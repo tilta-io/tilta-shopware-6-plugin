@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6;
 
+use Exception;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -20,6 +21,7 @@ use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin\Context\UpdateContext;
+use Tilta\Sdk\HttpClient\TiltaClient;
 use Tilta\TiltaPaymentSW6\Administration\TiltaAdministrationBundle;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\AbstractBootstrap;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\Database;
@@ -149,5 +151,14 @@ class TiltaPaymentSW6 extends Plugin
         }
 
         return $bootstrapper;
+    }
+}
+
+if (!class_exists(TiltaClient::class)) {
+    $autoloaderPath = dirname(__DIR__) . '/vendor/autoload.php';
+    if (file_exists($autoloaderPath)) {
+        require_once $autoloaderPath;
+    } else {
+        throw new Exception('Missing Tilta dependencies! Please run `composer require tilta/shopware6-payment-module` in project directory');
     }
 }
