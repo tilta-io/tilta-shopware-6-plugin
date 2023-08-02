@@ -1,0 +1,71 @@
+{
+    "name": "tilta/shopware6-payment-module",
+    "description": "Tilta payment method for Shopware 6",
+    "version": "dev-1.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tilta Fintech GmbH"
+        },
+        {
+            "name": "WEBiDEA",
+            "email": "github@webidea24.de",
+            "role": "Developer"
+        }
+    ],
+    "type": "shopware-platform-plugin",
+    "autoload": {
+        "psr-4": {
+            "Tilta\\TiltaPaymentSW6\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Tilta\\TiltaPaymentSW6\\TiltaPaymentSW6",
+        "copyright": "(c) by Tilta Fintech GmbH",
+        "plugin-icon": "src/Resources/public/plugin.png",
+        "label": {
+            "de-DE": "Tilta",
+            "en-GB": "Tilta"
+        },
+        "description": {
+            "de-DE": "TODO",
+            "en-GB": "Todo"
+        },
+        "manufacturerLink": {
+            "de-DE": "https://www.tilta.io",
+            "en-GB": "https://www.tilta.io"
+        },
+        "supportLink": {
+            "de-DE": "TODO",
+            "en-GB": "TODO"
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "tilta-io/tilta-php-sdk": "dev-dev",
+        "shopware/core": "^6.4.10",
+        "shopware/administration": "^6.4.10",
+        "shopware/storefront": "^6.4.10"
+    },
+    "scripts": {
+        "init-dev-ops": [
+            "composer req rector/rector symplify/easy-coding-standard phpstan/phpstan --dev --no-scripts --no-plugins -d ../../../"
+        ],
+        "rector-fix": "../../../vendor/bin/rector process --clear-cache",
+        "rector-lint": "../../../vendor/bin/rector process --clear-cache --dry-run",
+        "phpstan-lint": "../../../vendor/bin/phpstan analyse",
+        "code-style-fix": "../../../vendor/bin/ecs --fix --clear-cache",
+        "code-style-lint": "../../../vendor/bin/ecs --clear-cache",
+        "lint": [
+            "@rector-lint",
+            "@phpstan-lint",
+            "@code-style-lint"
+        ],
+        "fix": [
+            "@rector-fix",
+            "@code-style-fix"
+        ],
+        "release": "shopware-cli extension zip . --disable-git --release",
+        "build": "shopware-cli extension build ."
+    }
+}

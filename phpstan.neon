@@ -1,0 +1,15 @@
+parameters:
+    level: 9
+    paths:
+        - src
+
+    ignoreErrors:
+        - '#with no value type specified in iterable type array#'
+        - '#type has no value type specified in iterable type array.#'
+        - '#generic class Shopware\\Core\\Framework\\Struct\\ArrayStruct does not specify its types#'
+        - '#generic class Shopware\\Core\\Framework\\Struct\\ArrayStruct but does not specify its types#'
+
+    reportUnmatchedIgnoredErrors: false
+    tipsOfTheDay: false
+    bootstrapFiles:
+        - ../../../vendor/autoload.php

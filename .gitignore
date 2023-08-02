@@ -1,0 +1,5 @@
+/vendor/
+/build/
+/var/cache/
+composer.lock
+__COMPOSER_HOME__
