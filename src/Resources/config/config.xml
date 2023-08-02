@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>API Mode</title>
+        <title lang="de-DE">API Modus</title>
+
+        <input-field type="bool">
+            <name>sandbox</name>
+            <label>Sandbox</label>
+            <label lang="de-DE">Testmodus</label>
+            <value>0</value>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Live API</title>
+        <title lang="de-DE">Live API</title>
+
+        <input-field type="text">
+            <name>liveApiMerchantExternalId</name>
+            <label>Merchant ID</label>
+            <label lang="de-DE">Merchant ID</label>
+        </input-field>
+
+        <input-field type="password">
+            <name>liveApiAuthToken</name>
+            <label>API Token</label>
+            <label lang="de-DE">API Token</label>
+        </input-field>
+
+        <component name="tilta-test-api-credentials-button">
+            <name>testSandboxCredentialsButton</name>
+            <apiMode>live</apiMode>
+        </component>
+    </card>
+
+    <card>
+        <title>Sandbox API</title>
+        <title lang="de-DE">Sandbox API</title>
+
+        <input-field type="text">
+            <name>sandboxApiMerchantExternalId</name>
+            <label>Merchant ID</label>
+            <label lang="de-DE">Merchant ID</label>
+        </input-field>
+
+        <input-field type="password">
+            <name>sandboxApiAuthToken</name>
+            <label>API Token</label>
+            <label lang="de-DE">API Token</label>
+        </input-field>
+
+        <component name="tilta-test-api-credentials-button">
+            <name>testSandboxCredentialsButton</name>
+            <apiMode>sandbox</apiMode>
+        </component>
+    </card>
+
+    <card>
+        <title>Salutations</title>
+        <title lang="de-DE">Anreden</title>
+
+        <!-- it does not make any sense - but the `input-field`-tag must be before a `component`-tag -->
+        <input-field type="single-select">
+            <name>salutationFallback</name>
+            <label>Salutation (Fallback)</label>
+            <label lang="de-DE">Anrede (Fallback)</label>
+            <defaultValue>m</defaultValue>
+            <required>true</required>
+            <options>
+                <option>
+                    <id>m</id>
+                    <name>Mr.</name>
+                    <name lang="de-DE">Herr</name>
+                </option>
+                <option>
+                    <id>f</id>
+                    <name>Mrs.</name>
+                    <name lang="de-DE">Frau</name>
+                </option>
+            </options>
+        </input-field>
+
+        <component name="sw-entity-single-select">
+            <name>salutationMale</name>
+            <label>Salutation (Male)</label>
+            <label lang="de-DE">Anrede (Mann)</label>
+            <entity>salutation</entity>
+            <labelProperty>displayName</labelProperty>
+            <required>true</required>
+        </component>
+
+        <component name="sw-entity-single-select">
+            <name>salutationFemale</name>
+            <label>Salutation (Female)</label>
+            <label lang="de-DE">Anrede (Frau)</label>
+            <entity>salutation</entity>
+            <labelProperty>displayName</labelProperty>
+            <required>true</required>
+        </component>
+    </card>
+</config>

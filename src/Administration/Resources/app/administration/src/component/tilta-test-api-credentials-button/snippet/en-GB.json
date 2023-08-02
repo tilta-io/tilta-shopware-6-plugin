@@ -1,0 +1,17 @@
+{
+    "tilta": {
+        "config": {
+            "testCredentialsButton": {
+                "text": "Test credentials"
+            },
+            "notification": {
+                "validCredentials": "The credentials are correct.",
+                "invalidCredentials": "The credentials are unfortunately wrong.",
+                "failedToTestCredentials": "An error occurred while checking the credentials!",
+                "NOT_AUTHORIZED": "The API token is invalid.",
+                "UNAUTHORIZED": "The API token is invalid.",
+                "MERCHANT_NOT_FOUND": "The API token is valid. The merchant ID is incorrect. Please double-check it."
+            }
+        }
+    }
+}

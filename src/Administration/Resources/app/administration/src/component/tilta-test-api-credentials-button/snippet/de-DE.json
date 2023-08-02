@@ -1,0 +1,17 @@
+{
+    "tilta": {
+        "config": {
+            "testCredentialsButton": {
+                "text": "Zugangsdaten testen"
+            },
+            "notification": {
+                "validCredentials": "Die Zugangsdaten sind korrekt!",
+                "invalidCredentials": "Die Zugangsdaten sind ungültig.",
+                "failedToTestCredentials": "Beim Prüfen der Zugangsdaten ist ein Fehler aufgetreten!",
+                "NOT_AUTHORIZED": "Der API Token ist ungültig.",
+                "UNAUTHORIZED": "Der API Token ist ungültig.",
+                "MERCHANT_NOT_FOUND": "Der API Token ist korrekt. Die Händler ID ist nicht korrekt. Bitte prüfen Sie diese noch einmal."
+            }
+        }
+    }
+}
