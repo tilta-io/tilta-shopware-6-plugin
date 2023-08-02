@@ -16,6 +16,9 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         \Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector::class,
         \Rector\CodeQuality\Rector\Ternary\SwitchNegatedTernaryRector::class,
+        \Rector\CodeQuality\Rector\Class_\CompleteDynamicPropertiesRector::class => [
+            __DIR__ . '/src/TiltaPaymentSW6.php', // seems to be a problem with rector and traits
+        ]
     ]);
 
     $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
