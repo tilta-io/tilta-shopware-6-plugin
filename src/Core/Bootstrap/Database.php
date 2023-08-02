@@ -16,8 +16,6 @@ use Tilta\TiltaPaymentSW6\Core\Util\MigrationHelper;
 
 class Database extends AbstractBootstrap
 {
-    public $container;
-
     protected Connection $connection;
 
     public function injectServices(): void

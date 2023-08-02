@@ -18,8 +18,6 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class PluginConfig extends AbstractBootstrap
 {
-    public $container;
-
     private SystemConfigService $systemConfigService;
 
     /**
