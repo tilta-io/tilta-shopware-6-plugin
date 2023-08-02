@@ -1,0 +1,131 @@
+on:
+  push:
+    branches:
+      - '*'
+      - '*/*'
+
+env:
+  MODULE_NAME: TiltaPaymentSW6
+  MODULE_DIR: custom/plugins/TiltaPaymentSW6
+  COMPOSER_NAME: tilta/shopware6-payment-module
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint (Shopware ${{ matrix.shopware-version }}, PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }})
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ 'ubuntu-latest' ]
+        php-version: [ '7.4', '8.0', '8.1', '8.2' ]
+        shopware-version: [ 'v6.4.14.0', 'v6.4.15.0', 'v6.4.16.0', 'v6.4.17.0', 'v6.4.18.0', 'v6.4.19.0', 'v6.4.20.0' ]
+      fail-fast: false
+      max-parallel: 10
+    steps:
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xdebug, curl, dom, fileinfo, gd, iconv, intl, json, xml, mbstring, pdo, phar, zip, sodium, pdo_mysql
+          tools: composer:2.2
+
+      - name: "Check PHP Version"
+        run: php -v
+
+      - name: "Check Composer Version"
+        run: composer -V
+
+      - name: "Check PHP Extensions"
+        run: php -m
+
+      - name: "checkout Shopware (with flex template)"
+        if: matrix.php-version < 8.0
+        uses: actions/checkout@v3
+        with:
+          repository: shopware/production
+          ref: ${{ matrix.shopware-version }}
+
+      - name: "checkout Shopware (without flex template)"
+        if: matrix.php-version >= 8.0
+        uses: actions/checkout@v3
+        with:
+          repository: shopware/production
+          ref: 'flex'
+
+      - name: "Checkout ${{ env.COMPOSER_NAME }}"
+        uses: actions/checkout@v3
+        with:
+          path: ${{ env.MODULE_DIR }}
+
+      - name: "Get composer cache directory"
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: "Cache Composer dependencies"
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.operating-system }}-${{ matrix.php-version }}-${{ matrix.shopware-version }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: "Install Shopware dependencies (with flex template)"
+        if: matrix.php-version >= 8.0
+        # Install Shopware with --no-dev to prevent that dev-tools of the module got in conflict with the tools of shopware
+        run: |
+          composer req shopware/administration:${{ matrix.shopware-version }} shopware/core:${{ matrix.shopware-version }} shopware/elasticsearch:${{ matrix.shopware-version }} shopware/storefront:${{ matrix.shopware-version }} --no-update
+          composer install --no-dev
+
+      - name: "Install Shopware dependencies (without flex template)"
+        if: matrix.php-version < 8.0
+        # Install Shopware with --no-dev to prevent that dev-tools of the module got in conflict with the tools of shopware
+        run: |   
+          composer install --no-dev --no-scripts
+
+      ######## TEMPORARY ########
+      ## util sdk got released ##
+      ######## TEMPORARY ########
+      - run: |
+          composer config prefer-stable true
+          composer config minimum-stability dev
+
+      - uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SDK_ACCESS_TOKEN }}
+
+      - run: |
+          composer config repositories.github-sdk '{ "type": "vcs", "url": "https://github.com/tilta-io/tilta-php-sdk/"}'
+
+      - working-directory: ${{ env.MODULE_DIR }}
+        run: |
+          composer config repositories.github-sdk '{ "type": "vcs", "url": "https://github.com/tilta-io/tilta-php-sdk/"}'
+
+      ######## TEMPORARY ########
+      ########    END    ########
+      ######## TEMPORARY ########
+
+      - name: "Install ${{ env.COMPOSER_NAME }}"
+        run: |
+          composer config prefer-stable true
+          composer config minimum-stability dev
+          composer config repositories.local-plugins '{ "type": "path", "url": "custom/plugins/*", "options": { "symlink": true } }'
+          composer req ${{ env.COMPOSER_NAME }} --no-scripts
+
+      - name: "Install DEV-Tools"
+        working-directory: ${{ env.MODULE_DIR }}
+        run: |
+          composer remove shopware/* --no-update
+          composer install
+
+      - name: "Run PHPStan"
+        working-directory: ${{ env.MODULE_DIR }}
+        run: ./vendor/bin/phpstan
+
+      - name: "Check Code style (easy-coding-style)"
+        working-directory: ${{ env.MODULE_DIR }}
+        run: ./vendor/bin/ecs
+
+      - name: "Check Code style (rector)"
+        working-directory: ${{ env.MODULE_DIR }}
+        run: ./vendor/bin/rector --dry-run
