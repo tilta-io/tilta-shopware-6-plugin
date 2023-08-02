@@ -135,7 +135,7 @@ class TiltaPaymentSW6 extends Plugin
         ];
 
         /** @var EntityRepository $pluginRepository */
-        $pluginRepository = $this->container->get('plugin.repository');
+        $pluginRepository = $this->container->get('plugin.repository'); // @phpstan-ignore-line
         $plugins = $pluginRepository->search(
             (new Criteria())->addFilter(new EqualsFilter('baseClass', static::class)),
             $context->getContext()
@@ -143,7 +143,7 @@ class TiltaPaymentSW6 extends Plugin
         $plugin = $plugins->first();
         foreach ($bootstrapper as $bootstrap) {
             $bootstrap->setInstallContext($context);
-            $bootstrap->setContainer($this->container);
+            $bootstrap->setContainer($this->container); // @phpstan-ignore-line
             $bootstrap->injectServices();
             $bootstrap->setPlugin($plugin);
         }
