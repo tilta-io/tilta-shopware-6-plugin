@@ -19,7 +19,12 @@
             "Tilta\\TiltaPaymentSW6\\": "src/"
         }
     },
-    "extra": {
+	"autoload-dev": {
+		"psr-4": {
+			"Tilta\\TiltaPaymentSW6\\Tests": "tests/"
+		}
+	},
+	"extra": {
         "shopware-plugin-class": "Tilta\\TiltaPaymentSW6\\TiltaPaymentSW6",
         "copyright": "(c) by Tilta Fintech GmbH",
         "plugin-icon": "src/Resources/public/plugin.png",
