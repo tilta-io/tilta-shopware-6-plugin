@@ -1,0 +1,12 @@
+{% sw_extends '@Storefront/storefront/page/account/sidebar.html.twig' %}
+
+{% block page_account_sidebar_menu_inner %}
+    {{ parent() }}
+    {% block page_account_sidebar_link_tilta %}
+        <a href="{{ path('frontend.account.tilta.credit-facility.list') }}"
+           title="{{ "account.tilta.sidebarCreditFacilityLinkTitle"|trans|striptags }}"
+           class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('tilta.account.sidebarCreditFacilityLinkTitle') %} is-active{% endif %}">
+            {{ "account.tilta.sidebarCreditFacilityLinkTitle"|trans|sw_sanitize }}
+        </a>
+    {% endblock %}
+{% endblock %}

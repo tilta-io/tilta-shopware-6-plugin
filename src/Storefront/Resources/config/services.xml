@@ -2,6 +2,17 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults autowire="true" />
 
+        <service id="Tilta\TiltaPaymentSW6\Storefront\Controller\AccountFacilityController">
+            <argument key="$listAddressRoute" type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\ListAddressRoute" />
+            <argument key="$salutationRoute" type="service" id="Shopware\Core\System\Salutation\SalesChannel\SalutationRoute" />
 
+            <tag name="controller.service_arguments"/>
+            <call method="setContainer">
+                <argument id="service_container" type="service"/>
+            </call>
+        </service>
+    </services>
 </container>

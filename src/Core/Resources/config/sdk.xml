@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <defaults public="true" autowire="true"/>
+
+        <!-- Factory for TiltaClient -->
+        <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\TiltaClientFactory">
+<!--            <argument key="$logger" type="service" id="tilta_payment_s_w5.logger"/>-->
+        </service>
+
+        <service id="Tilta\Sdk\HttpClient\TiltaClient">
+            <factory service="Tilta\TiltaPaymentSW6\Core\Components\Api\TiltaClientFactory" method="createTiltaClient"/>
+        </service>
+
+        <!-- RequestServices -->
+        <service id="Tilta\Sdk\Service\Request\Buyer\GetBuyerDetailsRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Buyer\CreateBuyerRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Buyer\UpdateBuyerRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Facility\GetFacilityRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Facility\CreateFacilityRequest"/>
+
+    </services>
+</container>

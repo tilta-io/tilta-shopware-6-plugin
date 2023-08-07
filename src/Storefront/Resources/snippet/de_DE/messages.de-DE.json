@@ -1,0 +1,55 @@
+{
+	"account": {
+		"tilta": {
+			"sidebarCreditFacilityLinkTitle": "Tilta Kreditverfügungsrahmen",
+			"credit-facility": {
+				"expiresAtLabel": "Verfügbar bis",
+				"spentLabel": "Verbraucht",
+				"availableLabel": "Verfügbar",
+				"totalAmount": "Limit",
+				"list": {
+					"title": "Tilta Kreditverfügungsrahmen",
+					"intro": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
+				},
+				"create": {
+					"title": "Kreditverfügungsrahmen anfragen",
+					"intro": "Um als Geschäftskunde auf Rechnung zahlen zu können, müssen Sie einen Kreditverfügungsrahmen anfragen. Dafür benötigen wir noch ein paar Informationen von Ihnen.",
+					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
+				}
+			},
+			"incorporatedAtLabel": "Unternehmen angemeldet am",
+			"incorporatedAtSelectDay": "Tag",
+			"incorporatedAtSelectMonth": "Monat",
+			"incorporatedAtSelectYear": "Jahr",
+			"legalFormLabel": "Rechtsform",
+			"legalFormPlaceholder": "Rechtsform"
+		}
+	},
+	"tilta": {
+		"messages": {
+			"no-existing-b2b-address": "Bevor Sie einen Kreditrahmen bei Tilta anfragen können, müssen Sie zuerst eine geschäftliche Rechnungsadresse anlegen.",
+			"address-does-not-exist": "Die angefragte Adresse existiert nicht.",
+			"facility": {
+				"unknown-error": "Es ist ein unbekannter Fehler beim Anfragen des Kreditverfügungsrahmen aufgetreten. Bitte wenden Sie sich an den Kundenservice.",
+				"created-successfully": "Der Kreditverfügungsrahmen wurde erfolgreich erstellt."
+			}
+		},
+		"legalForms": {
+			"AG": "Aktiengesellschaft",
+			"EG": "Europäische Genossenschaft",
+			"EK": "Einzelkaufmann/Einzelkauffrau",
+			"EV": "Eingetragener Verein",
+			"FREELANCER": "Freiberufler/Freiberuflerin",
+			"GBR": "Gesellschaft bürgerlichen Rechts",
+			"GEWERBEBETRIEB": "Gewerbebetrieb",
+			"GMBH": "Gesellschaft mit beschränkter Haftung",
+			"GMBH_CO_KG": "Gesellschaft mit beschränkter Haftung & Compagnie Kommanditgesellschaft",
+			"KDOR": "Körperschaft des öffentlichen Rechts",
+			"KG": "Kommanditgesellschaft",
+			"OHG": "Offene Handelsgesellschaft",
+			"PRIVATE_PERSON": "Privatperson",
+			"UG": "Unternehmergesellschaft (haftungsbeschränkt)"
+		}
+	}
+}

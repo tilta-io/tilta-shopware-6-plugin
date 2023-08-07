@@ -1,0 +1,11 @@
+{
+	"tilta": {
+		"messages": {
+			"invalid-salutation": "Please provide your salutation.",
+			"invalid-phone": "Please provide your phone number.",
+			"invalid-company": "Please provide the company name.",
+			"invalid-incorporate-at": "Please provide the date of incorporation.",
+			"invalid-legal-form": "Please provide the legal form."
+		}
+	}
+}

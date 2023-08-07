@@ -1,0 +1,95 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    <div class="account-tilta-credit-facilities">
+        {% block page_account_tcf_welcome %}
+            <div class="account-welcome">
+                {% block page_account_tcf_welcome_headline %}
+                    <h1>{{ "account.tilta.credit-facility.list.title"|trans|sw_sanitize }}</h1>
+                {% endblock %}
+                {% block page_account_tcf_welcome_intro %}
+                    <p>
+                        {{ "account.tilta.credit-facility.list.intro"|trans|sw_sanitize }}
+                    </p>
+                {% endblock %}
+            </div>
+        {% endblock %}
+
+        {% if addressList is empty %}
+            {% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
+                type:"warning",
+                content: "tilta.messages.no-existing-b2b-address"|trans|sw_sanitize
+            } %}
+        {% endif %}
+
+        {% block page_account_tcf_list %}
+            <div class="tilta-buyer-list">
+                {% for address in addressList %}
+                    {% block page_account_tcf_list_buyer_item %}
+                        <div class="tilta-buyer-list__item">
+                            {% block page_account_tcf_list_buyer_item_inner %}
+
+                                {% block page_account_tcf_list_buyer_item_address %}
+                                    <div class="tilta-buyer-list__item__address">
+                                        {% sw_include '@Storefront/storefront/component/address/address.html.twig' with {'address': address} %}
+                                    </div>
+                                {% endblock %}
+
+                                {% block page_account_tcf_list_buyer_item_status %}
+                                    <div class="tilta-buyer-list__item__status{% if address.extensions.tiltaFacility %} has-facility{% endif %}">
+                                        {% if address.extensions.tiltaFacility %}
+
+                                            {% block page_account_tcf_list_buyer_item_status_progressbar_before %}
+                                                <div class="tilta-buyer-list__item__status__detail-wrapper before-progressbar">
+                                                    {% block page_account_tcf_list_buyer_item_status_progressbar_before_inner %}
+                                                        <div class="tilta-buyer-list__item__status__detail tilta-expires">
+                                                            <div class="tilta-label">{{ "account.tilta.credit-facility.expiresAtLabel"|trans|sw_sanitize }}</div>
+                                                            <div class="tilta-value">{{ address.extensions.tiltaFacility.expires_at|date }}</div>
+                                                        </div>
+                                                    {% endblock %}
+                                                 </div>
+                                            {% endblock %}
+
+                                            {% block page_account_tcf_list_buyer_item_status_progressbar %}
+                                                <div class="progress-bar">
+                                                    {% set tiltaNotAvailableAmount = address.extensions.tiltaFacility.available_amount / address.extensions.tiltaFacility.total_amount * 100  %}
+                                                    <span style="width: {{ tiltaNotAvailableAmount }}%;">{{ tiltaNotAvailableAmount }} %</span>
+                                                </div>
+                                            {% endblock %}
+
+                                            {% block page_account_tcf_list_buyer_item_status_progressbar_after %}
+                                                <div class="tilta-buyer-list__item__status__detail-wrapper after-progressbar">
+                                                    {% block page_account_tcf_list_buyer_item_status_progressbar_after_inner %}
+                                                        <div class="tilta-buyer-list__item__status__detail tilta-spent">
+                                                            <div class="tilta-label">{{ "account.tilta.credit-facility.spentLabel"|trans|sw_sanitize }}</div>
+                                                            <div class="tilta-value">{{ (address.extensions.tiltaFacility.used_amount / 100)|currency(address.extensions.tiltaFacility.currency) }}</div>
+                                                        </div>
+                                                        <div class="tilta-buyer-list__item__status__detail tilta-available">
+                                                            <div class="tilta-label">{{ "account.tilta.credit-facility.availableLabel"|trans|sw_sanitize }}</div>
+                                                            <div class="tilta-value">{{ (address.extensions.tiltaFacility.available_amount / 100)|currency(address.extensions.tiltaFacility.currency) }}</div>
+                                                        </div>
+                                                        <div class="tilta-buyer-list__item__status__detail tilta-total-amount">
+                                                            <div class="tilta-label">{{ "account.tilta.credit-facility.totalAmount"|trans|sw_sanitize }}</div>
+                                                            <div class="tilta-value">{{ (address.extensions.tiltaFacility.total_amount / 100)|currency(address.extensions.tiltaFacility.currency) }}</div>
+                                                        </div>
+                                                    {% endblock %}
+                                                </div>
+                                            {% endblock %}
+                                        {% else %}
+                                            {% block page_account_tcf_list_buyer_item_status_request %}
+                                                <a class="btn btn-primary" href="{{ path('frontend.account.tilta.credit-facility.requestForm', {'addressId': address.id}) }}">
+                                                    {{ "account.tilta.credit-facility.list.actionRequestFacility"|trans|sw_sanitize }}
+                                                </a>
+                                            {% endblock %}
+                                        {% endif %}
+                                    </div>
+                                {% endblock %}
+
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                {% endfor %}
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    <div class="account-tilta-credit-facilities">
+        {% block page_account_tcf_welcome %}
+            <div class="account-welcome">
+                {% block page_account_tcf_welcome_headline %}
+                    <h1>{{ "account.tilta.credit-facility.create.title"|trans|sw_sanitize }}</h1>
+                {% endblock %}
+                {% block page_account_tcf_welcome_intro %}
+                    <p>
+                        {{ "account.tilta.credit-facility.create.intro"|trans|sw_sanitize }}
+                    </p>
+                {% endblock %}
+            </div>
+        {% endblock %}
+
+        {% block page_account_tcf_create %}
+            <div class="tilta-buyer-create">
+                <div class="tilta-buyer-create__customer-_address">
+                    {% sw_include '@Storefront/storefront/component/address/address.html.twig' with {'address': page.address} %}
+                </div>
+
+                <form method="POST"
+                      action="{{ path('frontend.account.tilta.credit-facility.requestForm.post', {'addressId': page.address.id}) }}"
+                      data-form-csrf-handler="true"
+                      data-form-validation="true">
+                    {% sw_include '@TiltaPaymentSW6/storefront/component/buyer-fields.html.twig' %}
+
+                    {% block page_account_tcf_create_action_buttons %}
+                        <div class="address-form-actions">
+                            {% block page_account_tcf_create_action_button_send %}
+                                <button type="submit"
+                                        class="btn btn-primary"
+                                        title="{{ "account.tilta.credit-facility.create.actionRequestFacility"|trans|striptags }}">
+                                    {{ "account.tilta.credit-facility.create.actionRequestFacility"|trans|sw_sanitize }}
+                                </button>
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                </form>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}

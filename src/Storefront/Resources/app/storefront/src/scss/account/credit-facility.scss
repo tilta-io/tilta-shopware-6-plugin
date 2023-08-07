@@ -1,0 +1,96 @@
+.tilta-buyer-list {
+	&__item {
+		border-bottom: 1px solid #ccc;
+		padding-bottom: 0.5rem;
+		margin-bottom: 0.5rem;
+		display: flex;
+		grid-column-gap: 3rem;
+		grid-row-gap: 1rem;
+		flex-direction: column;
+		flex-wrap: wrap;
+
+		&:first-child {
+			border-top: 1px solid #ccc;
+			padding-top: 0.5rem;
+		}
+
+		&__address {
+			.address--company {
+				font-weight: $font-weight-bold;
+			}
+		}
+
+		@media (min-width: 580px) {
+			flex-direction: row;
+			justify-content: space-between;
+
+			&__address {
+				flex: 0 0 auto;
+			}
+
+			&__status {
+				align-self: center;
+				flex: 1 0 55%;
+				max-width: 600px;
+
+				&.has-facility {
+					align-self: end;
+				}
+			}
+		}
+
+		&__status {
+			&:not(.has-facility) {
+				text-align: right;
+			}
+
+			.progress-bar {
+				display: block;
+				width: 100%;
+				margin: 0.5rem 0 0.5rem 0;
+				height: 1rem;
+				position: relative;
+				background-color: whiteSmoke;
+				border-radius: 2px;
+				box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25) inset;
+
+				span {
+					display: block;
+					height: 100%;
+					background-color: $sw-color-brand-primary;
+					border-radius: 2px;
+					text-indent: -9999px;
+				}
+			}
+
+			&__detail {
+				flex: 1 0 auto;
+
+				.tilta-label {
+					font-weight: $font-weight-bold;
+				}
+
+				&.tilta-expires {
+					flex: 0 0 auto;
+					display: flex;
+					grid-gap: 0.5rem;
+					margin-left: auto;
+
+					.tilta-label {
+						&::after {
+							content: ':'
+						}
+					}
+				}
+
+				&-wrapper {
+					display: flex;
+					//grid-template-columns: repeat(4, 1fr);
+					grid-gap: 1rem;
+					text-align: center;
+					flex-wrap: wrap;
+				}
+			}
+		}
+	}
+}
