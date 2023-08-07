@@ -31,7 +31,7 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::CODE_QUALITY,
         SetList::TYPE_DECLARATION,
         SetList::CODING_STYLE,
-        LevelSetList::UP_TO_PHP_81,
+        LevelSetList::UP_TO_PHP_74,
     ]);
 
     $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');
