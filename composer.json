@@ -21,7 +21,7 @@
     },
 	"autoload-dev": {
 		"psr-4": {
-			"Tilta\\TiltaPaymentSW6\\Tests": "tests/"
+			"Tilta\\TiltaPaymentSW6\\Tests\\": "tests/"
 		}
 	},
 	"extra": {
