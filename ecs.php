@@ -6,6 +6,7 @@ use PhpCsFixer\Fixer\ClassNotation\ProtectedToPrivateFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Operator\NotOperatorWithSpaceFixer;
 use PhpCsFixer\Fixer\Operator\NotOperatorWithSuccessorSpaceFixer;
+use Rector\CodingStyle\Rector\FuncCall\ConsistentPregDelimiterRector;
 use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
@@ -35,6 +36,7 @@ file that was distributed with this source code.', 'separate' => 'bottom', 'loca
         ProtectedToPrivateFixer::class,
         NotOperatorWithSpaceFixer::class,
         NotOperatorWithSuccessorSpaceFixer::class,
-        AssignmentInConditionSniff::class
+        AssignmentInConditionSniff::class,
+        ConsistentPregDelimiterRector::class, // rule does not exist in further releases of ecs
     ]);
 };
