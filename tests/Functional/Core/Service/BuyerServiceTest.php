@@ -146,8 +146,8 @@ class BuyerServiceTest extends TestCase
             self::assertCount(1, $data);
             self::assertIsArray($data[0] ?? null);
             self::assertEquals($address->getId(), $data[0]['id']);
-            self::assertInstanceOf('updated-12345', $data[0]['phoneNumber']);
-            self::assertInstanceOf('updated-abc', $data[0]['salutationId']);
+            self::assertEquals('updated-12345', $data[0]['phoneNumber']);
+            self::assertEquals('updated-abc', $data[0]['salutationId']);
         });
 
         $tiltaDataRepositoryMock->method('upsert')->willReturnCallback(static function (array $data, $context) use ($address) {
@@ -165,8 +165,8 @@ class BuyerServiceTest extends TestCase
             [
                 'phoneNumber' => 'updated-12345',
                 'salutationId' => 'updated-abc',
-                'incorporated_at' => (new DateTime())->setDate(2000, 5, 15),
-                'legal_form' => 'updated-GMBH',
+                'incorporatedAt' => (new DateTime())->setDate(2000, 5, 15),
+                'legalForm' => 'updated-GMBH',
             ]
         );
     }

@@ -50,7 +50,7 @@ class FacilityService
         /** @var TiltaCustomerAddressDataEntity $tiltaData */
         $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
 
-        if (!$tiltaData instanceof TiltaCustomerAddressDataEntity || empty($tiltaData->getBuyerExternalId())) {
+        if (!$tiltaData instanceof TiltaCustomerAddressDataEntity || ($tiltaData->getBuyerExternalId() === null || $tiltaData->getBuyerExternalId() === '')) {
             $this->buyerService->createBuyerIfNotExist($address);
         } elseif ($withBuyerUpdate) {
             $this->buyerService->updateBuyer($address);

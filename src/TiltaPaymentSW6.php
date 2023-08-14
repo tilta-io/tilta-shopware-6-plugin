@@ -31,6 +31,13 @@ use Tilta\TiltaPaymentSW6\Storefront\TiltaStorefrontBundle;
 
 class TiltaPaymentSW6 extends Plugin
 {
+    public function getMigrationNamespace(): string
+    {
+        // Migrations of child-bundles got not loaded automatically.
+        // currently there are only migrations which are relevant for the whole module. so this is ok.
+        return $this->getNamespace() . '\Core\Migration';
+    }
+
     public function install(InstallContext $installContext): void
     {
         $bootstrapper = $this->getBootstrapClasses($installContext);

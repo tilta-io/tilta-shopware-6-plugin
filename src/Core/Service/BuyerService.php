@@ -75,7 +75,7 @@ class BuyerService
         /** @var CustomerEntity $customer */
         $customer = $address->getCustomer();
 
-        return !empty($externalId) ? $externalId : ((!empty($customer->getCustomerNumber()) ? $customer->getCustomerNumber() : $customer->getId()) . '-' . $address->getId());
+        return $externalId !== null && $externalId !== '' ? $externalId : ((!empty($customer->getCustomerNumber()) ? $customer->getCustomerNumber() : $customer->getId()) . '-' . $address->getId());
     }
 
     public function updateCustomerAddressData(CustomerAddressEntity $addressEntity, array $data): void
@@ -89,7 +89,7 @@ class BuyerService
             ],
         ], $context);
 
-        if (is_string($data['incorporatedAt'])) {
+        if (is_string($data['incorporatedAt']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['incorporatedAt'])) {
             $incorporatedAt = DateTime::createFromFormat('Y-m-d', $data['incorporatedAt']);
         } elseif ($data['incorporatedAt'] instanceof DateTimeInterface) {
             $incorporatedAt = $data['incorporatedAt'];

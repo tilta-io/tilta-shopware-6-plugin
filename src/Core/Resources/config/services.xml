@@ -15,5 +15,15 @@
         <service id="Tilta\TiltaPaymentSW6\Core\Service\BuyerService" />
         <service id="Tilta\TiltaPaymentSW6\Core\Service\FacilityService" />
 
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute">
+            <argument key="$addressRepository" type="service" id="customer_address.repository" />
+            <argument key="$salutationRepository" type="service" id="salutation.repository" />
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute">
+            <argument key="$listAddressRoute" type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\ListAddressRoute" />
+        </service>
+
     </services>
 </container>
