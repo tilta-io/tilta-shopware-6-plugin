@@ -38,7 +38,6 @@ class BuyerRequestFormDataRoute
 
     public function getRequestFormData(RequestDataBag $requestDataBag, SalesChannelContext $context, CustomerAddressEntity $customerAddress): BuyerRequestFormDataResponse
     {
-
         /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
         $tiltaData = $customerAddress->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
 
