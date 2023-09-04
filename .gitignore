@@ -3,3 +3,4 @@
 /var/cache/
 composer.lock
 __COMPOSER_HOME__
+/.phpunit.result.cache
