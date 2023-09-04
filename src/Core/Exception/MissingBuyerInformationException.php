@@ -10,20 +10,26 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\Exception;
 
-use Shopware\Core\Framework\HttpException;
+use Shopware\Core\Framework\ShopwareHttpException;
 
-class MissingBuyerInformationException extends HttpException
+class MissingBuyerInformationException extends ShopwareHttpException
 {
-    private array $messages = [];
-
     public function __construct(array $messages)
     {
-        parent::__construct(400, 'TILTA_BUYER_MISSING_DATA', implode('\n', $messages));
-        $this->messages = $messages;
+        parent::__construct('There are missing fields', [
+            'errors' => $messages,
+        ]);
     }
 
     public function getErrorMessages(): array
     {
-        return $this->messages;
+        $errors = $this->getParameter('errors');
+
+        return is_array($errors) ? $errors : [];
+    }
+
+    public function getErrorCode(): string
+    {
+        return 'TILTA_BUYER_MISSING_DATA';
     }
 }
