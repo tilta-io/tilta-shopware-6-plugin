@@ -1,0 +1,32 @@
+<div class="tilta-buyer-registration" data-tilta-buyer-registration="true">
+    <p>{{ "tilta.checkout.buyerRegistration.intro"|trans }}</p>
+
+    <div class="row tilta-buyer-create">
+        <div class="col-sm-5">
+            <div class="tilta-buyer-create__customer-_address">
+                {% sw_include '@Storefront/storefront/component/address/address.html.twig' with {'address': context.customer.activeBillingAddress} %}
+            </div>
+        </div>
+
+        <div class="col-sm-7">
+            <form method="POST"
+                  action="{{ path('frontend.account.tilta.credit-facility.requestForm.post', {'addressId': context.customer.activeBillingAddress.id}) }}"
+                  data-form-csrf-handler="true"
+                  data-form-validation="true">
+                <input type="hidden" name="backTo" value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
+                {% sw_include '@TiltaPaymentSW6/storefront/component/buyer-fields.html.twig' with tiltaData.addressFormData.all() %}
+                {% block page_account_tcf_create_action_buttons %}
+                    <div class="address-form-actions">
+                        {% block page_account_tcf_create_action_button_send %}
+                            <button type="submit"
+                                    class="btn btn-primary"
+                                    title="{{ "account.tilta.credit-facility.create.actionRequestFacility"|trans|striptags }}">
+                                {{ "account.tilta.credit-facility.create.actionRequestFacility"|trans|sw_sanitize }}
+                            </button>
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            </form>
+        </div>
+    </div>
+</div>

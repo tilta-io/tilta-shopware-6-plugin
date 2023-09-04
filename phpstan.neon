@@ -9,6 +9,13 @@ parameters:
         - '#generic class Shopware\\Core\\Framework\\Struct\\ArrayStruct does not specify its types#'
         - '#generic class Shopware\\Core\\Framework\\Struct\\ArrayStruct but does not specify its types#'
 
+        -
+            # Verified errors: These errors are caused by the wrong return-types of shopware models. The models always return a value, and never a null value.
+            messages:
+                - '#Parameter \#1 \$.* of method Tilta\\Sdk\\.*\\CreateOrderRequestModel::(setOrderedAt|setOrderExternalId)\(\) expects .*, .*\|null given.#'
+                - '#Parameter \#1 \$.* of method Tilta\\Sdk\\.*\\Address::(setStreet|setHouseNumber|setCountry)\(\) expects .*, .*\|null given.#'
+            path: src/Core/Components/Api/RequestDataFactory/CreateOrderRequestModelFactory.php
+
     reportUnmatchedIgnoredErrors: false
     tipsOfTheDay: false
     bootstrapFiles:

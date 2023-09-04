@@ -8,7 +8,15 @@
         </service>
 
         <service id="Tilta\TiltaPaymentSW6\Core\Extension\Definition\TiltaCustomerAddressDataDefinition">
-            <tag name="shopware.entity.definition" entity="tilta_address_data" />
+            <tag name="shopware.entity.definition" />
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Extension\OrderTransactionEntityExtension">
+            <tag name="shopware.entity.extension"/>
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Extension\Definition\TiltaOrderTransactionDataDefinition">
+            <tag name="shopware.entity.definition" />
         </service>
     </services>
 </container>

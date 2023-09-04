@@ -1,12 +1,12 @@
 <?php
-
-declare(strict_types=1);
 /*
  * (c) WEBiDEA
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Tests\Functional\Core\Routes;
 
@@ -46,6 +46,8 @@ class CreateFacilityRouteTest extends TestCase
      */
     private FacilityService $facilityServiceMock;
 
+    private CustomerEntity $customer;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -61,19 +63,19 @@ class CreateFacilityRouteTest extends TestCase
 
         /** @var EntityRepository $customerRepo */
         $customerRepo = $this->getContainer()->get('customer.repository');
-        $customer = $customerRepo->search((new Criteria([$this->createCustomer()])), Context::createDefaultContext())->first();
-        static::assertInstanceOf(CustomerEntity::class, $customer);
+        $this->customer = $customerRepo->search((new Criteria([$this->createCustomer()])), Context::createDefaultContext())->first();
+        static::assertInstanceOf(CustomerEntity::class, $this->customer);
 
         /** @var \Shopware\Core\Framework\DataAbstractionLayer\EntityRepository $addressRepo */
         $addressRepo = $this->getContainer()->get('customer_address.repository');
         $addressRepo->upsert([
             [
-                'id' => $customer->getDefaultBillingAddressId(),
+                'id' => $this->customer->getDefaultBillingAddressId(),
                 'company' => 'test company',
             ],
         ], Context::createDefaultContext());
 
-        $customerAddress = $addressRepo->search((new Criteria([$customer->getDefaultBillingAddressId()])), Context::createDefaultContext())->first();
+        $customerAddress = $addressRepo->search((new Criteria([$this->customer->getDefaultBillingAddressId()])), Context::createDefaultContext())->first();
         static::assertInstanceOf(CustomerAddressEntity::class, $customerAddress);
         $this->customerAddress = $customerAddress;
     }
@@ -92,7 +94,7 @@ class CreateFacilityRouteTest extends TestCase
             'legalForm' => 'GMBH',
         ]);
 
-        $response = $this->route->requestFacilityPost($requestData, $this->customerAddress);
+        $response = $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
 
         static::assertInstanceOf(SuccessResponse::class, $response);
     }
@@ -115,7 +117,7 @@ class CreateFacilityRouteTest extends TestCase
 
         $requestData->set($field, $value);
 
-        $response = $this->route->requestFacilityPost($requestData, $this->customerAddress);
+        $response = $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
 
         static::assertInstanceOf(SuccessResponse::class, $response);
     }

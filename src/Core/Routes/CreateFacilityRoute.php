@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * (c) WEBiDEA
  *
@@ -8,14 +6,19 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tilta\TiltaPaymentSW6\Core\Routes;
 
 use DateTime;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
+use Shopware\Core\Checkout\Customer\CustomerEntity;
+use Shopware\Core\Checkout\Customer\Exception\AddressNotFoundException;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Struct\ArrayStruct;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidationDefinition;
@@ -24,6 +27,7 @@ use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
 use Shopware\Core\System\SalesChannel\GenericStoreApiResponse;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -35,6 +39,9 @@ use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
 use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
 
+/**
+ * @Route(path="/store-api/tilta", defaults={"_loginRequired"=true, "_loginRequiredAllowGuest"=false, "_routeScope"={"store-api"}})
+ */
 class CreateFacilityRoute
 {
     private DataValidator $dataValidator;
@@ -65,8 +72,16 @@ class CreateFacilityRoute
         $this->logger = $logger;
     }
 
-    public function requestFacilityPost(RequestDataBag $requestDataBag, CustomerAddressEntity $address): Response
+    /**
+     * @Route(path="/facility/create/{addressId}", methods={"POST"})
+     */
+    public function requestFacilityPost(RequestDataBag $requestDataBag, CustomerEntity $customer, string $addressId): Response
     {
+        $customerAddress = $this->getAddressForCustomer($customer, $addressId);
+        if (!$customerAddress instanceof CustomerAddressEntity) {
+            throw new AddressNotFoundException($addressId);
+        }
+
         if ($requestDataBag->has('incorporatedAtDay') && $requestDataBag->has('incorporatedAtMonth') && $requestDataBag->has('incorporatedAtYear')) {
             $requestDataBag->set('incorporatedAt', sprintf('%02d-%02d-%02d', $requestDataBag->getAlnum('incorporatedAtYear'), $requestDataBag->getAlnum('incorporatedAtMonth'), $requestDataBag->getAlnum('incorporatedAtDay')));
         }
@@ -82,26 +97,25 @@ class CreateFacilityRoute
         );
 
         try {
-            $this->buyerService->updateCustomerAddressData($address, [
+            $incorporatedAt = $requestDataBag->get('incorporatedAt');
+            $this->buyerService->updateCustomerAddressData($customerAddress, [
                 'salutationId' => $requestDataBag->getAlnum('salutationId'),
                 'phoneNumber' => $requestDataBag->getAlnum('phoneNumber'),
                 'legalForm' => $requestDataBag->getAlnum('legalForm'),
-                'incorporatedAt' => DateTime::createFromFormat('Y-m-d', $requestDataBag->getAlnum('incorporatedAt')),
+                'incorporatedAt' => is_string($incorporatedAt) ? DateTime::createFromFormat('Y-m-d', $incorporatedAt) : null,
             ]);
 
-            // reload address, because entity data has been changed.
-            $addressCriteria = (new Criteria([$address->getId()]))
-                ->addAssociation('customer');
-            $address = $this->addressRepository->search($addressCriteria, Context::createDefaultContext())->first();
+            // reload address, because entity data has been changed. - address will be never null
+            /** @var CustomerAddressEntity $customerAddress */
+            $customerAddress = $this->getAddressForCustomer($customer, $addressId);
 
-            $this->facilityService->createFacilityForBuyerIfNotExist($address, true);
+            $this->facilityService->createFacilityForBuyerIfNotExist($customerAddress, true);
         } catch (MissingBuyerInformationException $missingBuyerInformationException) {
             throw new ConstraintViolationException(new ConstraintViolationList($missingBuyerInformationException->getErrorMessages()), $requestDataBag->all());
         } catch (TiltaException $tiltaException) {
             $this->logger->error('Error during creation of Tilta facility for buyer', [
-                /** @phpstan-ignore-next-line */
-                'user-id' => $address->getCustomer()->getId(),
-                'address-id' => $address->getId(),
+                'user-id' => $customer->getId(),
+                'address-id' => $customerAddress->getId(),
                 'error-message' => $tiltaException->getMessage(),
             ]);
 
@@ -112,6 +126,16 @@ class CreateFacilityRoute
         }
 
         return new SuccessResponse();
+    }
+
+    private function getAddressForCustomer(CustomerEntity $customer, string $addressId): ?CustomerAddressEntity
+    {
+        // reload address, because entity data has been changed.
+        $addressCriteria = (new Criteria([$addressId]))
+            ->addFilter(new EqualsFilter('customerId', $customer->getId()))
+            ->addAssociation('customer');
+
+        return $this->addressRepository->search($addressCriteria, Context::createDefaultContext())->first();
     }
 
     /**

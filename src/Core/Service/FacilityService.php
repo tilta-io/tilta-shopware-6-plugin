@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * (c) WEBiDEA
  *
@@ -8,9 +6,16 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tilta\TiltaPaymentSW6\Core\Service;
 
+use DateTimeInterface;
+use Exception;
+use Shopware\Core\Checkout\Cart\Price\Struct\CartPrice;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
+use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tilta\Sdk\Exception\GatewayException\Facility\DuplicateFacilityException;
 use Tilta\Sdk\Exception\GatewayException\Facility\NoActiveFacilityFoundException;
@@ -24,6 +29,7 @@ use Tilta\Sdk\Service\Request\Facility\GetFacilityRequest;
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
+use Tilta\TiltaPaymentSW6\Core\Util\AmountHelper;
 
 class FacilityService
 {
@@ -31,12 +37,16 @@ class FacilityService
 
     private BuyerService $buyerService;
 
+    private EntityRepository $tiltaDataRepository;
+
     public function __construct(
         ContainerInterface $container,
-        BuyerService $buyerService
+        BuyerService $buyerService,
+        EntityRepository $tiltaDataRepository
     ) {
         $this->container = $container;
         $this->buyerService = $buyerService;
+        $this->tiltaDataRepository = $tiltaDataRepository;
     }
 
     /**
@@ -64,6 +74,9 @@ class FacilityService
             // do nothing - just jump into finally.
         } finally {
             $facility = $this->getFacility($address);
+            if ($facility instanceof Facility) {
+                $this->updateFacilityOnCustomerAddress($address, $facility);
+            }
         }
 
         /** @phpstan-ignore-next-line */
@@ -76,9 +89,49 @@ class FacilityService
         $request = $this->container->get(GetFacilityRequest::class);
 
         try {
-            return $request->execute(new GetFacilityRequestModel(BuyerService::generateBuyerExternalId($address)));
+            $facility = $request->execute(new GetFacilityRequestModel(BuyerService::generateBuyerExternalId($address)));
+            $this->updateFacilityOnCustomerAddress($address, $facility);
+
+            return $facility;
         } catch (NoActiveFacilityFoundException $noActiveFacilityFoundException) {
             return null;
         }
+    }
+
+    public function updateFacilityOnCustomerAddress(CustomerAddressEntity $customerAddress, Facility $facility = null): void
+    {
+        $this->tiltaDataRepository->upsert([[
+            TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID => $customerAddress->getId(),
+            TiltaCustomerAddressDataEntity::FIELD_TOTAL_AMOUNT => $facility instanceof Facility ? $facility->getTotalAmount() : null,
+            TiltaCustomerAddressDataEntity::FIELD_VALID_UNTIL => $facility instanceof Facility ? $facility->getExpiresAt() : null,
+        ]], Context::createDefaultContext());
+    }
+
+    public function checkCartAmount(CustomerAddressEntity $customerAddress, CartPrice $price): bool
+    {
+        /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
+        $tiltaData = $customerAddress->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
+
+        if (!$tiltaData instanceof TiltaCustomerAddressDataEntity) {
+            // facility is "valid" if tiltaData does not exist - customer may create a buyer.
+            return true;
+        }
+
+        if (!$tiltaData->getValidUntil() instanceof DateTimeInterface) {
+            // facility seems to be invalid
+            return false;
+        }
+
+        if ($tiltaData->getValidUntil()->getTimestamp() < time()) {
+            try {
+                // fetching facility will update the facility in the database
+                $this->getFacility($customerAddress);
+            } catch (Exception $exception) {
+                // error during facility fetching -> facility seems to be not valid
+                return false;
+            }
+        }
+
+        return $tiltaData->getTotalAmount() >= AmountHelper::toSdk($price->getTotalPrice());
     }
 }

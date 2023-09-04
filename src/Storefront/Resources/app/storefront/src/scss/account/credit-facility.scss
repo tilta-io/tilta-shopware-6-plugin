@@ -1,3 +1,12 @@
+.is-ctl-accountfacility {
+	&.is-act-requestfacilityform {
+		.account-content-main:first-child {
+			// if sidebar is not available
+			margin: auto;
+		}
+	}
+}
+
 .tilta-buyer-list {
 	&__item {
 		border-bottom: 1px solid #ccc;

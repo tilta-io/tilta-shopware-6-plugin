@@ -1,0 +1,20 @@
+{% sw_extends '@Storefront/storefront/page/checkout/confirm/index.html.twig' %}
+
+{% block page_checkout_confirm_product_table %}
+    {% if (page.extensions.tilta) %}
+        {% block page_checkout_confirm_tilta %}
+            {% sw_include '@TiltaStorefrontBundle/storefront/page/checkout/confirm/tilta/default-data.html.twig' with {
+                tiltaData: page.extensions.tilta
+            } %}
+        {% endblock %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block page_checkout_aside_actions %}
+    {# allow submitting order only if the buyer can checkoput #}
+    {% if not page.extensions.tilta or page.extensions.tilta.allowedPaymentMethods %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

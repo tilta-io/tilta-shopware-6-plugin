@@ -1,0 +1,50 @@
+<div class="confirm-tilta">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card checkout-card">
+                <div class="card-body">
+
+                    {% block page_checkout_confirm_tilta_title %}
+                        <div class="card-title">{{ "tilta.checkout.title"|trans }}</div>
+                    {% endblock %}
+
+                    <div class="tilta--billing-form">
+                        {% if tiltaData.error %}
+                            {% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
+                                type: "danger",
+                                content: "tilta.messages.checkout."~tiltaData.error|trans|sw_sanitize
+                            } %}
+                        {% endif %}
+
+                        {% if tiltaData.action === 'buyer-registration-required' || tiltaData.action === 'facility-request-required' %}
+                            {% sw_include '@TiltaStorefrontBundle/storefront/page/checkout/confirm/tilta/buyer-registration.html.twig' with {
+                                tiltaData: page.extensions.tilta
+                            } %}
+                        {% endif %}
+
+                        {% if tiltaData.allowedPaymentMethods %}
+                            <input type="hidden" form="confirmOrderForm" name="tilta[buyer_external_id]" value="{{ tiltaData.buyerExternalId }}">
+                            {% if tiltaData.allowedPaymentMethods|length == 1 %}
+                                <input type="hidden" form="confirmOrderForm" name="tilta[payment_method]" value="{{ tiltaData.allowedPaymentMethods[0].payment_method }}">
+                                <p>{{ "tilta.checkout.informationAboutDuration"|trans({"%duration": tiltaData.allowedPaymentMethods[0].days}) }}</p>
+                            {% else %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-3 col-sm-6">
+                                        <label class="form-label" for="tilta-payment-method-select">{{ "tilta.checkout.paymentMethodSelectField"|trans }}</label>
+                                        <select id="tilta-payment-method-select" class="form-control" form="confirmOrderForm" name="tilta[payment_method]">
+                                            {% for method in tiltaData.allowedPaymentMethods %}
+{#                                                <option value="{{ method }}">{{ method }}</option>#}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

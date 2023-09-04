@@ -35,11 +35,25 @@ class TiltaCustomerAddressDataEntity extends Entity
      */
     public const FIELD_INCORPORATED_AT = 'incorporatedAt';
 
+    /**
+     * @var string
+     */
+    public const FIELD_TOTAL_AMOUNT = 'totalAmount';
+
+    /**
+     * @var string
+     */
+    public const FIELD_VALID_UNTIL = 'validUntil';
+
     protected string $customerAddressId;
 
     protected string $legalForm;
 
     protected ?string $buyerExternalId = null;
+
+    protected ?int $totalAmount = null;
+
+    protected ?DateTimeInterface $validUntil = null;
 
     protected DateTimeInterface $incorporatedAt;
 
@@ -61,5 +75,15 @@ class TiltaCustomerAddressDataEntity extends Entity
     public function getIncorporatedAt(): DateTimeInterface
     {
         return $this->incorporatedAt;
+    }
+
+    public function getTotalAmount(): ?int
+    {
+        return $this->totalAmount;
+    }
+
+    public function getValidUntil(): ?DateTimeInterface
+    {
+        return $this->validUntil;
     }
 }

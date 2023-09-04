@@ -1,12 +1,12 @@
 <?php
-
-declare(strict_types=1);
 /*
  * (c) WEBiDEA
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6;
 
@@ -25,6 +25,7 @@ use Tilta\Sdk\HttpClient\TiltaClient;
 use Tilta\TiltaPaymentSW6\Administration\TiltaAdministrationBundle;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\AbstractBootstrap;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\Database;
+use Tilta\TiltaPaymentSW6\Core\Bootstrap\PaymentMethods;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\PluginConfig;
 use Tilta\TiltaPaymentSW6\Core\TiltaCoreBundle;
 use Tilta\TiltaPaymentSW6\Storefront\TiltaStorefrontBundle;
@@ -141,6 +142,7 @@ class TiltaPaymentSW6 extends Plugin
         $bootstrapper = [
             new Database(),
             new PluginConfig(),
+            new PaymentMethods(),
         ];
 
         /** @var EntityRepository $pluginRepository */

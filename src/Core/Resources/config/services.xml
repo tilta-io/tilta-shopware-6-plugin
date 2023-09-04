@@ -6,23 +6,54 @@
     <imports>
         <import resource="models.xml"/>
         <import resource="sdk.xml"/>
+        <import resource="subscriber.xml"/>
+        <import resource="controllers.xml"/>
     </imports>
 
     <services>
         <defaults autowire="true" />
 
+        <service id="tilta.default-logger" class="Monolog\Logger">
+            <argument type="string">tilta-payment</argument>
+            <factory service="Shopware\Core\Framework\Log\LoggerFactory" method="createRotating"/>
+        </service>
+
         <service id="Tilta\TiltaPaymentSW6\Core\Service\LegalFormService" />
         <service id="Tilta\TiltaPaymentSW6\Core\Service\BuyerService" />
-        <service id="Tilta\TiltaPaymentSW6\Core\Service\FacilityService" />
-
-
-        <service id="Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute">
-            <argument key="$addressRepository" type="service" id="customer_address.repository" />
-            <argument key="$salutationRepository" type="service" id="salutation.repository" />
+        <service id="Tilta\TiltaPaymentSW6\Core\Service\FacilityService" >
+            <argument key="$tiltaDataRepository" type="service" id="tilta_address_data.repository" />
         </service>
+        <service id="Tilta\TiltaPaymentSW6\Core\Service\ConfigService" />
+        <service id="Tilta\TiltaPaymentSW6\Core\Service\PaymentTermsService" />
 
         <service id="Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute">
             <argument key="$listAddressRoute" type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\ListAddressRoute" />
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Routes\PaymentMethodRoute"
+                 decorates="Shopware\Core\Checkout\Payment\SalesChannel\PaymentMethodRoute">
+            <argument key="$innerService" type="service" id="Tilta\TiltaPaymentSW6\Core\Routes\PaymentMethodRoute.inner"/>
+            <argument key="$requestStack" type="service" id="request_stack"/>
+            <argument key="$orderRepository" type="service" id="order.repository"/>
+            <argument key="$contextSwitchRoute" type="service" id="Shopware\Core\System\SalesChannel\SalesChannel\ContextSwitchRoute"/>
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Routes\BuyerRequestFormDataRoute">
+            <argument key="$salutationRoute" type="service" id="Shopware\Core\System\Salutation\SalesChannel\SalutationRoute"/>
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Routes\TiltaCheckoutDataRoute" />
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper">
+            <argument key="$addressRepository" type="service" id="customer_address.repository"/>
+            <argument key="$orderAddressRepository" type="service" id="order_address.repository"/>
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Util\EntityHelper" />
+
+        <service id="Tilta\TiltaPaymentSW6\Core\PaymentHandler\TiltaDefaultPaymentHandler">
+            <argument key="$logger" type="service" id="tilta.default-logger"/>
+            <tag name="shopware.payment.method.sync"/>
         </service>
 
     </services>

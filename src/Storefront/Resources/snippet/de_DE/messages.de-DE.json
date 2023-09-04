@@ -33,6 +33,11 @@
 			"facility": {
 				"unknown-error": "Es ist ein unbekannter Fehler beim Anfragen des Kreditverfügungsrahmen aufgetreten. Bitte wenden Sie sich an den Kundenservice.",
 				"created-successfully": "Der Kreditverfügungsrahmen wurde erfolgreich erstellt."
+			},
+			"checkout": {
+				"unknown-error": "Leider können Sie diese Zahlungsart nicht nutzen. Wenden Sie sich bitte an den Kundenservice.",
+				"facility-exceeded": "Ihr Kreditrahmen ist momentan ausgeschöpft. Bevor Sie erneut auf Rechnung bestellen können, begleichen Sie bitte Ihre offenen Rechnungen. Bei Fragen oder Unklarheiten steht Ihnen unser Kundenservice gerne zur Verfügung.",
+				"facility-too-low": "Ihr Kreditrahmen reicht derzeit nicht aus, um diese Bestellung durchzuführen. Bitte überprüfen und passen Sie Ihre Bestellung oder Zahlungsmethode entsprechend an. Bei Fragen oder Unterstützungsbedarf wenden Sie sich bitte an unseren Kundenservice."
 			}
 		},
 		"legalForms": {
@@ -50,6 +55,13 @@
 			"OHG": "Offene Handelsgesellschaft",
 			"PRIVATE_PERSON": "Privatperson",
 			"UG": "Unternehmergesellschaft (haftungsbeschränkt)"
+		},
+		"checkout": {
+			"title": "Tilta Rechnungskauf",
+			"informationAboutDuration": "Nach dem wir Ihre Bestellung versandt haben, haben Sie einen Zeitraum von %duration Tagen, um den ausstehenden Betrag zu begleichen.",
+			"buyerRegistration": {
+				"intro": "Um diese Zahlungsart zu nutzen, bitten wir Sie, einen Kreditverfügbarkeitsrahmen beim Zahlungsdienstleister Tilta Fintech GmbH anzufragen. Nach erfolgreicher Anfrage können Sie mit Ihrer Bestellung fortfahren."
+			}
 		}
 	}
 }

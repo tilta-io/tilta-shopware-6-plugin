@@ -47,10 +47,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "tilta-io/tilta-php-sdk": "dev-dev",
-        "shopware/core": "^6.4.10",
-        "shopware/administration": "^6.4.10",
-        "shopware/storefront": "^6.4.10"
+        "tilta-io/tilta-php-sdk": "dev-dev"
     },
     "scripts": {
         "rector-fix": "./vendor/bin/rector process --clear-cache",

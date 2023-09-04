@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /*
  * (c) WEBiDEA
  *
@@ -8,10 +6,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Tilta\TiltaPaymentSW6\Storefront\Controller;
 
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
+use Shopware\Core\Checkout\Customer\Exception\AddressNotFoundException;
 use Shopware\Core\Checkout\Customer\SalesChannel\AbstractListAddressRoute;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -113,16 +114,10 @@ class AccountFacilityController extends StorefrontController
     /**
      * @Route(name="frontend.account.tilta.credit-facility.requestForm.post", path="/request/{addressId}", methods={"POST"})
      */
-    public function requestFacilityPost(RequestDataBag $requestData, SalesChannelContext $context, string $addressId): Response
+    public function requestFacilityPost(RequestDataBag $requestData, CustomerEntity $customerEntity, string $addressId): Response
     {
-        $address = $this->getAddressOrRedirect($context, $addressId);
-
-        if ($address instanceof Response) {
-            return $address;
-        }
-
         try {
-            $response = $this->createFacilityRoute->requestFacilityPost($requestData, $address);
+            $response = $this->createFacilityRoute->requestFacilityPost($requestData, $customerEntity, $addressId);
         } catch (ConstraintViolationException $constraintViolationException) {
             return $this->forwardToRoute(
                 'frontend.account.tilta.credit-facility.requestForm',
@@ -133,10 +128,17 @@ class AccountFacilityController extends StorefrontController
                     'addressId' => $addressId,
                 ]
             );
+        } catch (AddressNotFoundException $addressNotFoundException) {
+            return $this->handleAddressNotFound();
         }
 
         if ($response instanceof SuccessResponse) {
             $this->addFlash('success', $this->trans('tilta.messages.facility.created-successfully'));
+
+            $backTo = $requestData->get('backTo');
+            if (is_string($backTo)) {
+                return $this->redirect($backTo);
+            }
 
             return $this->redirectToRoute('frontend.account.tilta.credit-facility.list');
         }
@@ -150,6 +152,13 @@ class AccountFacilityController extends StorefrontController
                 'addressId' => $addressId,
             ]
         );
+    }
+
+    private function handleAddressNotFound(): Response
+    {
+        $this->addFlash('danger', $this->trans('tilta.messages.address-does-not-exist'));
+
+        return $this->redirectToRoute('frontend.account.tilta.credit-facility.list');
     }
 
     /**

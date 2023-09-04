@@ -1,5 +1,11 @@
 {% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
 
+{% block page_account_sidebar %}
+    {% if not app.request.get('backTo') %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
 {% block page_account_main_content %}
     <div class="account-tilta-credit-facilities">
         {% block page_account_tcf_welcome %}
@@ -25,6 +31,11 @@
                       action="{{ path('frontend.account.tilta.credit-facility.requestForm.post', {'addressId': page.address.id}) }}"
                       data-form-csrf-handler="true"
                       data-form-validation="true">
+
+                    {% if app.request.get('backTo') %}
+                        <input type="hidden" name="backTo" value="{{ app.request.get('backTo') }}"/>
+                    {% endif %}
+
                     {% sw_include '@TiltaPaymentSW6/storefront/component/buyer-fields.html.twig' %}
 
                     {% block page_account_tcf_create_action_buttons %}

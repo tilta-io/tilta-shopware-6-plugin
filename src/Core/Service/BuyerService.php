@@ -1,12 +1,12 @@
 <?php
-
-declare(strict_types=1);
 /*
  * (c) WEBiDEA
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\Service;
 
@@ -17,6 +17,7 @@ use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEnt
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\Country\CountryEntity;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,6 +37,7 @@ use Tilta\Sdk\Util\AddressHelper;
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
+use Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper;
 
 class BuyerService
 {
@@ -63,13 +65,21 @@ class BuyerService
         $this->configService = $configService;
     }
 
+    /**
+     * @return string|null the save buyer external id within the customer address
+     * this method will not generate a buyer external id, if no buyer external ID has been set up.
+     * Please use method `generateBuyerExternalId` to generate a buyer-external-id
+     */
+    public static function getBuyerExternalId(CustomerAddressEntity $address): ?string
+    {
+        $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
+
+        return $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getBuyerExternalId() : null;
+    }
+
     public static function generateBuyerExternalId(CustomerAddressEntity $address): string
     {
-        $externalId = null;
-        $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
-        if ($tiltaData instanceof TiltaCustomerAddressDataEntity) {
-            $externalId = $tiltaData->getBuyerExternalId();
-        }
+        $externalId = static::getBuyerExternalId($address);
 
         // added for PHPStan: customer is always loaded
         /** @var CustomerEntity $customer */
@@ -89,12 +99,12 @@ class BuyerService
             ],
         ], $context);
 
-        if (is_string($data['incorporatedAt']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['incorporatedAt'])) {
+        if (is_string($data['incorporatedAt']) && preg_match('#^\d{4}-\d{2}-\d{2}$#', $data['incorporatedAt'])) {
             $incorporatedAt = DateTime::createFromFormat('Y-m-d', $data['incorporatedAt']);
         } elseif ($data['incorporatedAt'] instanceof DateTimeInterface) {
             $incorporatedAt = $data['incorporatedAt'];
         } else {
-            throw new RuntimeException('incorporatedAt have to a datetime or a date formatted as Y-m-d');
+            throw new RuntimeException('incorporatedAt have to be a datetime or a date formatted as Y-m-d');
         }
 
         $this->tiltaAddressDataRepository->upsert([
@@ -119,7 +129,7 @@ class BuyerService
             /** @var GetBuyerDetailsRequest $buyerRequest */
             $buyerRequest = $this->container->get(GetBuyerDetailsRequest::class);
 
-            return $buyerRequest->execute(new GetBuyerDetailsRequestModel($buyerExternalId));
+            $buyer = $buyerRequest->execute(new GetBuyerDetailsRequestModel($buyerExternalId));
         } catch (BuyerNotFoundException $buyerNotFoundException) {
             $buyerRequestModel = $this->createCreateBuyerRequestModel($address);
 
@@ -128,15 +138,17 @@ class BuyerService
 
             $createBuyerRequest->execute($buyerRequestModel);
 
-            $this->tiltaAddressDataRepository->upsert([
-                [
-                    TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID => $address->getId(),
-                    TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => $buyerExternalId,
-                ],
-            ], Context::createDefaultContext());
-
-            return $buyerRequestModel;
+            $buyer = $buyerRequestModel;
         }
+
+        $this->tiltaAddressDataRepository->upsert([
+            [
+                TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID => $address->getId(),
+                TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => $buyer->getBuyerExternalId(),
+            ],
+        ], Context::createDefaultContext());
+
+        return $buyer;
     }
 
     public function updateBuyer(CustomerAddressEntity $address): void
@@ -205,6 +217,14 @@ class BuyerService
         }
     }
 
+    public function isCustomerValidTiltaBuyer(CustomerAddressEntity $customerAddress): bool
+    {
+        /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
+        $tiltaData = $this->tiltaAddressDataRepository->search(new Criteria([$customerAddress->getId()]), Context::createDefaultContext())->first();
+
+        return $tiltaData instanceof TiltaCustomerAddressDataEntity && $tiltaData->getBuyerExternalId();
+    }
+
     private function getMappedSalutationFromAddress(CustomerAddressEntity $addressEntity): string
     {
         $salutationId = $addressEntity->getSalutationId();
@@ -265,7 +285,7 @@ class BuyerService
             ->setIncorporatedAt($tiltaData->getIncorporatedAt())
             ->setBusinessAddress(
                 (new Address())
-                    ->setAdditional($address->getAdditionalAddressLine1()) // TODO merge with line 2?
+                    ->setAdditional(CustomerAddressHelper::mergeAdditionalAddressLines($address))
                     ->setStreet((string) AddressHelper::getStreetName($address->getStreet()))
                     ->setHouseNumber((string) AddressHelper::getHouseNumber($address->getStreet()))
                     ->setCity($address->getCity())

@@ -15,6 +15,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\DateField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\IntField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
@@ -38,6 +39,8 @@ class TiltaCustomerAddressDataDefinition extends EntityDefinition
             (new StringField('legal_form', TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM))->addFlags(new Required()),
             (new StringField('buyer_external_id', TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID)),
             (new DateField('incorporated_at', TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT))->addFlags(new Required()),
+            (new DateField('valid_until', TiltaCustomerAddressDataEntity::FIELD_VALID_UNTIL)),
+            (new IntField('total_amount', TiltaCustomerAddressDataEntity::FIELD_TOTAL_AMOUNT)),
         ]);
     }
 
