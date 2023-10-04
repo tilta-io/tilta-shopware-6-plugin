@@ -11,11 +11,11 @@
             <tag name="shopware.entity.definition" />
         </service>
 
-        <service id="Tilta\TiltaPaymentSW6\Core\Extension\OrderTransactionEntityExtension">
+        <service id="Tilta\TiltaPaymentSW6\Core\Extension\OrderDataEntityExtension">
             <tag name="shopware.entity.extension"/>
         </service>
 
-        <service id="Tilta\TiltaPaymentSW6\Core\Extension\Definition\TiltaOrderTransactionDataDefinition">
+        <service id="Tilta\TiltaPaymentSW6\Core\Extension\Definition\TiltaOrderDataDefinition">
             <tag name="shopware.entity.definition" />
         </service>
     </services>

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Tilta\TiltaPaymentSW6\Core\Util;
 
 use RuntimeException;
+use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
@@ -25,12 +26,16 @@ class EntityHelper
 
     private EntityRepository $countryRepository;
 
+    private EntityRepository $orderAddressRepository;
+
     public function __construct(
         EntityRepository $currencyRepository, // resolved by exact name
-        EntityRepository $countryRepository // resolved by exact name
+        EntityRepository $countryRepository,  // resolved by exact name
+        EntityRepository $orderAddressRepository // resolved by exact name
     ) {
         $this->currencyRepository = $currencyRepository;
         $this->countryRepository = $countryRepository;
+        $this->orderAddressRepository = $orderAddressRepository;
     }
 
     /**
@@ -55,8 +60,9 @@ class EntityHelper
 
     /**
      * @internal
+     * @param CustomerAddressEntity|OrderAddressEntity $addressEntity
      */
-    public function getCountryCode(OrderAddressEntity $addressEntity): ?string
+    public function getCountryCode($addressEntity): ?string
     {
         if ($addressEntity->getCountry() instanceof CountryEntity) {
             $country = $addressEntity->getCountry();
@@ -71,5 +77,10 @@ class EntityHelper
 
         // should never occur.
         throw new RuntimeException('Country for order-address `' . $addressEntity->getId() . '` does not exist (anymore).');
+    }
+
+    public function getOrderAddress(string $addressId): ?OrderAddressEntity
+    {
+        return $this->orderAddressRepository->search(new Criteria([$addressId]), Context::createDefaultContext())->first();
     }
 }

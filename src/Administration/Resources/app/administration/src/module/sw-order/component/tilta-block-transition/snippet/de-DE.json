@@ -1,0 +1,9 @@
+{
+    "tilta": {
+        "transition": {
+            "errors": {
+                "invoiceNumberMissing": "Der Lieferstatus kann nicht geändert werden, solange noch keine Rechnungsnummer hinterlegt ist! Erstelle eine Rechnung, oder hinterlege die externen Rechnungsdetails im Tab 'Tilta Zahlung'."
+            }
+        }
+    }
+}

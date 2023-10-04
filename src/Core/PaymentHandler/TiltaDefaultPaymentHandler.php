@@ -16,6 +16,7 @@ use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandler
 use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Exception\SyncPaymentProcessException;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidationDefinition;
 use Shopware\Core\Framework\Validation\DataValidator;
@@ -29,7 +30,7 @@ use Tilta\Sdk\Service\Request\Order\CreateOrderRequest;
 use Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\CreateOrderRequestModelFactory;
 use Tilta\TiltaPaymentSW6\Core\Event\TiltaPaymentFailedEvent;
 use Tilta\TiltaPaymentSW6\Core\Event\TiltaPaymentSuccessfulEvent;
-use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaOrderTransactionDataEntity as TransactionExtension;
+use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaOrderDataEntity as TransactionExtension;
 
 class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, TiltaPaymentMethod
 {
@@ -37,7 +38,7 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
 
     private CreateOrderRequestModelFactory $requestModelFactory;
 
-    private EntityRepository $tiltaOrderTransactionRepository;
+    private EntityRepository $tiltaOrderDataRepository;
 
     private LoggerInterface $logger;
 
@@ -48,14 +49,14 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
     public function __construct(
         CreateOrderRequest $createOrderRequest,
         CreateOrderRequestModelFactory $requestModelFactory,
-        EntityRepository $tiltaOrderTransactionRepository,
+        EntityRepository $tiltaOrderDataRepository,
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         DataValidator $dataValidator
     ) {
         $this->createOrderRequest = $createOrderRequest;
         $this->requestModelFactory = $requestModelFactory;
-        $this->tiltaOrderTransactionRepository = $tiltaOrderTransactionRepository;
+        $this->tiltaOrderDataRepository = $tiltaOrderDataRepository;
         $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
         $this->dataValidator = $dataValidator;
@@ -96,9 +97,11 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
         }
 
         try {
-            $this->tiltaOrderTransactionRepository->upsert([
+            $this->tiltaOrderDataRepository->upsert([
                 [
-                    TransactionExtension::FIELD_ORDER_TRANSACTION_ID => $transaction->getOrderTransaction()->getId(),
+                    TransactionExtension::FIELD_ID => Uuid::randomHex(),
+                    TransactionExtension::FIELD_ORDER_ID => $orderEntity->getId(),
+                    TransactionExtension::FIELD_ORDER_VERSION_ID => $orderEntity->getVersionId(),
                     TransactionExtension::FIELD_ORDER_EXTERNAL_ID => $responseModel->getOrderExternalId(),
                     TransactionExtension::FIELD_MERCHANT_EXTERNAL_ID => $responseModel->getMerchantExternalId(),
                     TransactionExtension::FIELD_BUYER_EXTERNAL_ID => $responseModel->getBuyerExternalId(),

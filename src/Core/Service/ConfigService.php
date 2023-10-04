@@ -52,4 +52,33 @@ class ConfigService
 
         return $this->systemConfigService->getString('TiltaPaymentSW6.config.liveApiMerchantExternalId');
     }
+
+    public function getStateForShip(): ?string
+    {
+        return $this->getNullableString('stateShipped');
+    }
+
+    public function getStateCancel(): ?string
+    {
+        return $this->getNullableString('stateCanceled');
+    }
+
+    public function getStateReturn(): ?string
+    {
+        return $this->getNullableString('stateReturned');
+    }
+
+    public function isStateWatchingEnabled(): bool
+    {
+        return $this->systemConfigService->getBool('TiltaPaymentSW6.config.stateEnabled');
+    }
+
+    private function getNullableString(string $key): ?string
+    {
+        try {
+            return $this->systemConfigService->getString('TiltaPaymentSW6.config.' . $key);
+        } catch (InvalidSettingValueException $invalidSettingValueException) {
+            return null;
+        }
+    }
 }
