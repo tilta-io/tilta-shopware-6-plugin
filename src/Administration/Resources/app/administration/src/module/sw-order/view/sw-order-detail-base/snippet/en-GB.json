@@ -1,0 +1,26 @@
+{
+	"tilta": {
+		"orderData": {
+			"cart": {
+				"title": "Tilta Payment"
+			},
+			"fields": {
+				"status": {
+					"label": "Status"
+				},
+				"orderExternalId": {
+					"label": "External Order-ID"
+				},
+				"buyerExternalId": {
+					"label": "External Buyer-ID"
+				},
+				"invoiceNumber": {
+					"label": "Invoice number"
+				},
+				"invoiceExternalId": {
+					"label": "Invoice ID"
+				}
+			}
+		}
+	}
+}
