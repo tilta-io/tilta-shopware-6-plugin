@@ -1,0 +1,46 @@
+{% sw_extends '@Storefront/storefront/component/address/address-form.html.twig' %}
+
+{#
+    Workaround: phoneNumber is always required, but we are not able to override the config-flag within the original block
+    So we have copied the whole block-content within the config-check and set all fields to required.
+    maybe got improved in the future. Keep on track, if you override this template.
+#}
+{% block component_address_form_phone_number %}
+    {% set hasTiltaExternalBuyerId = data.extensions and data.extensions.tiltaData and data.extensions.tiltaData.buyerExternalId is not null %}
+    {% if config('core.loginRegistration.showPhoneNumberField') or not hasTiltaExternalBuyerId %}
+        {{ parent }}
+    {% else %}
+        {% block component_address_form_phone_number_tilta_override %}
+            <div class="form-group col-md-6">
+                {% if formViolations.getViolations("/phoneNumber") is not empty %}
+                    {% set violationPath = "/phoneNumber" %}
+                {% elseif formViolations.getViolations("/#{prefix}/phoneNumber") is not empty %}
+                    {% set violationPath = "/#{prefix}/phoneNumber" %}
+                {% endif %}
+
+                {% block component_address_form_phone_number_label %}
+                    <label class="form-label"
+                           for="{{ idPrefix ~ prefix }}AddressPhoneNumber">
+                        {{ "address.phoneNumberLabel"|trans|sw_sanitize }}{{ "general.required"|trans|sw_sanitize }}
+                    </label>
+                {% endblock %}
+
+                {% block component_address_form_phone_number_input %}
+                    <input type="text"
+                           class="form-control"
+                           id="{{ idPrefix ~ prefix }}AddressPhoneNumber"
+                           placeholder="{{ "address.phoneNumberPlaceholder"|trans|striptags }}"
+                           name="{{ prefix }}[phoneNumber]"
+                           value="{{ data.get('phoneNumber') }}"
+                           required>
+                {% endblock %}
+
+                {% block component_address_form_phone_error %}
+                    {% if violationPath %}
+                        {% sw_include '@Storefront/storefront/utilities/form-violation.html.twig' %}
+                    {% endif %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    {% endif %}
+{% endblock %}

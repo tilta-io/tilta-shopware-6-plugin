@@ -12,6 +12,7 @@ namespace Tilta\TiltaPaymentSW6\Core\Util;
 
 use RuntimeException;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
+use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
@@ -28,14 +29,18 @@ class EntityHelper
 
     private EntityRepository $orderAddressRepository;
 
+    private EntityRepository $customerRepository;
+
     public function __construct(
-        EntityRepository $currencyRepository, // resolved by exact name
-        EntityRepository $countryRepository,  // resolved by exact name
-        EntityRepository $orderAddressRepository // resolved by exact name
+        EntityRepository $currencyRepository,     // resolved by exact name
+        EntityRepository $countryRepository,      // resolved by exact name
+        EntityRepository $orderAddressRepository, // resolved by exact name
+        EntityRepository $customerRepository // resolved by exact name
     ) {
         $this->currencyRepository = $currencyRepository;
         $this->countryRepository = $countryRepository;
         $this->orderAddressRepository = $orderAddressRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -59,8 +64,8 @@ class EntityHelper
     }
 
     /**
-     * @internal
      * @param CustomerAddressEntity|OrderAddressEntity $addressEntity
+     * @internal
      */
     public function getCountryCode($addressEntity): ?string
     {
@@ -82,5 +87,20 @@ class EntityHelper
     public function getOrderAddress(string $addressId): ?OrderAddressEntity
     {
         return $this->orderAddressRepository->search(new Criteria([$addressId]), Context::createDefaultContext())->first();
+    }
+
+    public function getCustomerFromAddress(CustomerAddressEntity $customerAddressEntity): CustomerEntity
+    {
+        if ($customerAddressEntity->getCustomer() instanceof CustomerEntity) {
+            return $customerAddressEntity->getCustomer();
+        }
+
+        $customer = $this->customerRepository->search(new Criteria([$customerAddressEntity->getCustomerId()]), Context::createDefaultContext())->first();
+        if (!$customer) {
+            // should never occur, because an address can not exist without a customer
+            throw new RuntimeException('customer can not be found for address');
+        }
+
+        return $customer;
     }
 }
