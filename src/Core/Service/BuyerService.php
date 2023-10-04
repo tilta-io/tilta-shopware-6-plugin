@@ -18,7 +18,6 @@ use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\System\Country\CountryEntity;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,18 +25,17 @@ use Tilta\Sdk\Exception\GatewayException\NotFoundException\BuyerNotFoundExceptio
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\Sdk\Model\Address;
 use Tilta\Sdk\Model\Buyer;
-use Tilta\Sdk\Model\BuyerRepresentative;
+use Tilta\Sdk\Model\ContactPerson;
 use Tilta\Sdk\Model\Request\Buyer\CreateBuyerRequestModel;
 use Tilta\Sdk\Model\Request\Buyer\GetBuyerDetailsRequestModel;
 use Tilta\Sdk\Model\Request\Buyer\UpdateBuyerRequestModel;
 use Tilta\Sdk\Service\Request\Buyer\CreateBuyerRequest;
 use Tilta\Sdk\Service\Request\Buyer\GetBuyerDetailsRequest;
 use Tilta\Sdk\Service\Request\Buyer\UpdateBuyerRequest;
-use Tilta\Sdk\Util\AddressHelper;
+use Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\AddressModelFactory;
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
-use Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper;
 
 class BuyerService
 {
@@ -51,18 +49,22 @@ class BuyerService
 
     private SystemConfigService $configService;
 
+    private AddressModelFactory $addressModelFactory;
+
     public function __construct(
         EntityRepository $customerAddressRepository,
         EntityRepository $tiltaAddressDataRepository,
         TranslatorInterface $translator,
         ContainerInterface $container,
-        SystemConfigService $configService
+        SystemConfigService $configService,
+        AddressModelFactory $addressModelFactory,
     ) {
         $this->customerAddressRepository = $customerAddressRepository;
         $this->tiltaAddressDataRepository = $tiltaAddressDataRepository;
         $this->translator = $translator;
         $this->container = $container;
         $this->configService = $configService;
+        $this->addressModelFactory = $addressModelFactory;
     }
 
     /**
@@ -278,26 +280,18 @@ class BuyerService
         }
 
         $requestModel
-            ->setLegalName($address->getCompany())
+            ->setLegalName($address->getCompany() ?: '')
             ->setTradingName($address->getCompany())
             ->setLegalForm($tiltaData->getLegalForm())
             ->setRegisteredAt($customer->getCreatedAt() ?? new DateTime()) // should be always set.
             ->setIncorporatedAt($tiltaData->getIncorporatedAt())
-            ->setBusinessAddress(
-                (new Address())
-                    ->setAdditional(CustomerAddressHelper::mergeAdditionalAddressLines($address))
-                    ->setStreet((string) AddressHelper::getStreetName($address->getStreet()))
-                    ->setHouseNumber((string) AddressHelper::getHouseNumber($address->getStreet()))
-                    ->setCity($address->getCity())
-                    ->setPostcode((string) $address->getZipcode())
-                    ->setCountry($address->getCountry() instanceof CountryEntity ? (string) $address->getCountry()->getIso() : 'DE')
-            )
+            ->setBusinessAddress($this->addressModelFactory->createFromCustomerAddress($address))
             ->setCustomData([
                 'source' => 'Shopware',
             ]);
 
-        $requestModel->setRepresentatives([
-            (new BuyerRepresentative())
+        $requestModel->setContactPersons([
+            (new ContactPerson())
                 ->setSalutation($this->getMappedSalutationFromAddress($address))
                 ->setFirstName($address->getFirstname())
                 ->setLastName($address->getLastname())
