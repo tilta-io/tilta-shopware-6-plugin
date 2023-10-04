@@ -36,6 +36,7 @@ use Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\AddressModelFac
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
+use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
 class BuyerService
 {
@@ -51,6 +52,8 @@ class BuyerService
 
     private AddressModelFactory $addressModelFactory;
 
+    private EntityHelper $entityHelper;
+
     public function __construct(
         EntityRepository $customerAddressRepository,
         EntityRepository $tiltaAddressDataRepository,
@@ -58,6 +61,7 @@ class BuyerService
         ContainerInterface $container,
         SystemConfigService $configService,
         AddressModelFactory $addressModelFactory,
+        EntityHelper $entityHelper
     ) {
         $this->customerAddressRepository = $customerAddressRepository;
         $this->tiltaAddressDataRepository = $tiltaAddressDataRepository;
@@ -65,6 +69,7 @@ class BuyerService
         $this->container = $container;
         $this->configService = $configService;
         $this->addressModelFactory = $addressModelFactory;
+        $this->entityHelper = $entityHelper;
     }
 
     /**
@@ -262,9 +267,7 @@ class BuyerService
         /** @var TiltaCustomerAddressDataEntity $tiltaData */ // is never null, cause validated in `validateAdditionalData`
         $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
 
-        // added for PHPStan: customer is always loaded
-        /** @var CustomerEntity $customer */
-        $customer = $address->getCustomer();
+        $customer = $this->entityHelper->getCustomerFromAddress($address);
 
         $buyerExternalId = self::generateBuyerExternalId($address);
         switch ($class) {
@@ -282,7 +285,7 @@ class BuyerService
         $requestModel
             ->setLegalName($address->getCompany() ?: '')
             ->setTradingName($address->getCompany())
-            ->setLegalForm($tiltaData->getLegalForm())
+            ->setLegalForm('DE_' . $tiltaData->getLegalForm())
             ->setRegisteredAt($customer->getCreatedAt() ?? new DateTime()) // should be always set.
             ->setIncorporatedAt($tiltaData->getIncorporatedAt())
             ->setBusinessAddress($this->addressModelFactory->createFromCustomerAddress($address))
