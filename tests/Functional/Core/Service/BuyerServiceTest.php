@@ -21,10 +21,12 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tilta\Sdk\Model\Request\Buyer\CreateBuyerRequestModel;
 use Tilta\Sdk\Model\Request\Buyer\UpdateBuyerRequestModel;
+use Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\AddressModelFactory;
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
 use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
+use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
 class BuyerServiceTest extends TestCase
 {
@@ -61,6 +63,8 @@ class BuyerServiceTest extends TestCase
             $this->getContainer()->get('translator'),
             $this->createMock(ContainerInterface::class),
             $this->createMock(SystemConfigService::class),
+            $this->getContainer()->get(AddressModelFactory::class),
+            $this->getContainer()->get(EntityHelper::class)
         );
 
         $this->expectException(MissingBuyerInformationException::class);
@@ -75,6 +79,8 @@ class BuyerServiceTest extends TestCase
             $this->getContainer()->get('translator'),
             $this->createMock(ContainerInterface::class),
             $this->createMock(SystemConfigService::class),
+            $this->getContainer()->get(AddressModelFactory::class),
+            $this->getContainer()->get(EntityHelper::class)
         );
 
         $buyerService->validateAdditionalData($this->getValidAddress());
@@ -93,6 +99,8 @@ class BuyerServiceTest extends TestCase
             $this->getContainer()->get('translator'),
             $this->createMock(ContainerInterface::class),
             $this->createMock(SystemConfigService::class),
+            $this->getContainer()->get(AddressModelFactory::class),
+            $this->getContainer()->get(EntityHelper::class)
         );
 
         $address = $this->getValidAddress();
@@ -129,6 +137,8 @@ class BuyerServiceTest extends TestCase
             $this->getContainer()->get('translator'),
             $this->createMock(ContainerInterface::class),
             $this->createMock(SystemConfigService::class),
+            $this->getContainer()->get(AddressModelFactory::class),
+            $this->getContainer()->get(EntityHelper::class)
         );
         $customerAddressRepositoryMock->expects($this->once())->method('upsert');
         $tiltaDataRepositoryMock->expects($this->once())->method('upsert');
@@ -173,6 +183,8 @@ class BuyerServiceTest extends TestCase
             $this->getContainer()->get('translator'),
             $this->createMock(ContainerInterface::class),
             $configServiceMock = $this->createMock(SystemConfigService::class),
+            $this->getContainer()->get(AddressModelFactory::class),
+            $this->getContainer()->get(EntityHelper::class)
         );
         $configServiceMock->method('get')->willReturnMap([
             'TiltaPaymentSW6.config.salutationMale', null, 'salutation-id-male',
@@ -195,6 +207,8 @@ class BuyerServiceTest extends TestCase
             $this->getContainer()->get('translator'),
             $this->createMock(ContainerInterface::class),
             $configServiceMock = $this->createMock(SystemConfigService::class),
+            $this->getContainer()->get(AddressModelFactory::class),
+            $this->getContainer()->get(EntityHelper::class)
         );
         $configServiceMock->method('get')->willReturnMap([
             'TiltaPaymentSW6.config.salutationMale', null, 'salutation-id-male',
