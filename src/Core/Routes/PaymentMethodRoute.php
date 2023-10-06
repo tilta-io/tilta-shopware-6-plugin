@@ -15,6 +15,7 @@ use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
+use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
 use Shopware\Core\Checkout\Payment\SalesChannel\AbstractPaymentMethodRoute;
 use Shopware\Core\Checkout\Payment\SalesChannel\PaymentMethodRouteResponse;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -138,9 +139,12 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
         }
 
         if (PaymentMethodHelper::isTiltaPaymentMethod($context->getPaymentMethod())) {
-            $this->contextSwitchRoute->switchContext(new RequestDataBag([
-                SalesChannelContextService::PAYMENT_METHOD_ID => $response->getPaymentMethods()->first()->getId(),
-            ]), $context);
+            $newPaymentMethod = $response->getPaymentMethods()->first();
+            if ($newPaymentMethod instanceof PaymentMethodEntity) {
+                $this->contextSwitchRoute->switchContext(new RequestDataBag([
+                    SalesChannelContextService::PAYMENT_METHOD_ID => $newPaymentMethod->getId(),
+                ]), $context);
+            }
         }
 
         return $response;
