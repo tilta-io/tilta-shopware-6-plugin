@@ -26,7 +26,7 @@ class PaymentMethods extends AbstractBootstrap
             'handlerIdentifier' => TiltaDefaultPaymentHandler::class,
             'name' => 'Tilta Invoice',
             'description' => 'Todo',
-            'afterOrderEnabled' => false,
+            'afterOrderEnabled' => true,
             'translations' => [
                 'de-DE' => [
                     'name' => 'Tilta Rechnungskauf',
