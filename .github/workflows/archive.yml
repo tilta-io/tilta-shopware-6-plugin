@@ -16,6 +16,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+        ######## TEMPORARY ########
+        ## util sdk got released ##
+        ######## TEMPORARY ########
+      - run: |
+          composer config prefer-stable true
+          composer config minimum-stability dev
+
+      -   uses: webfactory/ssh-agent@v0.8.0
+          with:
+              ssh-private-key: ${{ secrets.SDK_ACCESS_TOKEN }}
+
+      -   run: |
+              composer req tilta-io/tilta-php-sdk:9999999-dev --no-update
+              composer config repositories.github-sdk '{ "type": "vcs", "url": "https://github.com/tilta-io/tilta-php-sdk/"}'
+
+      -   working-directory: ${{ env.MODULE_DIR }}
+          run: |
+              composer config repositories.github-sdk '{ "type": "vcs", "url": "https://github.com/tilta-io/tilta-php-sdk/"}'
+
+        ######## TEMPORARY ########
+        ########    END    ########
+        ######## TEMPORARY ########
+
       - uses: actions/setup-go@v4
 
       - run: go install github.com/FriendsOfShopware/shopware-cli@latest
