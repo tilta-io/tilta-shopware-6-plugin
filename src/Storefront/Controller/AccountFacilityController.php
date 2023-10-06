@@ -17,24 +17,18 @@ use Shopware\Core\Checkout\Customer\SalesChannel\AbstractListAddressRoute;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
-use Shopware\Core\Framework\Struct\ArrayStruct;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
-use Shopware\Core\System\Salutation\SalesChannel\AbstractSalutationRoute;
-use Shopware\Core\System\Salutation\SalutationCollection;
-use Shopware\Core\System\Salutation\SalutationEntity;
 use Shopware\Storefront\Controller\StorefrontController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
-use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
+use Tilta\TiltaPaymentSW6\Core\Routes\AbstractBuyerRequestFormDataRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute;
-use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
 
 /**
  * @Route(path="/account/credit-facilities", defaults={"_loginRequired"=true, "_routeScope"={"storefront"}})
@@ -43,26 +37,22 @@ class AccountFacilityController extends StorefrontController
 {
     private AbstractListAddressRoute $listAddressRoute;
 
-    private AbstractSalutationRoute $salutationRoute;
-
-    private LegalFormService $legalFormService;
-
     private CreateFacilityRoute $createFacilityRoute;
 
     private GetAddressesWithFacilityRoute $addressesWithFacilityRoute;
 
+    private AbstractBuyerRequestFormDataRoute $buyerRequestFormDataRoute;
+
     public function __construct(
         AbstractListAddressRoute $listAddressRoute,
-        AbstractSalutationRoute $salutationRoute,
-        LegalFormService $legalFormService,
         CreateFacilityRoute $createFacilityRoute,
-        GetAddressesWithFacilityRoute $addressesWithFacilityRoute
+        GetAddressesWithFacilityRoute $addressesWithFacilityRoute,
+        AbstractBuyerRequestFormDataRoute $buyerRequestFormDataRoute
     ) {
         $this->listAddressRoute = $listAddressRoute;
-        $this->salutationRoute = $salutationRoute;
-        $this->legalFormService = $legalFormService;
         $this->createFacilityRoute = $createFacilityRoute;
         $this->addressesWithFacilityRoute = $addressesWithFacilityRoute;
+        $this->buyerRequestFormDataRoute = $buyerRequestFormDataRoute;
     }
 
     /**
@@ -91,24 +81,9 @@ class AccountFacilityController extends StorefrontController
             return $address;
         }
 
-        /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
-        $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
+        $data = $this->buyerRequestFormDataRoute->getRequestFormData(new RequestDataBag($request->request->all()), $context, $address);
 
-        return $this->render('@TiltaStorefront/storefront/page/account/tilta-credit-facilities/request-form.html.twig', [
-            'page' => [
-                'address' => $address,
-                'salutations' => $this->getSalutations($context),
-                'legalForms' => $this->legalFormService->getLegalForms(),
-            ],
-            'data' => new ArrayStruct([
-                'salutationId' => $request->get('salutationId', $address->getSalutationId()),
-                'phoneNumber' => $request->get('phoneNumber', $address->getPhoneNumber()),
-                'legalForm' => $request->get('legalForm', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getLegalForm() : null),
-                'incorporatedAtYear' => $request->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()->format('Y') : null),
-                'incorporatedAtMonth' => $request->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()->format('m') : null),
-                'incorporatedAtDay' => $request->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()->format('d') : null),
-            ]),
-        ]);
+        return $this->render('@TiltaStorefront/storefront/page/account/tilta-credit-facilities/request-form.html.twig', $data->getObject()->getVars());
     }
 
     /**
@@ -187,14 +162,5 @@ class AccountFacilityController extends StorefrontController
         }
 
         return $address;
-    }
-
-    private function getSalutations(SalesChannelContext $salesChannelContext): SalutationCollection
-    {
-        $salutations = $this->salutationRoute->load(new Request(), $salesChannelContext, new Criteria())->getSalutations();
-
-        $salutations->sort(static fn (SalutationEntity $a, SalutationEntity $b): int => $b->getSalutationKey() <=> $a->getSalutationKey());
-
-        return $salutations;
     }
 }

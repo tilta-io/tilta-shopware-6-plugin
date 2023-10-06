@@ -12,6 +12,7 @@ namespace Tilta\TiltaPaymentSW6\Core\Routes;
 
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Plugin\Exception\DecorationPatternException;
 use Shopware\Core\Framework\Struct\ArrayStruct;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -23,17 +24,30 @@ use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
 use Tilta\TiltaPaymentSW6\Core\Routes\Response\BuyerRequestFormDataResponse;
 use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
+use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
-class BuyerRequestFormDataRoute
+class BuyerRequestFormDataRoute extends AbstractBuyerRequestFormDataRoute
 {
     private LegalFormService $legalFormService;
 
     private AbstractSalutationRoute $salutationRoute;
 
-    public function __construct(LegalFormService $legalFormService, AbstractSalutationRoute $salutationRoute)
+    private EntityHelper $entityHelper;
+
+    public function __construct(
+        LegalFormService $legalFormService,
+        AbstractSalutationRoute $salutationRoute,
+        EntityHelper $entityHelper
+    )
     {
         $this->legalFormService = $legalFormService;
         $this->salutationRoute = $salutationRoute;
+        $this->entityHelper = $entityHelper;
+    }
+
+    public function getDecorated(): AbstractBuyerRequestFormDataRoute
+    {
+        throw new DecorationPatternException(self::class);
     }
 
     public function getRequestFormData(RequestDataBag $requestDataBag, SalesChannelContext $context, CustomerAddressEntity $customerAddress): BuyerRequestFormDataResponse
