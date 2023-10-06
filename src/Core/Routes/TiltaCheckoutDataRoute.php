@@ -130,10 +130,9 @@ class TiltaCheckoutDataRoute
 
             if ($paymentTerms instanceof GetPaymentTermsResponseModel) {
                 /** @var string[] $terms */
-                $terms = array_map(static fn (PaymentTerm $term): array => [
-                    ...$term->toArray(),
+                $terms = array_map(static fn (PaymentTerm $term): array => array_merge($term->toArray(), [
                     'days' => $term->getDueDate()->diff((new DateTime())->setTime(0, 0))->days,
-                ], $paymentTerms->getPaymentTerms());
+                ]), $paymentTerms->getPaymentTerms());
 
                 $extensionData->set('allowedPaymentMethods', $terms);
                 $extensionData->set('buyerExternalId', BuyerService::getBuyerExternalId($customerAddress));
