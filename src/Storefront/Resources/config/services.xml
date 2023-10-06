@@ -13,7 +13,7 @@
 
         <service id="Tilta\TiltaPaymentSW6\Storefront\Controller\AccountFacilityController">
             <argument key="$listAddressRoute" type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\ListAddressRoute" />
-            <argument key="$salutationRoute" type="service" id="Shopware\Core\System\Salutation\SalesChannel\SalutationRoute" />
+            <argument key="$buyerRequestFormDataRoute" type="service" id="Tilta\TiltaPaymentSW6\Core\Routes\BuyerRequestFormDataRoute" />
 
             <tag name="controller.service_arguments"/>
             <call method="setContainer">
