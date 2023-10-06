@@ -32,6 +32,10 @@
                       data-form-csrf-handler="true"
                       data-form-validation="true">
 
+                    {% block page_account_tcf_create_csrf %}
+                        {{ sw_csrf('frontend.account.tilta.credit-facility.requestForm.post') }}
+                    {% endblock %}
+
                     {% if app.request.get('backTo') %}
                         <input type="hidden" name="backTo" value="{{ app.request.get('backTo') }}"/>
                     {% endif %}
