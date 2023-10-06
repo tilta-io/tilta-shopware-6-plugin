@@ -101,7 +101,7 @@ class CreateFacilityRoute
             $this->buyerService->updateCustomerAddressData($customerAddress, [
                 'salutationId' => $requestDataBag->getAlnum('salutationId'),
                 'phoneNumber' => $requestDataBag->getAlnum('phoneNumber'),
-                'legalForm' => $requestDataBag->getAlnum('legalForm'),
+                'legalForm' => $requestDataBag->get('legalForm'),
                 'incorporatedAt' => is_string($incorporatedAt) ? DateTime::createFromFormat('Y-m-d', $incorporatedAt) : null,
             ]);
 

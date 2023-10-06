@@ -60,7 +60,7 @@ trait TiltaTestBehavior
             'company' => 'test-company',
             CustomerAddressEntityExtension::TILTA_DATA => [
                 TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => 'buyer-external-id',
-                TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'GMBH',
+                TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'DE_GMBH',
                 TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT => new DateTime(),
             ],
         ]], Context::createDefaultContext());

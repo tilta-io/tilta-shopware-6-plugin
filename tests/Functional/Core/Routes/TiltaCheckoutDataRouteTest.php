@@ -82,7 +82,7 @@ class TiltaCheckoutDataRouteTest extends TestCase
             CustomerAddressEntityExtension::TILTA_DATA,
             (new TiltaCustomerAddressDataEntity())->assign([
                 TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => 'buyer-external-id',
-                TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'GMBH',
+                TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'DE_GMBH',
                 TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT => new DateTime(),
             ])
         );

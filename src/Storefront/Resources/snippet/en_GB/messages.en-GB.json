@@ -53,7 +53,8 @@
 			"KG": "Limited Partnership",
 			"OHG": "General Partnership",
 			"PRIVATE_PERSON": "Private Individual",
-			"UG": "Entrepreneurial Company (limited liability)"
+			"UG": "Entrepreneurial Company (limited liability)",
+			"EINZELUNTERNEHMER": "Self employed"
 		}
 	},
 	"checkout": {
