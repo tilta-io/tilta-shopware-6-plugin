@@ -28,6 +28,7 @@
 	},
 	"tilta": {
 		"messages": {
+			"unknown-error": "Es is ein unbekannte Fehler aufgetreten. Bitte versuchen Sie es erneut. Falls weiter Probleme auftreten, wenden Sie sich bitte an den Kundendienst.",
 			"no-existing-b2b-address": "Bevor Sie einen Kreditrahmen bei Tilta anfragen können, müssen Sie zuerst eine geschäftliche Rechnungsadresse anlegen.",
 			"address-does-not-exist": "Die angefragte Adresse existiert nicht.",
 			"no-country-can-not-be-changed": "Das Land dieser Adresse kann nicht geändert werden, da Sie bereits einen Kreditverfügungsrahmen (bei Tilta) haben. Legen Sie bei Bedarf bitte eine neue Adresse an.",
