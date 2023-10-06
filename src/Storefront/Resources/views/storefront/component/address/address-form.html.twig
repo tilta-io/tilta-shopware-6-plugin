@@ -1,5 +1,16 @@
 {% sw_extends '@Storefront/storefront/component/address/address-form.html.twig' %}
 
+{% block component_address_form %}
+    {{ parent() }}
+
+    {% if page.tiltaNoticeCountryNotChangeable %}
+        {% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
+            type:"warning",
+            content: "tilta.messages.no-country-can-not-be-changed"|trans|sw_sanitize
+        } %}
+    {% endif %}
+{% endblock %}
+
 {#
     Workaround: phoneNumber is always required, but we are not able to override the config-flag within the original block
     So we have copied the whole block-content within the config-check and set all fields to required.

@@ -18,6 +18,9 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
+use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
+use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
 
 class CustomerAddressHelper
 {
@@ -25,12 +28,16 @@ class CustomerAddressHelper
 
     private EntityRepository $orderAddressRepository;
 
+    private EntityRepository $tiltaCustomerAddressDataRepository;
+
     public function __construct(
         EntityRepository $addressRepository,
-        EntityRepository $orderAddressRepository
+        EntityRepository $orderAddressRepository,
+        EntityRepository $tiltaCustomerAddressDataRepository
     ) {
         $this->addressRepository = $addressRepository;
         $this->orderAddressRepository = $orderAddressRepository;
+        $this->tiltaCustomerAddressDataRepository = $tiltaCustomerAddressDataRepository;
     }
 
     public function getCustomerAddressForOrder(OrderEntity $orderEntity): ?CustomerAddressEntity
@@ -64,5 +71,30 @@ class CustomerAddressHelper
 
         // TODO validate
         return $this->addressRepository->search($criteria, Context::createDefaultContext())->first();
+    }
+
+    public function canCountryChanged(string $addressId, string $newCountryId = null): bool
+    {
+        if ($newCountryId === null) {
+            $criteria = new Criteria();
+            $criteria->addFilter(new EqualsFilter(TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID, $addressId));
+            $criteria->addFilter(new NotFilter(NotFilter::CONNECTION_AND, [new EqualsFilter(
+                TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID,
+                null
+            )]));
+
+            return $this->tiltaCustomerAddressDataRepository->searchIds($criteria, Context::createDefaultContext())->getIds() === [];
+        }
+
+        $criteria = new Criteria([$addressId]);
+        $criteria->addFilter(new NotFilter(NotFilter::CONNECTION_AND, [new EqualsFilter(
+            implode('.', [CustomerAddressEntityExtension::TILTA_DATA, TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID]),
+            null
+        )]));
+
+        /** @var CustomerAddressEntity|null $existingAddress */
+        $existingAddress = $this->addressRepository->search($criteria, Context::createDefaultContext())->first();
+
+        return !$existingAddress instanceof CustomerAddressEntity || $existingAddress->getCountryId() === $newCountryId;
     }
 }
