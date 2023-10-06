@@ -8,21 +8,31 @@ env:
     MODULE_NAME: TiltaPaymentSW6
     MODULE_DIR: custom/plugins/TiltaPaymentSW6
     COMPOSER_NAME: tilta/shopware6-payment-module
+    TEST_DATABASE_URL: "mysql://root:root@127.0.0.1:3306/shopware"
 
 permissions:
     contents: read
 
 jobs:
     lint:
-        name: Lint (Shopware ${{ matrix.shopware-version }}, PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }})
+        name: Lint / PHPUnit (Shopware ${{ matrix.shopware-version }}, PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }})
         runs-on: ${{ matrix.operating-system }}
         strategy:
             matrix:
                 operating-system: [ 'ubuntu-latest' ]
                 php-version: [ '7.4', '8.0', '8.1', '8.2' ]
+                mysql-versions: [ '5.7', '8.0' ]
                 shopware-version: [ 'v6.4.14.0', 'v6.4.15.0', 'v6.4.16.0', 'v6.4.17.0', 'v6.4.18.0', 'v6.4.19.0', 'v6.4.20.0' ]
             fail-fast: false
             max-parallel: 10
+        services:
+            mysql:
+                image: mysql:${{ matrix.mysql-versions }}
+                env:
+                    MYSQL_DATABASE: shopware
+                    MYSQL_ROOT_PASSWORD: root
+                ports:
+                    - 3306:3306
         steps:
 
             -   name: Install PHP
@@ -75,13 +85,13 @@ jobs:
                 # Install Shopware with --no-dev to prevent that dev-tools of the module got in conflict with the tools of shopware
                 run: |
                     composer req shopware/administration:${{ matrix.shopware-version }} shopware/core:${{ matrix.shopware-version }} shopware/elasticsearch:${{ matrix.shopware-version }} shopware/storefront:${{ matrix.shopware-version }} --no-update
-                    composer install --no-dev
+                    composer install
 
             -   name: "Install Shopware dependencies (without flex template)"
                 if: matrix.php-version < 8.0
                 # Install Shopware with --no-dev to prevent that dev-tools of the module got in conflict with the tools of shopware
                 run: |
-                    composer install --no-dev --no-scripts
+                    composer install --no-scripts
 
             ######## TEMPORARY ########
             ## util sdk got released ##
@@ -129,3 +139,14 @@ jobs:
             -   name: "Check Code style (rector)"
                 working-directory: ${{ env.MODULE_DIR }}
                 run: ./vendor/bin/rector process --dry-run --autoload-file ../../../vendor/autoload.php
+
+            -   name: "Install Shopware for unit-testing"
+                run: |
+                    echo APP_ENV=test >> .env.local
+                    echo DATABASE_URL=${{ env.TEST_DATABASE_URL }} >> .env.local
+                    echo MAILER_DSN=null://null >> .env.local
+                    bin/console system:install --basic-setup
+
+            -   name: "Run PHPUnit Tests"
+                working-directory: custom/plugins/${{ env.MODULE_NAME }}
+                run: SYMFONY_DEPRECATIONS_HELPER=disabled ./vendor/bin/phpunit --testdox
