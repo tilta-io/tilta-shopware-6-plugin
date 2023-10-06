@@ -1,7 +1,7 @@
 build:
     zip:
         composer:
-            enabled: false
+            enabled: true
         assets:
             enabled: true
             enable_es_build_for_admin: true
