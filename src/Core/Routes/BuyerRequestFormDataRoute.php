@@ -38,8 +38,7 @@ class BuyerRequestFormDataRoute extends AbstractBuyerRequestFormDataRoute
         LegalFormService $legalFormService,
         AbstractSalutationRoute $salutationRoute,
         EntityHelper $entityHelper
-    )
-    {
+    ) {
         $this->legalFormService = $legalFormService;
         $this->salutationRoute = $salutationRoute;
         $this->entityHelper = $entityHelper;
@@ -59,7 +58,7 @@ class BuyerRequestFormDataRoute extends AbstractBuyerRequestFormDataRoute
             'page' => [
                 'address' => $customerAddress,
                 'salutations' => $this->getSalutations($context),
-                'legalForms' => $this->legalFormService->getLegalForms(),
+                'legalForms' => $this->legalFormService->getLegalForms($this->entityHelper->getCountryCode($customerAddress) ?? ''),
             ],
             'data' => new ArrayStruct([
                 'salutationId' => $requestDataBag->get('salutationId', $customerAddress->getSalutationId()),

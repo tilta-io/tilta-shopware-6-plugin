@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\Subscriber;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressDefinition;
@@ -47,8 +48,8 @@ class CustomerAddressSubscriberTest extends TestCase
             'tiltaData' => [
                 TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID => $this->customer->getDefaultBillingAddressId(),
                 TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => 'test-company',
-                TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'GMBH',
-                TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT => new \DateTime(),
+                TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'DE_GMBH',
+                TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT => new DateTime(),
             ],
         ]], Context::createDefaultContext());
 

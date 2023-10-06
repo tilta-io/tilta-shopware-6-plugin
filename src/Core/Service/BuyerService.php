@@ -285,7 +285,7 @@ class BuyerService
         $requestModel
             ->setLegalName($address->getCompany() ?: '')
             ->setTradingName($address->getCompany())
-            ->setLegalForm('DE_' . $tiltaData->getLegalForm())
+            ->setLegalForm($tiltaData->getLegalForm())
             ->setRegisteredAt($customer->getCreatedAt() ?? new DateTime()) // should be always set.
             ->setIncorporatedAt($tiltaData->getIncorporatedAt())
             ->setBusinessAddress($this->addressModelFactory->createFromCustomerAddress($address))

@@ -22,11 +22,28 @@ class LegalFormService
         $this->translator = $translator;
     }
 
-    public function getLegalForms(): array
+    public function getLegalForms(string $countryCode): array
     {
         return array_map(fn (string $legalForm): array => [
             'value' => $legalForm,
-            'label' => $this->translator->trans('tilta.legalForms.' . $legalForm),
-        ], LegalFormEnum::LEGAL_FORMS);
+            'label' => $this->findTranslation($legalForm),
+        ], LegalFormEnum::getLegalFormsForCountry($countryCode));
+    }
+
+    private function findTranslation(string $legalForm): string
+    {
+        $keys = [
+            'tilta.legalForms.' . $legalForm,
+            'tilta.legalForms.' . LegalFormEnum::removePrefix($legalForm),
+        ];
+
+        foreach ($keys as $key) {
+            $trans = $this->translator->trans($key);
+            if ($trans !== $key) {
+                return $trans;
+            }
+        }
+
+        return $legalForm;
     }
 }

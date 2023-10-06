@@ -91,7 +91,7 @@ class CreateFacilityRouteTest extends TestCase
             'incorporatedAtYear' => 2000,
             'salutationId' => $this->getValidSalutationId(),
             'phoneNumber' => '0123456789',
-            'legalForm' => 'GMBH',
+            'legalForm' => 'DE_GMBH',
         ]);
 
         $response = $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
@@ -112,7 +112,7 @@ class CreateFacilityRouteTest extends TestCase
             'incorporatedAtYear' => 2000,
             'salutationId' => $this->getValidSalutationId(),
             'phoneNumber' => '0123456789',
-            'legalForm' => 'GMBH',
+            'legalForm' => 'DE_GMBH',
         ]);
 
         $requestData->set($field, $value);

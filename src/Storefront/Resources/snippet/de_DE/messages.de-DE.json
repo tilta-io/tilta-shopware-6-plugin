@@ -54,7 +54,8 @@
 			"KG": "Kommanditgesellschaft",
 			"OHG": "Offene Handelsgesellschaft",
 			"PRIVATE_PERSON": "Privatperson",
-			"UG": "Unternehmergesellschaft (haftungsbeschränkt)"
+			"UG": "Unternehmergesellschaft (haftungsbeschränkt)",
+			"EINZELUNTERNEHMER": "Einzelunternehmer"
 		},
 		"checkout": {
 			"title": "Tilta Rechnungskauf",
