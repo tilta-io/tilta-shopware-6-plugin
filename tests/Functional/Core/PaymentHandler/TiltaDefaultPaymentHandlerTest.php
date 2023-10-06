@@ -136,28 +136,13 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         // Order data should be always saved.
         $tiltaOrderTransactionRepository->expects($this->once())->method('upsert');
 
-        // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
-        if (!method_exists(SyncPaymentProcessException::class, 'getParameter')) {
-            $this->expectException(SyncPaymentProcessException::class);
-        }
+        $handler->pay($transactionStruct, new RequestDataBag([
+            'tilta' => [
+                'payment_method' => 'BNPL30',
+                'buyer_external_id' => 'buyer-external-id',
 
-        try {
-            $handler->pay($transactionStruct, new RequestDataBag([
-                'tilta' => [
-                    'payment_method' => 'BNPL30',
-                    'buyer_external_id' => 'buyer-external-id',
-
-                ],
-            ]), $this->createSalesChannelContext());
-        } catch (SyncPaymentProcessException $exception) {
-            // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
-            if (method_exists(SyncPaymentProcessException::class, 'getParameter')) {
-                static::assertNotNull($exception->getParameter('errorMessage'));
-                static::assertMatchesRegularExpression('/missing/i', $exception->getParameter('errorMessage'));
-            } else {
-                throw $exception;
-            }
-        }
+            ],
+        ]), $this->createSalesChannelContext());
     }
 
     public function testIfRequestToGatewayGotHandledCorrectly()
