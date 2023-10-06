@@ -28,6 +28,7 @@
 	},
 	"tilta": {
 		"messages": {
+			"unknown-error": "An unknown error has occurred. Please try again. If further issues persist, please contact customer service.",
 			"no-existing-b2b-address": "Before you can request a credit facility with Tilta, you need to create a business billing address first.",
 			"address-does-not-exist": "The requested address does not exist.",
 			"no-country-can-not-be-changed": "The country of this address cannot be changed as you already have a credit limit (with Tilta). Please create a new address if needed.",
