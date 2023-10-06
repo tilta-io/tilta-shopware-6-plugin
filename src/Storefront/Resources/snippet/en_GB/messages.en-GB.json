@@ -14,7 +14,8 @@
 				},
 				"create": {
 					"title": "Request credit facility",
-					"intro": "To pay on account as a business customer, you need to request a credit limit. For this purpose, we require a few more pieces of information from you."
+					"intro": "To pay on account as a business customer, you need to request a credit limit. For this purpose, we require a few more pieces of information from you.",
+					"actionRequestFacility": "Request credit facility"
 				}
 			},
 			"incorporatedAtLabel": "Company registered at",
