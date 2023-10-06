@@ -40,6 +40,7 @@
         <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\LineItemsFactory"/>
 
         <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\OperationService">
+            <argument key="$tiltaOrderDataRepository" type="service" id="tilta_order_data.repository" />
             <argument key="$logger" type="service" id="tilta.default-logger" />
         </service>
 

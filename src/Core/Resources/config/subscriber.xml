@@ -13,8 +13,12 @@
             <argument key="$orderDeliveryRepository" id="order_delivery.repository" type="service" />
         </service>
 
-        <service id="Tilta\TiltaPaymentSW6\Core\Subscriber\CustomerAddressSubscriber" />
-        <service id="Tilta\TiltaPaymentSW6\Core\Subscriber\CountryChangeSubscriber" />
+        <service id="Tilta\TiltaPaymentSW6\Core\Subscriber\CustomerAddressSubscriber">
+            <argument key="$customerAddressRepository" type="service" id="customer_address.repository" />
+        </service>
+        <service id="Tilta\TiltaPaymentSW6\Core\Subscriber\CountryChangeSubscriber">
+            <argument key="$customerAddressRepository" type="service" id="customer_address.repository" />
+        </service>
 
     </services>
 </container>
