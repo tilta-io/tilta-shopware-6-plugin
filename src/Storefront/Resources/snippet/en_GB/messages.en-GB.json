@@ -56,13 +56,13 @@
 			"PRIVATE_PERSON": "Private Individual",
 			"UG": "Entrepreneurial Company (limited liability)",
 			"EINZELUNTERNEHMER": "Self employed"
-		}
-	},
-	"checkout": {
-		"title": "Tilta Invoice",
-		"informationAboutDuration": "After we have shipped your order, you have a period of %duration days to settle the outstanding amount.",
-		"buyerRegistration": {
-			"intro": "For utilizing this payment method, please request a credit availability limit from the payment service provider Tilta Fintech GmbH. Once approved, you can continue with your order."
+		},
+		"checkout": {
+			"title": "Tilta Invoice",
+			"informationAboutDuration": "After we have shipped your order, you have a period of %duration days to settle the outstanding amount.",
+			"buyerRegistration": {
+				"intro": "For utilizing this payment method, please request a credit availability limit from the payment service provider Tilta Fintech GmbH. Once approved, you can continue with your order."
+			}
 		}
 	}
 }
