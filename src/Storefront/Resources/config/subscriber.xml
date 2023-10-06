@@ -9,6 +9,7 @@
             <tag name="kernel.event_subscriber" />
         </defaults>
 
+        <service id="Tilta\TiltaPaymentSW6\Storefront\Subscriber\AccountSubscriber" />
         <service id="Tilta\TiltaPaymentSW6\Storefront\Subscriber\CheckoutSubscriber" />
         <service id="Tilta\TiltaPaymentSW6\Storefront\Subscriber\CountryChangeSubscriber" />
 
