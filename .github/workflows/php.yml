@@ -105,6 +105,7 @@ jobs:
                     ssh-private-key: ${{ secrets.SDK_ACCESS_TOKEN }}
 
             -   run: |
+                    composer req tilta-io/tilta-php-sdk:9999999-dev --no-update -d ${{ env.MODULE_DIR }}
                     composer config repositories.github-sdk '{ "type": "vcs", "url": "https://github.com/tilta-io/tilta-php-sdk/"}'
 
             -   working-directory: ${{ env.MODULE_DIR }}
