@@ -47,6 +47,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
+		"shopware/core": "~6.4.14",
         "tilta-io/tilta-php-sdk": "dev-dev"
     },
     "scripts": {
