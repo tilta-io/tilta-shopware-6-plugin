@@ -20,10 +20,12 @@
 
         <service id="Tilta\TiltaPaymentSW6\Core\Service\LegalFormService" />
         <service id="Tilta\TiltaPaymentSW6\Core\Service\BuyerService" >
+            <argument key="$container" type="service" id="service_container" />
             <argument key="$customerAddressRepository" type="service" id="customer_address.repository" />
             <argument key="$tiltaAddressDataRepository" type="service" id="tilta_address_data.repository" />
         </service>
-        <service id="Tilta\TiltaPaymentSW6\Core\Service\FacilityService" >
+        <service id="Tilta\TiltaPaymentSW6\Core\Service\FacilityService">
+            <argument key="$container" type="service" id="service_container" />
             <argument key="$tiltaDataRepository" type="service" id="tilta_address_data.repository" />
         </service>
         <service id="Tilta\TiltaPaymentSW6\Core\Service\ConfigService" />
