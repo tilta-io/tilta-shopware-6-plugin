@@ -14,16 +14,29 @@ use Shopware\Core\Framework\ShopwareHttpException;
 
 class MissingBuyerInformationException extends ShopwareHttpException
 {
+    // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be removed for 6.5 (or >=6.4.15)
+    private array $_parameters = [];
+
     public function __construct(array $messages)
     {
-        parent::__construct('There are missing fields', [
+        $parameters = [
             'errors' => $messages,
-        ]);
+        ];
+        // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be removed for 6.5 (or >=6.4.15)
+        if (property_exists($this, 'parameters')) {
+            parent::__construct('There are missing fields', $parameters);
+        } else {
+            parent::__construct('There are missing fields');
+            $this->_parameters = [
+                'errors' => $messages,
+            ];
+        }
     }
 
     public function getErrorMessages(): array
     {
-        $errors = $this->getParameter('errors');
+        // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+        $errors = method_exists($this, 'getParameter') ? $this->getParameter('errors') : $this->_parameters['errors'];
 
         return is_array($errors) ? $errors : [];
     }

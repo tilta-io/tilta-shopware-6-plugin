@@ -236,13 +236,13 @@ class OperationService
 
             $tiltaOrder = $this->orderDetailsRequest->execute((new GetOrderDetailsRequestModel($orderEntity->getOrderNumber())));
             $this->tiltaOrderDataRepository->update([
-                [
+                array_merge([
                     TiltaOrderDataEntity::FIELD_ID => $tiltaData->getId(),
                     'version_id' => $tiltaData->getVersionId(),
                     TiltaOrderDataEntity::FIELD_ORDER_ID => $orderEntity->getId(),
                     TiltaOrderDataEntity::FIELD_STATUS => $tiltaOrder->getStatus(),
-                    ...$additionalData,
-                ],
+
+                ], $additionalData),
             ], Context::createDefaultContext());
         } catch (Exception $exception) {
             $this->logger->critical(
