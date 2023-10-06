@@ -47,6 +47,7 @@
         <service id="Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper">
             <argument key="$addressRepository" type="service" id="customer_address.repository"/>
             <argument key="$orderAddressRepository" type="service" id="order_address.repository"/>
+            <argument key="$tiltaCustomerAddressDataRepository" type="service" id="tilta_address_data.repository"/>
         </service>
 
         <service id="Tilta\TiltaPaymentSW6\Core\Util\EntityHelper" />

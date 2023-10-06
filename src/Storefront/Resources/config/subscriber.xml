@@ -10,7 +10,7 @@
         </defaults>
 
         <service id="Tilta\TiltaPaymentSW6\Storefront\Subscriber\CheckoutSubscriber" />
-
+        <service id="Tilta\TiltaPaymentSW6\Storefront\Subscriber\CountryChangeSubscriber" />
 
     </services>
 </container>
