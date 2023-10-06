@@ -32,10 +32,10 @@ class EntityHelper
     private EntityRepository $customerRepository;
 
     public function __construct(
-        EntityRepository $currencyRepository,     // resolved by exact name
-        EntityRepository $countryRepository,      // resolved by exact name
-        EntityRepository $orderAddressRepository, // resolved by exact name
-        EntityRepository $customerRepository // resolved by exact name
+        EntityRepository $currencyRepository,
+        EntityRepository $countryRepository,
+        EntityRepository $orderAddressRepository,
+        EntityRepository $customerRepository
     ) {
         $this->currencyRepository = $currencyRepository;
         $this->countryRepository = $countryRepository;

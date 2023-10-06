@@ -19,7 +19,10 @@
         </service>
 
         <service id="Tilta\TiltaPaymentSW6\Core\Service\LegalFormService" />
-        <service id="Tilta\TiltaPaymentSW6\Core\Service\BuyerService" />
+        <service id="Tilta\TiltaPaymentSW6\Core\Service\BuyerService" >
+            <argument key="$customerAddressRepository" type="service" id="customer_address.repository" />
+            <argument key="$tiltaAddressDataRepository" type="service" id="tilta_address_data.repository" />
+        </service>
         <service id="Tilta\TiltaPaymentSW6\Core\Service\FacilityService" >
             <argument key="$tiltaDataRepository" type="service" id="tilta_address_data.repository" />
         </service>
@@ -50,13 +53,19 @@
             <argument key="$tiltaCustomerAddressDataRepository" type="service" id="tilta_address_data.repository"/>
         </service>
 
-        <service id="Tilta\TiltaPaymentSW6\Core\Util\EntityHelper" />
+        <service id="Tilta\TiltaPaymentSW6\Core\Util\EntityHelper">
+            <argument key="$currencyRepository" type="service" id="currency.repository"/>
+            <argument key="$countryRepository" type="service" id="country.repository"/>
+            <argument key="$orderAddressRepository" type="service" id="order_address.repository"/>
+            <argument key="$customerRepository" type="service" id="customer.repository"/>
+        </service>
         <service id="Tilta\TiltaPaymentSW6\Core\Util\OrderHelper" >
             <argument key="$documentRepository" type="service" id="document.repository"/>
         </service>
 
         <service id="Tilta\TiltaPaymentSW6\Core\PaymentHandler\TiltaDefaultPaymentHandler">
             <argument key="$logger" type="service" id="tilta.default-logger"/>
+            <argument key="$tiltaOrderDataRepository" type="service" id="tilta_order_data.repository" />
             <tag name="shopware.payment.method.sync"/>
         </service>
 
