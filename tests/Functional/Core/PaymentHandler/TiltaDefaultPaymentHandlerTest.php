@@ -58,11 +58,22 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         $requestModelFactory->expects($this->never())->method('createModel');
 
         $context = $this->createSalesChannelContext();
+
+        // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+        if (!method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+            $this->expectException(SyncPaymentProcessException::class);
+        }
+
         try {
             $handler->pay($transactionStruct, new RequestDataBag($returnData), $context);
         } catch (SyncPaymentProcessException $exception) {
-            static::assertNotNull($exception->getParameter('errorMessage'));
-            static::assertMatchesRegularExpression('/missing/i', $exception->getParameter('errorMessage'));
+            // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+            if (method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+                static::assertNotNull($exception->getParameter('errorMessage'));
+                static::assertMatchesRegularExpression('/missing/i', $exception->getParameter('errorMessage'));
+            } else {
+                throw $exception;
+            }
         }
     }
 
@@ -125,6 +136,11 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         // Order data should be always saved.
         $tiltaOrderTransactionRepository->expects($this->once())->method('upsert');
 
+        // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+        if (!method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+            $this->expectException(SyncPaymentProcessException::class);
+        }
+
         try {
             $handler->pay($transactionStruct, new RequestDataBag([
                 'tilta' => [
@@ -134,8 +150,13 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
                 ],
             ]), $this->createSalesChannelContext());
         } catch (SyncPaymentProcessException $exception) {
-            static::assertNotNull($exception->getParameter('errorMessage'));
-            static::assertMatchesRegularExpression('/missing/i', $exception->getParameter('errorMessage'));
+            // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+            if (method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+                static::assertNotNull($exception->getParameter('errorMessage'));
+                static::assertMatchesRegularExpression('/missing/i', $exception->getParameter('errorMessage'));
+            } else {
+                throw $exception;
+            }
         }
     }
 
@@ -161,6 +182,11 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         $createOrderRequest->expects($this->once())->method('execute')->willThrowException(new TiltaException('test-message'));
         $tiltaOrderTransactionRepository->expects($this->never())->method('upsert');
 
+        // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+        if (!method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+            $this->expectException(SyncPaymentProcessException::class);
+        }
+
         try {
             $handler->pay($transactionStruct, new RequestDataBag([
                 'tilta' => [
@@ -170,9 +196,14 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
                 ],
             ]), $this->createSalesChannelContext());
         } catch (SyncPaymentProcessException $exception) {
-            static::assertNotNull($exception->getParameter('errorMessage'));
-            static::assertMatchesRegularExpression('/test-message/i', $exception->getParameter('errorMessage'));
             static::assertInstanceOf(TiltaException::class, $exception->getPrevious(), 'original exception should be in the sync-payment-exception.');
+            // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+            if (method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+                static::assertNotNull($exception->getParameter('errorMessage'));
+                static::assertMatchesRegularExpression('/test-message/i', $exception->getParameter('errorMessage'));
+            } else {
+                throw $exception;
+            }
         }
     }
 
@@ -198,6 +229,11 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         $createOrderRequest->expects($this->never())->method('execute');
         $tiltaOrderTransactionRepository->expects($this->never())->method('upsert');
 
+        // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+        if (!method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+            $this->expectException(SyncPaymentProcessException::class);
+        }
+
         try {
             $handler->pay($transactionStruct, new RequestDataBag([
                 'tilta' => [
@@ -207,9 +243,15 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
                 ],
             ]), $this->createSalesChannelContext());
         } catch (SyncPaymentProcessException $exception) {
-            static::assertNotNull($exception->getParameter('errorMessage'));
-            static::assertMatchesRegularExpression('/test-message/i', $exception->getParameter('errorMessage'));
             static::assertInstanceOf(TiltaException::class, $exception->getPrevious(), 'original exception should be in the sync-payment-exception.');
+
+            // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
+            if (method_exists(SyncPaymentProcessException::class, 'getParameter')) {
+                static::assertNotNull($exception->getParameter('errorMessage'));
+                static::assertMatchesRegularExpression('/test-message/i', $exception->getParameter('errorMessage'));
+            } else {
+                throw $exception;
+            }
         }
     }
 
