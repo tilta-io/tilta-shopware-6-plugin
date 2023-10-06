@@ -50,7 +50,7 @@ trait TiltaTestBehavior
         return $tiltaPaymentMethod;
     }
 
-    protected function createSalesChannelContextWithTiltaBuyer(array $salesChannelContextOverrides = null): SalesChannelContext
+    protected function createSalesChannelContextWithTiltaBuyer(array $salesChannelContextOverrides = []): SalesChannelContext
     {
         $customer = $this->createCustomer();
         /** @var EntityRepository $addressRepo */
@@ -160,8 +160,7 @@ trait TiltaTestBehavior
                     'id' => $this->getValidPaymentMethodId(),
                 ], // we should not remove the default valid payment method
             ],
-            SalesChannelContextService::PAYMENT_METHOD_ID => $tiltaPaymentMethod->
-getId(),
+            SalesChannelContextService::PAYMENT_METHOD_ID => $tiltaPaymentMethod->getId(),
         ]);
 
         return $this->createRandomOrder($salesChannelContext);
