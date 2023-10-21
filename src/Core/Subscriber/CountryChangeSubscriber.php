@@ -48,7 +48,7 @@ class CountryChangeSubscriber implements EventSubscriberInterface
 
     public function validationBuilt(BuildValidationEvent $event): void
     {
-        $addressId = $event->getData()->getAlpha('id');
+        $addressId = $event->getData()->getAlnum('id');
         if ($addressId && !$this->customerAddressHelper->canCountryChanged($addressId)) {
             /** @var CustomerAddressEntity|null $existingAddress */
             $existingAddress = $this->customerAddressRepository->search(new Criteria([$addressId]), $event->getContext())->first();
