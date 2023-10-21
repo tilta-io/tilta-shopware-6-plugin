@@ -10,40 +10,49 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\Service;
 
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Tilta\Sdk\Enum\LegalFormEnum;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Tilta\Sdk\Model\Request\Util\GetLegalFormsRequestModel;
+use Tilta\Sdk\Service\Request\Util\GetLegalFormsRequest;
 
 class LegalFormService
 {
-    private TranslatorInterface $translator;
+    private CacheInterface $cache;
 
-    public function __construct(TranslatorInterface $translator)
+    private GetLegalFormsRequest $legalFormsRequest;
+
+    public function __construct(CacheInterface $cache, GetLegalFormsRequest $legalFormsRequest)
     {
-        $this->translator = $translator;
+        $this->cache = $cache;
+        $this->legalFormsRequest = $legalFormsRequest;
     }
 
     public function getLegalForms(string $countryCode): array
     {
-        return array_map(fn (string $legalForm): array => [
-            'value' => $legalForm,
-            'label' => $this->findTranslation($legalForm),
-        ], LegalFormEnum::getLegalFormsForCountry($countryCode));
+        $cacheKey = 'tilta-legal-forms-' . $countryCode;
+        $return = $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($countryCode): array {
+
+            /** @noinspection PhpExpressionResultUnusedInspection */
+            $item->expiresAfter(3600 * 4); // cache results for 4 hours
+
+            $responseModel = $this->legalFormsRequest->execute(new GetLegalFormsRequestModel($countryCode));
+
+            $options = [];
+            foreach ($responseModel->getItems() as $code => $label) {
+                $options[] = [
+                    'value' => $code,
+                    'label' => $label,
+                ];
+            }
+
+            return $options;
+        });
+
+        return is_array($return) ? $return : [];
     }
 
-    private function findTranslation(string $legalForm): string
+    public function getLegalFormsOnlyCodes(string $countryCode): array
     {
-        $keys = [
-            'tilta.legalForms.' . $legalForm,
-            'tilta.legalForms.' . LegalFormEnum::removePrefix($legalForm),
-        ];
-
-        foreach ($keys as $key) {
-            $trans = $this->translator->trans($key);
-            if ($trans !== $key) {
-                return $trans;
-            }
-        }
-
-        return $legalForm;
+        return array_map(static fn (array $item) => $item['value'], $this->getLegalForms($countryCode));
     }
 }

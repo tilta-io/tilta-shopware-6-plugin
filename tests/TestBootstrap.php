@@ -14,7 +14,7 @@ $projectRoot = $_SERVER['PROJECT_ROOT'] ?? dirname(__DIR__, 4);
 
 $moduleAutoloader = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($moduleAutoloader)) {
-    throw new \RuntimeException('Please run `composer dump-autoload` for the directory ' . dirname(__DIR__));
+    throw new \RuntimeException('Please run `composer dump-autoload --dev` for the directory ' . dirname(__DIR__));
 }
 
 require_once $moduleAutoloader;

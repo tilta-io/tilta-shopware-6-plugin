@@ -32,6 +32,7 @@
         <service id="Tilta\Sdk\Service\Request\Order\GetOrderDetailsRequest"/>
         <service id="Tilta\Sdk\Service\Request\Invoice\CreateInvoiceRequest"/>
         <service id="Tilta\Sdk\Service\Request\CreditNote\CreateCreditNoteRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Util\GetLegalFormsRequest"/>
 
         <!-- request model factories -->
         <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\AddressModelFactory"/>

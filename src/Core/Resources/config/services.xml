@@ -18,7 +18,10 @@
             <factory service="Shopware\Core\Framework\Log\LoggerFactory" method="createRotating"/>
         </service>
 
-        <service id="Tilta\TiltaPaymentSW6\Core\Service\LegalFormService" />
+        <service id="Tilta\TiltaPaymentSW6\Core\Service\LegalFormService">
+            <argument key="$cache" type="service" id="cache.object" />
+        </service>
+
         <service id="Tilta\TiltaPaymentSW6\Core\Service\BuyerService" >
             <argument key="$container" type="service" id="service_container" />
             <argument key="$customerAddressRepository" type="service" id="customer_address.repository" />

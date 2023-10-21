@@ -24,6 +24,7 @@ use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidationDefinition;
 use Shopware\Core\Framework\Validation\DataValidator;
 use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
+use Shopware\Core\System\Country\CountryEntity;
 use Shopware\Core\System\SalesChannel\GenericStoreApiResponse;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,11 +34,11 @@ use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Tilta\Sdk\Enum\LegalFormEnum;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
 use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
+use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
 
 /**
  * @Route(path="/store-api/tilta", defaults={"_loginRequired"=true, "_loginRequiredAllowGuest"=false, "_routeScope"={"store-api"}})
@@ -56,13 +57,16 @@ class CreateFacilityRoute
 
     private LoggerInterface $logger;
 
+    private LegalFormService $legalFormService;
+
     public function __construct(
         DataValidator $dataValidator,
         BuyerService $buyerService,
         FacilityService $facilityService,
         EntityRepository $addressRepository,
         EntityRepository $salutationRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        LegalFormService $legalFormService
     ) {
         $this->dataValidator = $dataValidator;
         $this->buyerService = $buyerService;
@@ -70,6 +74,7 @@ class CreateFacilityRoute
         $this->addressRepository = $addressRepository;
         $this->salutationRepository = $salutationRepository;
         $this->logger = $logger;
+        $this->legalFormService = $legalFormService;
     }
 
     /**
@@ -82,6 +87,9 @@ class CreateFacilityRoute
             throw new AddressNotFoundException($addressId);
         }
 
+        /** @var CountryEntity $country */ // country is always loaded
+        $country = $customerAddress->getCountry();
+
         if ($requestDataBag->has('incorporatedAtDay') && $requestDataBag->has('incorporatedAtMonth') && $requestDataBag->has('incorporatedAtYear')) {
             $requestDataBag->set('incorporatedAt', sprintf('%02d-%02d-%02d', $requestDataBag->getAlnum('incorporatedAtYear'), $requestDataBag->getAlnum('incorporatedAtMonth'), $requestDataBag->getAlnum('incorporatedAtDay')));
         }
@@ -92,7 +100,7 @@ class CreateFacilityRoute
             (new DataValidationDefinition())
                 ->add('salutationId', new NotBlank(), new Choice($this->getSalutationIds()))
                 ->add('phoneNumber', new NotBlank(), new Type('string'))
-                ->add('legalForm', new NotBlank(), new Choice(LegalFormEnum::LEGAL_FORMS))
+                ->add('legalForm', new NotBlank(), new Choice($this->legalFormService->getLegalFormsOnlyCodes($country->getIso() ?? '-')))
                 ->add('incorporatedAt', new NotBlank(), new Type('string'), new Date())
         );
 
@@ -133,6 +141,7 @@ class CreateFacilityRoute
         // reload address, because entity data has been changed.
         $addressCriteria = (new Criteria([$addressId]))
             ->addFilter(new EqualsFilter('customerId', $customer->getId()))
+            ->addAssociation('country')
             ->addAssociation('customer');
 
         return $this->addressRepository->search($addressCriteria, Context::createDefaultContext())->first();
