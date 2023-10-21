@@ -26,6 +26,7 @@ use Shopware\Core\System\SalesChannel\SuccessResponse;
 use Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute;
 use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
 use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
+use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
 
 class CreateFacilityRouteTest extends TestCase
 {
@@ -58,8 +59,15 @@ class CreateFacilityRouteTest extends TestCase
             $this->facilityServiceMock = $this->createMock(FacilityService::class),
             $this->getContainer()->get('customer_address.repository'),
             $this->getContainer()->get('salutation.repository'),
-            $this->getContainer()->get('logger')
+            $this->getContainer()->get('logger'),
+            $legalFormService = $this->createMock(LegalFormService::class)
         );
+
+        $legalFormService->method('getLegalFormsOnlyCodes')->willReturn(['DE_GMBH']);
+        $legalFormService->method('getLegalForms')->willReturn([[
+            'value' => 'DE_GMBH',
+            'label' => 'GmbH',
+        ]]);
 
         /** @var EntityRepository $customerRepo */
         $customerRepo = $this->getContainer()->get('customer.repository');
