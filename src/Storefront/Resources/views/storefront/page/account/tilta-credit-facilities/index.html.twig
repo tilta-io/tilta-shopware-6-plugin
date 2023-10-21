@@ -62,7 +62,7 @@
                                                     {% block page_account_tcf_list_buyer_item_status_progressbar_after_inner %}
                                                         <div class="tilta-buyer-list__item__status__detail tilta-spent">
                                                             <div class="tilta-label">{{ "account.tilta.credit-facility.spentLabel"|trans|sw_sanitize }}</div>
-                                                            <div class="tilta-value">{{ (address.extensions.tiltaFacility.used_amount / 100)|currency(address.extensions.tiltaFacility.currency) }}</div>
+                                                            <div class="tilta-value">{{ ((address.extensions.tiltaFacility.used_amount + address.extensions.tiltaFacility.pending_orders_amount) / 100)|currency(address.extensions.tiltaFacility.currency) }}</div>
                                                         </div>
                                                         <div class="tilta-buyer-list__item__status__detail tilta-available">
                                                             <div class="tilta-label">{{ "account.tilta.credit-facility.availableLabel"|trans|sw_sanitize }}</div>
