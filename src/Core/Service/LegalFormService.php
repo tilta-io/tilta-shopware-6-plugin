@@ -31,7 +31,6 @@ class LegalFormService
     {
         $cacheKey = 'tilta-legal-forms-' . $countryCode;
         $return = $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($countryCode): array {
-
             /** @noinspection PhpExpressionResultUnusedInspection */
             $item->expiresAfter(3600 * 4); // cache results for 4 hours
 
