@@ -51,6 +51,10 @@ class CheckoutSubscriber implements EventSubscriberInterface
         if ($event instanceof CheckoutConfirmPageLoadedEvent) {
             $tiltaData = $this->checkoutDataRoute->getCheckoutDataForSalesChannelContext($event->getSalesChannelContext(), new RequestDataBag($event->getRequest()->request->all()));
         } elseif ($event instanceof AccountEditOrderPageLoadedEvent) {
+            if (!$event->getPage()->isPaymentChangeable()) {
+                return;
+            }
+
             $tiltaData = $this->checkoutDataRoute->getCheckoutDataForOrderEntity($event->getSalesChannelContext(), $event->getPage()->getOrder(), new RequestDataBag($event->getRequest()->request->all()));
         } else {
             throw new RuntimeException('not supported event: ' . get_class($event));
