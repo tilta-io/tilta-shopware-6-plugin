@@ -20,6 +20,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
+use Tilta\Sdk\Enum\OrderStatusEnum;
 use Tilta\TiltaPaymentSW6\Core\Exception\OrderIsNotATiltaOrder;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaOrderDataEntity;
 use Tilta\TiltaPaymentSW6\Core\Extension\OrderDataEntityExtension;
@@ -55,6 +56,14 @@ class OrderHelper
         }
 
         return $invoiceNumber === null || $invoiceExternalId === null ? null : [$invoiceNumber, $invoiceExternalId];
+    }
+
+    public static function isPaymentChangeable(OrderEntity $orderEntity): bool
+    {
+        /** @var TiltaOrderDataEntity|null $tiltaData */
+        $tiltaData = $orderEntity->getExtension(OrderDataEntityExtension::EXTENSION_NAME);
+
+        return !$tiltaData instanceof TiltaOrderDataEntity || $tiltaData->getStatus() === OrderStatusEnum::PENDING_CONFIRMATION;
     }
 
     private function getInvoiceNumberAndExternalIdFromDocument(OrderEntity $orderEntity): ?array
