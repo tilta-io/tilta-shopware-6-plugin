@@ -23,7 +23,8 @@
 			"incorporatedAtSelectMonth": "Monat",
 			"incorporatedAtSelectYear": "Jahr",
 			"legalFormLabel": "Rechtsform",
-			"legalFormPlaceholder": "Rechtsform"
+			"legalFormPlaceholder": "Rechtsform",
+			"loadingScreenText": "Dies könnte einige Sekunden dauern, bitte schließen Sie das Fenster nicht."
 		}
 	},
 	"tilta": {

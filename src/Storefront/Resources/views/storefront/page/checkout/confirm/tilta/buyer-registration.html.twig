@@ -12,7 +12,8 @@
             <form method="POST"
                   action="{{ path('frontend.account.tilta.credit-facility.requestForm.post', {'addressId': context.customer.activeBillingAddress.id}) }}"
                   data-form-csrf-handler="true"
-                  data-form-validation="true">
+                  data-form-validation="true"
+                  data-tilta-create-facility-form="true">
 
                 {% block page_checkout_confirm_tilta_request_facility_csrf %}
                     {{ sw_csrf('frontend.account.tilta.credit-facility.requestForm.post') }}

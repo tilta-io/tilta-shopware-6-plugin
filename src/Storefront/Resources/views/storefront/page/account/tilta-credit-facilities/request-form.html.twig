@@ -30,7 +30,8 @@
                 <form method="POST"
                       action="{{ path('frontend.account.tilta.credit-facility.requestForm.post', {'addressId': page.address.id}) }}"
                       data-form-csrf-handler="true"
-                      data-form-validation="true">
+                      data-form-validation="true"
+                      data-tilta-create-facility-form="true">
 
                     {% block page_account_tcf_create_csrf %}
                         {{ sw_csrf('frontend.account.tilta.credit-facility.requestForm.post') }}

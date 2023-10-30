@@ -223,3 +223,11 @@
         {% endblock %}
     {% endblock %}
 {% endblock %}
+
+{% block tcf_loading_screen %}
+    <div class="tcf_loading-screen" style="display: none">
+        <div class="inner">
+            <div class="text">{{ "account.tilta.loadingScreenText"|trans|sw_sanitize }}</div>
+        </div>
+    </div>
+{% endblock %}

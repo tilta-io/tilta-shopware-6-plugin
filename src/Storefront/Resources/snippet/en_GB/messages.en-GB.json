@@ -23,7 +23,8 @@
 			"incorporatedAtSelectMonth": "Month",
 			"incorporatedAtSelectYear": "Year",
 			"legalFormLabel": "Legal form",
-			"legalFormPlaceholder": "Legal form"
+			"legalFormPlaceholder": "Legal form",
+			"loadingScreenText": "This could take a few seconds please don’t close the window."
 		}
 	},
 	"tilta": {
