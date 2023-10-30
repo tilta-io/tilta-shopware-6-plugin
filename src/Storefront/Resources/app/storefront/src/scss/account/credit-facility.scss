@@ -103,3 +103,26 @@
 		}
 	}
 }
+
+[data-tilta-create-facility-form="true"].is-loading {
+	position: relative;
+
+	.tcf_loading-screen {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(255, 255, 255, 0.9);
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+		padding: 2rem;
+		font-size: 1.25rem;
+		text-align: center;
+
+		.spinner {
+			margin-top: 1.5rem;
+		}
+	}
+}
