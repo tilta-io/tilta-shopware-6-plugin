@@ -34,13 +34,12 @@
 			justify-content: space-between;
 
 			&__address {
-				flex: 0 0 auto;
+				flex: 1 0 35%;
 			}
 
 			&__status {
 				align-self: center;
 				flex: 1 0 55%;
-				max-width: 600px;
 
 				&.has-facility {
 					align-self: end;
