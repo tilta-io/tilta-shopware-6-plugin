@@ -14,7 +14,7 @@
 				},
 				"create": {
 					"title": "Request credit facility",
-					"intro": "To pay on account as a business customer, you need to request a credit limit. For this purpose, we require a few more pieces of information from you.",
+					"intro": "You can apply for a credit limit to use Invoice Payments. After you are approved, you will have a site-wide credit limit, allowing you to delay payment for the orders that fit into your limit. Requesting a credit limit from us does not affect your credit rating.",
 					"actionRequestFacility": "Request credit facility"
 				}
 			},
@@ -32,7 +32,7 @@
 			"unknown-error": "An unknown error has occurred. Please try again. If further issues persist, please contact customer service.",
 			"no-existing-b2b-address": "Before you can request a credit facility with Tilta, you need to create a business billing address first.",
 			"address-does-not-exist": "The requested address does not exist.",
-			"no-country-can-not-be-changed": "The country of this address cannot be changed as you already have a credit limit (with Tilta). Please create a new address if needed.",
+			"no-country-can-not-be-changed": "This country cannot be updated for this billing address, since you have a linked credit limit for Invoice Payments. Please create a new billing address if you need to change the country.",
 			"facility": {
 				"unknown-error": "An unknown error occurred while requesting the credit facility. Please contact customer service for assistance.",
 				"created-successfully": "The credit facility has been created successful."
@@ -61,7 +61,7 @@
 		},
 		"checkout": {
 			"title": "Tilta Invoice",
-			"informationAboutDuration": "After we have shipped your order, you have a period of %duration days to settle the outstanding amount.",
+			"informationAboutDuration": "You have %duration days to pay after your order is shipped. We will send you a reminder when the payment date is close with all important details.",
 			"buyerRegistration": {
 				"intro": "For utilizing this payment method, please request a credit availability limit from the payment service provider Tilta Fintech GmbH. Once approved, you can continue with your order."
 			}

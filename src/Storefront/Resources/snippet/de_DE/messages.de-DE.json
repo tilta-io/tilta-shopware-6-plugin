@@ -1,20 +1,20 @@
 {
 	"account": {
 		"tilta": {
-			"sidebarCreditFacilityLinkTitle": "Tilta Kreditverfügungsrahmen",
+			"sidebarCreditFacilityLinkTitle": "Kreditlimit",
 			"credit-facility": {
 				"expiresAtLabel": "Verfügbar bis",
 				"spentLabel": "Verbraucht",
 				"availableLabel": "Verfügbar",
 				"totalAmount": "Limit",
 				"list": {
-					"title": "Tilta Kreditverfügungsrahmen",
+					"title": "Kreditlimit",
 					"intro": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
 					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
 				},
 				"create": {
 					"title": "Kreditverfügungsrahmen anfragen",
-					"intro": "Um als Geschäftskunde auf Rechnung zahlen zu können, müssen Sie einen Kreditverfügungsrahmen anfragen. Dafür benötigen wir noch ein paar Informationen von Ihnen.",
+					"intro": "Sie können ein Kreditlimit für die Nutzung des Rechnungskaufs beantragen. Nach der Genehmigung erhalten Sie ein Kreditlimit zur Nutzung auf dieser Seite. Mit diesem können Sie die Zahlung für die Bestellungen, die in Ihr Limit passen, aufschieben. Die Beantragung eines Kreditlimits hat keinen Einfluss auf Ihre Kreditwürdigkeit.",
 					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
 				}
 			},
@@ -32,7 +32,7 @@
 			"unknown-error": "Es is ein unbekannte Fehler aufgetreten. Bitte versuchen Sie es erneut. Falls weiter Probleme auftreten, wenden Sie sich bitte an den Kundendienst.",
 			"no-existing-b2b-address": "Bevor Sie einen Kreditrahmen bei Tilta anfragen können, müssen Sie zuerst eine geschäftliche Rechnungsadresse anlegen.",
 			"address-does-not-exist": "Die angefragte Adresse existiert nicht.",
-			"no-country-can-not-be-changed": "Das Land dieser Adresse kann nicht geändert werden, da Sie bereits einen Kreditverfügungsrahmen (bei Tilta) haben. Legen Sie bei Bedarf bitte eine neue Adresse an.",
+			"no-country-can-not-be-changed": "Dieses Land kann für die angegebene Rechnungsadresse nicht aktualisiert werden, da bereits Kreditlimit mit einer Rechnungszahlung verknüpft ist. Bitte legen Sie eine neue Rechnungsadresse an, wenn Sie das Land ändern möchten. Die Beantragung eines Kreditlimits hat keinen Einfluss auf Ihre Kreditwürdigkeit.",
 			"facility": {
 				"unknown-error": "Es ist ein unbekannter Fehler beim Anfragen des Kreditverfügungsrahmen aufgetreten. Bitte wenden Sie sich an den Kundenservice.",
 				"created-successfully": "Der Kreditverfügungsrahmen wurde erfolgreich erstellt."
@@ -62,7 +62,7 @@
 		},
 		"checkout": {
 			"title": "Tilta Rechnungskauf",
-			"informationAboutDuration": "Nach dem wir Ihre Bestellung versandt haben, haben Sie einen Zeitraum von %duration Tagen, um den ausstehenden Betrag zu begleichen.",
+			"informationAboutDuration": "Sie haben %duration Tage Zeit, um zu bezahlen, nachdem Ihre Bestellung versandt wurde. Wir senden Ihnen eine Erinnerung mit allen wichtigen Details, wenn das Zahlungsdatum naht.",
 			"buyerRegistration": {
 				"intro": "Um diese Zahlungsart zu nutzen, bitten wir Sie, einen Kreditverfügbarkeitsrahmen beim Zahlungsdienstleister Tilta Fintech GmbH anzufragen. Nach erfolgreicher Anfrage können Sie mit Ihrer Bestellung fortfahren."
 			}
