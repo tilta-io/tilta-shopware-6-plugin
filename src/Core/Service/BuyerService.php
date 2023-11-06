@@ -23,7 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tilta\Sdk\Exception\GatewayException\NotFoundException\BuyerNotFoundException;
 use Tilta\Sdk\Exception\TiltaException;
-use Tilta\Sdk\Model\Address;
 use Tilta\Sdk\Model\Buyer;
 use Tilta\Sdk\Model\ContactPerson;
 use Tilta\Sdk\Model\Request\Buyer\CreateBuyerRequestModel;
