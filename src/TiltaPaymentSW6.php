@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6;
 
-use Exception;
 use RuntimeException;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -24,7 +23,6 @@ use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin\Context\UpdateContext;
 use Shopware\Core\Framework\Plugin\PluginEntity;
-use Tilta\Sdk\HttpClient\TiltaClient;
 use Tilta\TiltaPaymentSW6\Administration\TiltaAdministrationBundle;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\AbstractBootstrap;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\Database;
@@ -124,7 +122,7 @@ class TiltaPaymentSW6 extends Plugin
 
     public function executeComposerCommands(): bool
     {
-        return false; // shopware sw < 6.5 only supports this by using a feature flag. So we disable this and still using require_once at the end of the plugin-file
+        return true;
     }
 
     public function getAdditionalBundles(AdditionalBundleParameters $parameters): array
@@ -167,14 +165,5 @@ class TiltaPaymentSW6 extends Plugin
         }
 
         return $bootstrapper;
-    }
-}
-
-if (!class_exists(TiltaClient::class)) {
-    $autoloaderPath = dirname(__DIR__) . '/vendor/autoload.php';
-    if (file_exists($autoloaderPath)) {
-        require_once $autoloaderPath;
-    } else {
-        throw new Exception('Missing Tilta dependencies! Please run `composer require tilta/shopware6-payment-module` in project directory');
     }
 }

@@ -11,13 +11,8 @@
         <div class="col-sm-7">
             <form method="POST"
                   action="{{ path('frontend.account.tilta.credit-facility.requestForm.post', {'addressId': context.customer.activeBillingAddress.id}) }}"
-                  data-form-csrf-handler="true"
                   data-form-validation="true"
                   data-tilta-create-facility-form="true">
-
-                {% block page_checkout_confirm_tilta_request_facility_csrf %}
-                    {{ sw_csrf('frontend.account.tilta.credit-facility.requestForm.post') }}
-                {% endblock %}
 
                 <input type="hidden" name="backTo" value="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}" />
                 {% sw_include '@TiltaPaymentSW6/storefront/component/buyer-fields.html.twig' with tiltaData.addressFormData.all() %}
