@@ -7,14 +7,7 @@ export default class TiltaCreateFacilityForm extends Plugin {
     }
 
     _registerEvents() {
-        if (!('csrf' in window) || window.csrf.mode === 'twig') {
-            this.el.addEventListener('submit', this._submitForm.bind(this));
-        } else {
-            /**
-             * @deprecated tag:6.5.0 CSRF will be removed in  6.5.0.0 - we only need to subscribe the `submit`-event.
-             */
-            this.el.addEventListener('beforeSubmit', this._submitForm.bind(this))
-        }
+        this.el.addEventListener('submit', this._submitForm.bind(this));
     }
 
     _submitForm(event) {

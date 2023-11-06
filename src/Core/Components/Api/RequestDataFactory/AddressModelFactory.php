@@ -45,7 +45,7 @@ class AddressModelFactory
         return (new Address())
             ->setStreet(AddressHelper::getStreetName($addressEntity->getStreet()) ?: '')
             ->setHouseNumber(AddressHelper::getHouseNumber($addressEntity->getStreet()) ?: '')
-            ->setPostcode($addressEntity->getZipcode())
+            ->setPostcode($addressEntity->getZipcode() ?: '')
             ->setCity($addressEntity->getCity())
             ->setCountry($this->entityHelper->getCountryCode($addressEntity, $context) ?: '')
             ->setAdditional(self::mergeAdditionalAddressLines($addressEntity));

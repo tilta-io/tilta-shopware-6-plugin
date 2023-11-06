@@ -1,0 +1,15 @@
+{% block sw_order_detail_content_tabs_extension %}
+    {% parent %}
+
+    {% block sw_order_detail_content_tabs_tilta %}
+        <sw-tabs-item
+            v-if="order && order.extensions.tiltaData"
+            class="sw-order-detail__tabs-tab-tilta-payment"
+            :route="{ name: 'sw.order.detail.tilta-payment', params: { id: $route.params.id } }"
+            :title="$tc('sw-order.detail.tilta-payment')"
+        >
+            {{ $tc('sw-order.detail.tilta-payment') }}
+        </sw-tabs-item>
+    {% endblock %}
+
+{% endblock %}
