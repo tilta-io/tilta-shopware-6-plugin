@@ -103,6 +103,9 @@ class StateMachineRegistryDecorator extends StateMachineRegistry // we must exte
         $criteria->addAssociation('transactions.paymentMethod');
         $criteria->addAssociation('documents.documentType');
 
-        return $this->orderRepository->search($criteria, $context)->first();
+        $orderEntity = $this->orderRepository->search($criteria, $context)->first();
+
+        // check is only for PHPStan
+        return $orderEntity instanceof OrderEntity ? $orderEntity : null;
     }
 }
