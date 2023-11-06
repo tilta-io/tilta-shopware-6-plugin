@@ -29,12 +29,12 @@ class PaymentMethods extends AbstractBootstrap
             'afterOrderEnabled' => true,
             'translations' => [
                 'de-DE' => [
-                    'name' => 'Tilta Rechnungskauf',
-                    'description' => 'TODO',
+                    'name' => 'Rechnungskauf',
+                    'description' => 'Mit dem Rechnungskauf können Sie die Bezahlung Ihrer Bestellung auf einen günstigeren Zeitpunkt verschieben.',
                 ],
                 'en-GB' => [
-                    'name' => 'Tilta Invoice',
-                    'description' => 'TODO',
+                    'name' => 'Invoice Payment',
+                    'description' => 'Invoice Payment allows you to delay payment for your order until a more convenient time.',
                 ],
             ],
         ],
