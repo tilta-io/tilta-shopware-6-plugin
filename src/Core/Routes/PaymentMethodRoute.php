@@ -26,7 +26,6 @@ use Shopware\Core\System\SalesChannel\SalesChannel\AbstractContextSwitchRoute;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Tilta\Sdk\Model\Response\Facility;
 use Tilta\TiltaPaymentSW6\Core\Service\ConfigService;
 use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
 use Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper;

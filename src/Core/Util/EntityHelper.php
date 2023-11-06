@@ -16,6 +16,7 @@ use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\Country\CountryEntity;
@@ -96,7 +97,7 @@ class EntityHelper
         }
 
         $customer = $this->customerRepository->search(new Criteria([$customerAddressEntity->getCustomerId()]), Context::createDefaultContext())->first();
-        if (!$customer) {
+        if (!$customer instanceof Entity) {
             // should never occur, because an address can not exist without a customer
             throw new RuntimeException('customer can not be found for address');
         }
