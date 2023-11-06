@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\StateMachine\Subscriber;
 
+use RuntimeException;
 use Shopware\Core\Checkout\Order\Aggregate\OrderDelivery\OrderDeliveryDefinition;
 use Shopware\Core\Checkout\Order\Aggregate\OrderDelivery\OrderDeliveryEntity;
 use Shopware\Core\Checkout\Order\OrderDefinition;
@@ -95,6 +96,12 @@ class TransitionSubscriber implements EventSubscriberInterface
         $criteria->addAssociation('documents.documentType');
         $criteria->addAssociation('lineItems');
 
-        return $this->orderRepository->search($criteria, $context)->first();
+        $orderEntity = $this->orderRepository->search($criteria, $context)->first();
+
+        if (!$orderEntity instanceof OrderEntity) {
+            throw new RuntimeException('Order seems to be got deleted during transition');
+        }
+
+        return $orderEntity;
     }
 }

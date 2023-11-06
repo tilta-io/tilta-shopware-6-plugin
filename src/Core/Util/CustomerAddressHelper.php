@@ -70,7 +70,10 @@ class CustomerAddressHelper
             ->addFilter(new EqualsFilter('phoneNumber', $billingAddress->getPhoneNumber()));
 
         // TODO validate
-        return $this->addressRepository->search($criteria, Context::createDefaultContext())->first();
+        $addressEntity = $this->addressRepository->search($criteria, Context::createDefaultContext())->first();
+
+        // check is only for PHPStan
+        return $addressEntity instanceof CustomerAddressEntity ? $addressEntity : null;
     }
 
     public function canCountryChanged(string $addressId, string $newCountryId = null): bool

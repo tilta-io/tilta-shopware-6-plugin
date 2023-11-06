@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Tilta\TiltaPaymentSW6;
 
 use Exception;
+use RuntimeException;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -21,6 +22,7 @@ use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin\Context\UpdateContext;
+use Shopware\Core\Framework\Plugin\PluginEntity;
 use Tilta\Sdk\HttpClient\TiltaClient;
 use Tilta\TiltaPaymentSW6\Administration\TiltaAdministrationBundle;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\AbstractBootstrap;
@@ -152,6 +154,10 @@ class TiltaPaymentSW6 extends Plugin
             $context->getContext()
         );
         $plugin = $plugins->first();
+        if (!$plugin instanceof PluginEntity) {
+            throw new RuntimeException('can not load plugin entity from database.');
+        }
+
         foreach ($bootstrapper as $bootstrap) {
             $bootstrap->setInstallContext($context);
             $bootstrap->setContainer($this->container); // @phpstan-ignore-line

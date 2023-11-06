@@ -144,7 +144,10 @@ class CreateFacilityRoute
             ->addAssociation('country')
             ->addAssociation('customer');
 
-        return $this->addressRepository->search($addressCriteria, Context::createDefaultContext())->first();
+        $address = $this->addressRepository->search($addressCriteria, Context::createDefaultContext())->first();
+
+        // check is only for PHPStan
+        return $address instanceof CustomerAddressEntity ? $address : null;
     }
 
     /**

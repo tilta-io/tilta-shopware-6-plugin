@@ -74,7 +74,7 @@ class CountryChangeSubscriber implements EventSubscriberInterface
         $failedAddressIds = [];
         foreach ($commands as $command) {
             $payload = $command->getPayload();
-            if ($command->getEntityName() !== CustomerAddressDefinition::ENTITY_NAME || !isset($payload['country_id'])) {
+            if ($command->getEntityName() !== CustomerAddressDefinition::ENTITY_NAME || !isset($payload['country_id']) || !is_string($payload['country_id'])) {
                 continue;
             }
 
