@@ -2,7 +2,7 @@ on:
     push:
         branches:
             - '*'
-            - '*/*'
+            - 'task/*'
 
 env:
     MODULE_NAME: TiltaPaymentSW6
@@ -141,11 +141,21 @@ jobs:
                 working-directory: ${{ env.MODULE_DIR }}
                 run: ./vendor/bin/rector process --dry-run --autoload-file ../../../vendor/autoload.php
 
+            # Workaround. The following variables are required for shopware to work properly during unit-testing
             -   name: "Install Shopware for unit-testing"
                 run: |
-                    echo APP_ENV=test >> .env.local
-                    echo DATABASE_URL=${{ env.TEST_DATABASE_URL }} >> .env.local
-                    echo MAILER_DSN=null://null >> .env.local
+                    echo DATABASE_URL=${{ env.TEST_DATABASE_URL }} >> .env
+                    echo MAILER_DSN=null://null >> .env
+                    echo OPENSEARCH_URL=http://localhost:9200 >> .env
+                    echo LOCK_DSN=flock >> .env
+                    echo MAILER_DSN=null://null >> .env
+                    echo APP_SECRET=se$cr$t >> .env
+                    echo REDIS_CACHE_HOST=127.0.0.1 >> .env
+                    echo REDIS_CACHE_PORT=123 >> .env
+                    echo REDIS_SESSION_HOST=127.0.0.1 >> .env
+                    echo REDIS_SESSION_PORT=123 >> .env
+                    echo SHOPWARE_HTTP_CACHE_ENABLED=0 >> .env
+                    echo STOREFRONT_PROXY_URL=http://localhost:80 >> .env
                     bin/console system:install --basic-setup
 
             -   name: "Run PHPUnit Tests"
