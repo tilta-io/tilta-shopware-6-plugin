@@ -11,7 +11,7 @@
 
                     {% block tcf_component_additional_details_form_salutation_select %}
                         <select id="{{ idPrefix ~ prefix }}personalSalutation"
-                                class="{{ formSelectClass }}{% if formViolations.getViolations('/salutationId') is not empty %} is-invalid{% endif %}"
+                                class="form-control{{ formSelectClass }}{% if formViolations.getViolations('/salutationId') is not empty %} is-invalid{% endif %}"
                                 name="{% if prefix %}{{ prefix }}[salutationId]{% else %}salutationId{% endif %}"
                                 required="required">
                             {% if not data.get('salutationId') %}
@@ -87,7 +87,7 @@
 
                     {% block tcf_component_additional_details_form_legal_form_select %}
                         <select id="{{ idPrefix ~ prefix }}legalForm"
-                                class="{{ formSelectClass }}{% if formViolations.getViolations('/legalForm') is not empty %} is-invalid{% endif %}"
+                                class="form-control{{ formSelectClass }}{% if formViolations.getViolations('/legalForm') is not empty %} is-invalid{% endif %}"
                                 name="legalForm"
                                 required="required">
                             {% if not data.get('legalForm') %}
@@ -162,7 +162,7 @@
                     <div class="form-group col-4">
                         <select id="{{ idPrefix ~ prefix }}incorporatedAt"
                                 name="incorporatedAtDay"
-                                class="{{ formSelectClass }}{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
+                                class="form-control{{ formSelectClass }}{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
                                 required="required">
                             {% if not data.get('incorporatedAtDay') %}
                                 <option selected="selected" value="">{{ "account.tilta.incorporatedAtSelectDay"|trans|sw_sanitize }}</option>
