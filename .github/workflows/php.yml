@@ -15,7 +15,7 @@ permissions:
 
 jobs:
     lint:
-        name: Lint / PHPUnit (Shopware ${{ matrix.shopware-version }}, PHP ${{ matrix.php-version }} on ${{ matrix.operating-system }})
+        name: Lint / PHPUnit (Shopware ${{ matrix.shopware-version }}, PHP ${{ matrix.php-version }}, MySQL ${{ matrix.mysql-versions }} on ${{ matrix.operating-system }})
         runs-on: ${{ matrix.operating-system }}
         strategy:
             matrix:
