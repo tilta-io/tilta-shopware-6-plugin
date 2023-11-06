@@ -1,6 +1,6 @@
 {% block tcf_component_additional_details_fields %}
     {% block tcf_component_additional_details_fields_salutation_wrapper %}
-        <div class="{{ formRowClass }}">
+        <div class="row">
             {% block tcf_component_additional_details_fields_salutation %}
                 <div class="form-group col-12">
                     {% block tcf_component_additional_details_fields_salutation_label %}
@@ -11,7 +11,7 @@
 
                     {% block tcf_component_additional_details_form_salutation_select %}
                         <select id="{{ idPrefix ~ prefix }}personalSalutation"
-                                class="form-control {{ formSelectClass }}{% if formViolations.getViolations('/salutationId') is not empty %} is-invalid{% endif %}"
+                                class="form-control{% if formViolations.getViolations('/salutationId') is not empty %} is-invalid{% endif %}"
                                 name="{% if prefix %}{{ prefix }}[salutationId]{% else %}salutationId{% endif %}"
                                 required="required">
                             {% if not data.get('salutationId') %}
@@ -44,7 +44,7 @@
     {% endblock %}
 
     {% block tcf_component_additional_details_fields_phone_number_wrapper %}
-        <div class="{{ formRowClass }}">
+        <div class="row">
             {% block tcf_component_additional_details_fields_phone_number %}
                 <div class="form-group col-12">
                     {% block component_address_form_phone_number_label %}
@@ -79,7 +79,7 @@
     {% endblock %}
 
     {% block tcf_component_additional_details_fields_legal_form_wrapper %}
-        <div class="{{ formRowClass }}">
+        <div class="row">
             {% block tcf_component_additional_details_fields_legal_form %}
                 <div class="form-group col-12">
                     {% block tcf_component_additional_details_fields_legal_form_label %}
@@ -91,7 +91,7 @@
 
                     {% block tcf_component_additional_details_form_legal_form_select %}
                         <select id="{{ idPrefix ~ prefix }}legalForm"
-                                class="form-control {{ formSelectClass }}{% if formViolations.getViolations('/legalForm') is not empty %} is-invalid{% endif %}"
+                                class="form-control{% if formViolations.getViolations('/legalForm') is not empty %} is-invalid{% endif %}"
                                 name="legalForm"
                                 required="required">
                             {% if not data.get('legalForm') %}
@@ -121,7 +121,7 @@
     {% endblock %}
 
 {#    {% block tcf_component_additional_details_vatid %}#}
-{#        <div class="{{ formRowClass }}">#}
+{#        <div class="row">#}
 {#            {% block tcf_component_additional_details_vatid_name %}#}
 {#                <div class="form-group col-12">#}
 {#                    {% block tcf_component_additional_details_vatId_label %}#}
@@ -161,12 +161,12 @@
         {% endblock %}
 
         {% block tcf_component_additional_details_fields_incorporatedAt_selects %}
-            <div class="{{ formRowClass }}">
+            <div class="row">
                 {% block tcf_component_additional_details_fields_incorporatedAt_select_day %}
                     <div class="form-group col-4">
                         <select id="{{ idPrefix ~ prefix }}incorporatedAt"
                                 name="incorporatedAtDay"
-                                class="form-control {{ formSelectClass }}{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
+                                class="form-control{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
                                 required="required">
                             {% if not data.get('incorporatedAtDay') %}
                                 <option selected="selected" value="">{{ "account.tilta.incorporatedAtSelectDay"|trans|sw_sanitize }}</option>
@@ -183,7 +183,7 @@
                 {% block tcf_component_additional_details_fields_incorporatedAt_select_month %}
                     <div class="form-group col-4">
                         <select name="incorporatedAtMonth"
-                                class="form-control {{ formSelectClass }}{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
+                                class="form-control{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
                                 required="required">
                         {% if not data.get('incorporatedAtMonth') %}
                                 <option selected="selected" value="">{{ "account.tilta.incorporatedAtSelectMonth"|trans|sw_sanitize }}</option>
@@ -203,7 +203,7 @@
                         {% set startYear = currentYear - 120 %}
 
                         <select name="incorporatedAtYear"
-                                class="form-control {{ formSelectClass }}{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
+                                class="form-control{% if formViolations.getViolations('/incorporatedAt') is not empty %} is-invalid{% endif %}"
                                 required="required">
                             {% if not data.get('incorporatedAtYear') %}
                                 <option selected="selected" value="">{{ "account.tilta.incorporatedAtSelectYear"|trans|sw_sanitize }}</option>
@@ -228,12 +228,12 @@
     {% endblock %}
 
     {% block tcf_component_additional_details_fields_toc_wrapper %}
-        <div class="{{ formRowClass }}">
+        <div class="row">
             <div class="form-group col-12">
                 {% block tcf_component_additional_details_fields_toc %}
-                    <div class="{{ formCheckboxWrapperClass }}">
+                    <div class="form-check">
                         <input type="checkbox"
-                               class="{{ formCheckInputClass }}{% if formViolations.getViolations('/toc') is not empty %} is-invalid{% endif %}"
+                               class="form-check-input{% if formViolations.getViolations('/toc') is not empty %} is-invalid{% endif %}"
                                required="required"
                                id="toc"
                                name="toc"

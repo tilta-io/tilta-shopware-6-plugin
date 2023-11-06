@@ -1,0 +1,45 @@
+<sw-card class="tilta-payment-order-data-card"
+         :title="$tc('tilta.orderData.card.title')"
+         v-if="order.extensions.tiltaData"
+         positionIdentifier="order-details-tilta-card">
+    {% block tilta_payment_order_data %}
+        <sw-container columns="repeat(auto-fit, minmax(250px, 1fr))" gap="30px 30px">
+
+            <sw-description-list columns="1fr" grid="1fr">
+                <dt>{{ $tc('tilta.orderData.fields.status.label') }}</dt>
+                <dd>
+                    {{ order.extensions.tiltaData.status }}
+                </dd>
+            </sw-description-list>
+
+            <sw-description-list columns="1fr" grid="1fr">
+                <dt>{{ $tc('tilta.orderData.fields.orderExternalId.label') }}</dt>
+                <dd>
+                    {{ order.extensions.tiltaData.orderExternalId }}
+                </dd>
+            </sw-description-list>
+
+            <sw-description-list columns="1fr" grid="1fr">
+                <dt>{{ $tc('tilta.orderData.fields.buyerExternalId.label') }}</dt>
+                <dd>
+                    {{ order.extensions.tiltaData.buyerExternalId }}
+                </dd>
+            </sw-description-list>
+
+            <sw-description-list columns="1fr" grid="1fr">
+                <dt>{{ $tc('tilta.orderData.fields.invoiceNumber.label') }}</dt>
+                <dd>
+                    <sw-text-field v-model="order.extensions.tiltaData.invoiceNumber"></sw-text-field>
+                </dd>
+            </sw-description-list>
+
+            <sw-description-list columns="1fr" grid="1fr">
+                <dt>{{ $tc('tilta.orderData.fields.invoiceExternalId.label') }}</dt>
+                <dd>
+                    <sw-text-field v-model="order.extensions.tiltaData.invoiceExternalId"></sw-text-field>
+                </dd>
+            </sw-description-list>
+
+        </sw-container>
+    {% endblock %}
+</sw-card>

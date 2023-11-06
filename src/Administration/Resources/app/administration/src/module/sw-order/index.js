@@ -1,2 +1,3 @@
 import './component/tilta-block-transition';
-import './view/sw-order-detail-base';
+import './page/sw-order-detail';
+import './view/sw-order-detail-tilta-payment';

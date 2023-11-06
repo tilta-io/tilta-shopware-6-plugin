@@ -1,0 +1,26 @@
+{
+    "tilta": {
+        "orderData": {
+            "card": {
+                "title": "Tilta Zahlung"
+            },
+            "fields": {
+                "status": {
+                    "label": "Status"
+                },
+                "orderExternalId": {
+                    "label": "Externe Bestell-ID"
+                },
+                "buyerExternalId": {
+                    "label": "Externe Käufer-ID"
+                },
+                "invoiceNumber": {
+                    "label": "Rechnungsnummer"
+                },
+                "invoiceExternalId": {
+                    "label": "Rechnung-ID"
+                }
+            }
+        }
+    }
+}

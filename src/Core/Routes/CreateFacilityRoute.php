@@ -43,6 +43,7 @@ use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
 use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
 use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
+use UnexpectedValueException;
 
 /**
  * @Route(path="/store-api/tilta", defaults={"_loginRequired"=true, "_loginRequiredAllowGuest"=false, "_routeScope"={"store-api"}})
@@ -105,7 +106,11 @@ class CreateFacilityRoute
         $country = $customerAddress->getCountry();
 
         if ($requestDataBag->has('incorporatedAtDay') && $requestDataBag->has('incorporatedAtMonth') && $requestDataBag->has('incorporatedAtYear')) {
-            $requestDataBag->set('incorporatedAt', sprintf('%02d-%02d-%02d', $requestDataBag->getAlnum('incorporatedAtYear'), $requestDataBag->getAlnum('incorporatedAtMonth'), $requestDataBag->getAlnum('incorporatedAtDay')));
+            try {
+                $requestDataBag->set('incorporatedAt', sprintf('%02d-%02d-%02d', $requestDataBag->getAlnum('incorporatedAtYear'), $requestDataBag->getAlnum('incorporatedAtMonth'), $requestDataBag->getAlnum('incorporatedAtDay')));
+            } catch (UnexpectedValueException $unexpectedValueException) {
+                // do nothing. Validation exception got thrown later.
+            }
         }
 
         // TODO: use \Shopware\Core\Framework\Rule\RuleConstraints in the future
