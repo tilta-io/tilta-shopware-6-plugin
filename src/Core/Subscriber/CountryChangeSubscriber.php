@@ -12,6 +12,7 @@ namespace Tilta\TiltaPaymentSW6\Core\Subscriber;
 
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressDefinition;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -26,10 +27,16 @@ use Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper;
 
 class CountryChangeSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
+     */
     private EntityRepository $customerAddressRepository;
 
     private CustomerAddressHelper $customerAddressHelper;
 
+    /**
+     * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $customerAddressRepository
+     */
     public function __construct(
         EntityRepository $customerAddressRepository,
         CustomerAddressHelper $customerAddressHelper

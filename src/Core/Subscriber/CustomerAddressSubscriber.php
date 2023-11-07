@@ -30,6 +30,9 @@ use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
 
 class CustomerAddressSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
+     */
     private EntityRepository $customerAddressRepository;
 
     private BuyerService $buyerService;
@@ -55,6 +58,9 @@ class CustomerAddressSubscriber implements EventSubscriberInterface
         ],
     ];
 
+    /**
+     * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $customerAddressRepository
+     */
     public function __construct(
         EntityRepository $customerAddressRepository,
         BuyerService $buyerService,

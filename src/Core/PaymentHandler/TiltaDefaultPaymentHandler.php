@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Exception\SyncPaymentProcessException;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
@@ -30,6 +31,7 @@ use Tilta\Sdk\Service\Request\Order\CreateOrderRequest;
 use Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\CreateOrderRequestModelFactory;
 use Tilta\TiltaPaymentSW6\Core\Event\TiltaPaymentFailedEvent;
 use Tilta\TiltaPaymentSW6\Core\Event\TiltaPaymentSuccessfulEvent;
+use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaOrderDataEntity;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaOrderDataEntity as TransactionExtension;
 
 class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, TiltaPaymentMethod
@@ -38,6 +40,9 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
 
     private CreateOrderRequestModelFactory $requestModelFactory;
 
+    /**
+     * @var EntityRepository<EntityCollection<TiltaOrderDataEntity>>
+     */
     private EntityRepository $tiltaOrderDataRepository;
 
     private LoggerInterface $logger;
@@ -46,6 +51,9 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
 
     private DataValidator $dataValidator;
 
+    /**
+     * @param EntityRepository<EntityCollection<TiltaOrderDataEntity>> $tiltaOrderDataRepository
+     */
     public function __construct(
         CreateOrderRequest $createOrderRequest,
         CreateOrderRequestModelFactory $requestModelFactory,

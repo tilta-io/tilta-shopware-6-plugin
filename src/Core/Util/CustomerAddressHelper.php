@@ -15,6 +15,7 @@ use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderCustomer\OrderCustomerEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -24,12 +25,26 @@ use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
 
 class CustomerAddressHelper
 {
+    /**
+     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
+     */
     private EntityRepository $addressRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<OrderAddressEntity>>
+     */
     private EntityRepository $orderAddressRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>>
+     */
     private EntityRepository $tiltaCustomerAddressDataRepository;
 
+    /**
+     * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $addressRepository
+     * @param EntityRepository<EntityCollection<OrderAddressEntity>> $orderAddressRepository
+     * @param EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>> $tiltaCustomerAddressDataRepository
+     */
     public function __construct(
         EntityRepository $addressRepository,
         EntityRepository $orderAddressRepository,

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Tilta\TiltaPaymentSW6\Core\Bootstrap;
 
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -41,7 +42,7 @@ class PaymentMethods extends AbstractBootstrap
     ];
 
     /**
-     * @var EntityRepository
+     * @var EntityRepository<EntityCollection<PaymentMethodEntity>>
      * the interface has been deprecated, but shopware is using the Interface in a decorator for the repository.
      * so it will crash, if we are only using EntityRepository, cause an object of the decorator got injected into the constructor.
      * After Shopware has removed the decorator, we can replace this by a normal definition

@@ -16,6 +16,7 @@ use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEnt
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Customer\Exception\AddressNotFoundException;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -27,6 +28,7 @@ use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
 use Shopware\Core\System\Country\CountryEntity;
 use Shopware\Core\System\SalesChannel\GenericStoreApiResponse;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
+use Shopware\Core\System\Salutation\SalutationEntity;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Choice;
@@ -51,14 +53,24 @@ class CreateFacilityRoute
 
     private FacilityService $facilityService;
 
+    /**
+     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
+     */
     private EntityRepository $addressRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<SalutationEntity>>
+     */
     private EntityRepository $salutationRepository;
 
     private LoggerInterface $logger;
 
     private LegalFormService $legalFormService;
 
+    /**
+     * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $addressRepository
+     * @param EntityRepository<EntityCollection<SalutationEntity>> $salutationRepository
+     */
     public function __construct(
         DataValidator $dataValidator,
         BuyerService $buyerService,

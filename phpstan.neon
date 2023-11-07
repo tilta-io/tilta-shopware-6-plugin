@@ -16,6 +16,12 @@ parameters:
                 - '#Parameter \#1 \$.* of method Tilta\\Sdk\\.*\\Address::(setStreet|setHouseNumber|setCountry)\(\) expects .*, .*\|null given.#'
             path: src/Core/Components/Api/RequestDataFactory/CreateOrderRequestModelFactory.php
 
+        -
+            # verified errors: SW < 6.5.4.0 does not support generic types for EntityRepository
+            messages:
+                - '#PHPDoc tag @var for property .*Repository contains generic type Shopware\\Core\\Framework\\DataAbstractionLayer\\EntityRepository<.*but class Shopware\\Core\\Framework\\DataAbstractionLayer\\EntityRepository is not generic.#'
+                - '#PHPDoc tag @param for parameter .*Repository contains generic type Shopware\\Core\\Framework\\DataAbstractionLayer\\EntityRepository<.*but class Shopware\\Core\\Framework\\DataAbstractionLayer\\EntityRepository is not generic.#'
+
     reportUnmatchedIgnoredErrors: false
     tipsOfTheDay: false
     bootstrapFiles:

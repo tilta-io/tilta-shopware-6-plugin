@@ -16,6 +16,7 @@ use Shopware\Core\Checkout\Document\DocumentEntity;
 use Shopware\Core\Checkout\Document\Renderer\InvoiceRenderer;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -27,8 +28,14 @@ use Tilta\TiltaPaymentSW6\Core\Extension\OrderDataEntityExtension;
 
 class OrderHelper
 {
+    /**
+     * @var EntityRepository<EntityCollection<DocumentEntity>>
+     */
     private EntityRepository $documentRepository;
 
+    /**
+     * @param EntityRepository<EntityCollection<DocumentEntity>> $documentRepository
+     */
     public function __construct(
         EntityRepository $documentRepository
     ) {

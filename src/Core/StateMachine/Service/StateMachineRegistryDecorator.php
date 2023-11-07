@@ -17,6 +17,7 @@ use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEnti
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\StateMachine\Aggregation\StateMachineState\StateMachineStateCollection;
@@ -33,14 +34,24 @@ class StateMachineRegistryDecorator extends StateMachineRegistry // we must exte
 {
     protected ConfigService $configService;
 
+    /**
+     * @var EntityRepository<EntityCollection<OrderEntity>>
+     */
     protected EntityRepository $orderRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<OrderDeliveryEntity>>
+     */
     protected EntityRepository $orderDeliveryRepository;
 
     private StateMachineRegistry $innerService;
 
     private OrderHelper $orderHelper;
 
+    /**
+     * @param EntityRepository<EntityCollection<OrderEntity>> $orderRepository
+     * @param EntityRepository<EntityCollection<OrderDeliveryEntity>> $orderDeliveryRepository
+     */
     public function __construct(
         StateMachineRegistry $innerService,
         ConfigService $configService,

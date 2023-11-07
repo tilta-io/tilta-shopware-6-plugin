@@ -16,6 +16,7 @@ use RuntimeException;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
@@ -39,8 +40,14 @@ use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
 class BuyerService
 {
+    /**
+     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
+     */
     private EntityRepository $customerAddressRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>>
+     */
     private EntityRepository $tiltaAddressDataRepository;
 
     private TranslatorInterface $translator;
@@ -53,6 +60,10 @@ class BuyerService
 
     private EntityHelper $entityHelper;
 
+    /**
+     * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $customerAddressRepository
+     * @param EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>> $tiltaAddressDataRepository
+     */
     public function __construct(
         EntityRepository $customerAddressRepository,
         EntityRepository $tiltaAddressDataRepository,

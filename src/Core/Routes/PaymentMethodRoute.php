@@ -18,6 +18,7 @@ use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
 use Shopware\Core\Checkout\Payment\SalesChannel\AbstractPaymentMethodRoute;
 use Shopware\Core\Checkout\Payment\SalesChannel\PaymentMethodRouteResponse;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
@@ -39,6 +40,9 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
 
     private RequestStack $requestStack;
 
+    /**
+     * @var EntityRepository<EntityCollection<OrderEntity>>
+     */
     private EntityRepository $orderRepository;
 
     private CustomerAddressHelper $customerAddressHelper;
@@ -49,6 +53,9 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
 
     private AbstractContextSwitchRoute $contextSwitchRoute;
 
+    /**
+     * @param EntityRepository<EntityCollection<OrderEntity>> $orderRepository
+     */
     public function __construct(
         AbstractPaymentMethodRoute $innerService,
         ConfigService $configService,
