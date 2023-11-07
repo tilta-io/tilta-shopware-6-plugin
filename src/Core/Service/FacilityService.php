@@ -15,6 +15,7 @@ use Exception;
 use Shopware\Core\Checkout\Cart\Price\Struct\CartPrice;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tilta\Sdk\Exception\GatewayException\Facility\DuplicateFacilityException;
@@ -37,8 +38,14 @@ class FacilityService
 
     private BuyerService $buyerService;
 
+    /**
+     * @var EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>>
+     */
     private EntityRepository $tiltaDataRepository;
 
+    /**
+     * @param EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>> $tiltaDataRepository
+     */
     public function __construct(
         ContainerInterface $container,
         BuyerService $buyerService,

@@ -17,6 +17,7 @@ use RuntimeException;
 use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\Sdk\Model\Request\CreditNote\CreateCreditNoteRequestModel;
@@ -47,6 +48,9 @@ class OperationService
 
     private Logger $logger;
 
+    /**
+     * @var EntityRepository<EntityCollection<TiltaOrderDataEntity>>
+     */
     private EntityRepository $tiltaOrderDataRepository;
 
     private OrderHelper $orderHelper;
@@ -63,6 +67,9 @@ class OperationService
 
     private CancelOrderRequest $cancelOrderRequest;
 
+    /**
+     * @param EntityRepository<EntityCollection<TiltaOrderDataEntity>> $tiltaOrderDataRepository
+     */
     public function __construct(
         CreateInvoiceRequest $createInvoiceRequest,
         GetOrderDetailsRequest $orderDetailsRequest,

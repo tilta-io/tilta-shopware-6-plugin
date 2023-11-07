@@ -16,6 +16,7 @@ use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\Country\CountryEntity;
@@ -23,14 +24,32 @@ use Shopware\Core\System\Currency\CurrencyEntity;
 
 class EntityHelper
 {
+    /**
+     * @var EntityRepository<EntityCollection<CurrencyEntity>>
+     */
     private EntityRepository $currencyRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<CountryEntity>>
+     */
     private EntityRepository $countryRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<OrderAddressEntity>>
+     */
     private EntityRepository $orderAddressRepository;
 
+    /**
+     * @var EntityRepository<EntityCollection<CustomerEntity>>
+     */
     private EntityRepository $customerRepository;
 
+    /**
+     * @param EntityRepository<EntityCollection<CurrencyEntity>> $currencyRepository
+     * @param EntityRepository<EntityCollection<CountryEntity>> $countryRepository
+     * @param EntityRepository<EntityCollection<OrderAddressEntity>> $orderAddressRepository
+     * @param EntityRepository<EntityCollection<CustomerEntity>> $customerRepository
+     */
     public function __construct(
         EntityRepository $currencyRepository,
         EntityRepository $countryRepository,

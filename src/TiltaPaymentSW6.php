@@ -12,6 +12,7 @@ namespace Tilta\TiltaPaymentSW6;
 
 use Exception;
 use RuntimeException;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -147,7 +148,7 @@ class TiltaPaymentSW6 extends Plugin
             new PaymentMethods(),
         ];
 
-        /** @var EntityRepository $pluginRepository */
+        /** @var EntityRepository<EntityCollection<PluginEntity>> $pluginRepository */
         $pluginRepository = $this->container->get('plugin.repository'); // @phpstan-ignore-line
         $plugins = $pluginRepository->search(
             (new Criteria())->addFilter(new EqualsFilter('baseClass', static::class)),
