@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -114,6 +115,7 @@ class CreateFacilityRoute
                 ->add('phoneNumber', new NotBlank(), new Type('string'))
                 ->add('legalForm', new NotBlank(), new Choice($this->legalFormService->getLegalFormsOnlyCodes($country->getIso() ?? '-')))
                 ->add('incorporatedAt', new NotBlank(), new Type('string'), new Date())
+                ->add('toc', new NotBlank(), new EqualTo('1'))
         );
 
         try {

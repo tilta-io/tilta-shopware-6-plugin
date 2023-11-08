@@ -100,6 +100,7 @@ class CreateFacilityRouteTest extends TestCase
             'salutationId' => $this->getValidSalutationId(),
             'phoneNumber' => '0123456789',
             'legalForm' => 'DE_GMBH',
+            'toc' => '1',
         ]);
 
         $response = $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
@@ -121,6 +122,7 @@ class CreateFacilityRouteTest extends TestCase
             'salutationId' => $this->getValidSalutationId(),
             'phoneNumber' => '0123456789',
             'legalForm' => 'DE_GMBH',
+            'toc' => '1',
         ]);
 
         $requestData->set($field, $value);
@@ -144,6 +146,8 @@ class CreateFacilityRouteTest extends TestCase
             ['phoneNumber', null],
             ['legalForm', null],
             ['legalForm', 'invalid-value'],
+            ['toc', null],
+            ['toc', 'invalid-value'],
         ];
     }
 }

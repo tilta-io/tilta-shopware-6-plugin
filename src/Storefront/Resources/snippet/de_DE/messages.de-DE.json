@@ -24,7 +24,8 @@
 			"incorporatedAtSelectYear": "Jahr",
 			"legalFormLabel": "Rechtsform",
 			"legalFormPlaceholder": "Rechtsform",
-			"loadingScreenText": "Dies könnte einige Sekunden dauern, bitte schließen Sie das Fenster nicht."
+			"loadingScreenText": "Dies könnte einige Sekunden dauern, bitte schließen Sie das Fenster nicht.",
+			"terms-of-condition": "Der Rechnungskauf wird in Zusammenarbeit mit der Varengold Bank angeboten. Ich bestätige, dass ich die Datenschutzbestimmungen von <a href=\"https://static.tilta.io/data-privacy/buyers/varengold-data-protection-information_v2.7_2021-05-01_de_DE.pdf\" target=\"_blank\">Varengold</a> und <a href=\"https://static.tilta.io/data-privacy/buyers/tilta-data-protection-information_v1.0_2023-02-17_de_DE.pdf\" target=\"_blank\">Tilta</a> gelesen habe und akzeptiere diese."
 		}
 	},
 	"tilta": {
