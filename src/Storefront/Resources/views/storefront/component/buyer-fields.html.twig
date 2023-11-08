@@ -222,6 +222,28 @@
             </div>
         {% endblock %}
     {% endblock %}
+
+    {% block tcf_component_additional_details_fields_toc_wrapper %}
+        <div class="{{ formRowClass }}">
+            <div class="form-group col-12">
+                {% block tcf_component_additional_details_fields_toc %}
+                    <div class="{{ formCheckboxWrapperClass }}">
+                        <input type="checkbox"
+                               class="{{ formCheckInputClass }}{% if formViolations.getViolations('/toc') is not empty %} is-invalid{% endif %}"
+                               required="required"
+                               id="toc"
+                               name="toc"
+                               value="1"/>
+
+                        <label for="toc" class="custom-control-label">
+                            {{ "account.tilta.terms-of-condition"|trans|raw }}
+                        </label>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    {% endblock %}
+
 {% endblock %}
 
 {% block tcf_loading_screen %}
