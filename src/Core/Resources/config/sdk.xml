@@ -26,7 +26,7 @@
         <service id="Tilta\Sdk\Service\Request\Buyer\UpdateBuyerRequest"/>
         <service id="Tilta\Sdk\Service\Request\Facility\GetFacilityRequest"/>
         <service id="Tilta\Sdk\Service\Request\Facility\CreateFacilityRequest"/>
-        <service id="Tilta\Sdk\Service\Request\Order\GetPaymentTermsRequest"/>
+        <service id="Tilta\Sdk\Service\Request\PaymentTerm\GetPaymentTermsRequest"/>
         <service id="Tilta\Sdk\Service\Request\Order\CreateOrderRequest"/>
         <service id="Tilta\Sdk\Service\Request\Order\CancelOrderRequest"/>
         <service id="Tilta\Sdk\Service\Request\Order\GetOrderDetailsRequest"/>

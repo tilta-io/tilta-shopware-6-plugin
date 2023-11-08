@@ -29,7 +29,7 @@ use Tilta\Sdk\Exception\GatewayException\Facility\NoActiveFacilityFoundException
 use Tilta\Sdk\Exception\GatewayException\NotFoundException\BuyerNotFoundException;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\Sdk\Model\Response\Facility;
-use Tilta\Sdk\Model\Response\Order\GetPaymentTermsResponseModel;
+use Tilta\Sdk\Model\Response\PaymentTerm\GetPaymentTermsResponseModel;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
 use Tilta\TiltaPaymentSW6\Core\PaymentHandler\TiltaDefaultPaymentHandler;
