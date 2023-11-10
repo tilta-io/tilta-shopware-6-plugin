@@ -39,7 +39,7 @@ class AccountSubscriber implements EventSubscriberInterface
         if ($event->getStorefrontRequest()->request->has('tilta')) {
             $event->getStoreApiRequest()->request->set(
                 'tilta',
-                $event->getStorefrontRequest()->request->get('tilta')
+                $event->getStorefrontRequest()->request->all()['tilta'] ?? []
             );
         }
     }

@@ -18,6 +18,7 @@ use Shopware\Core\Checkout\Payment\Exception\SyncPaymentProcessException;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Uuid\Uuid;
+use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidationDefinition;
 use Shopware\Core\Framework\Validation\DataValidator;
@@ -87,8 +88,8 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
             throw new SyncPaymentProcessException($transaction->getOrderTransaction()->getId(), 'Missing required Tilta data in request data.', $constraintViolationException);
         }
 
-        /** @var RequestDataBag $tiltaRequestData */
-        $tiltaRequestData = $dataBag->get('tilta');
+        $tiltaDataArray = $dataBag->all()['tilta'] ?? [];
+        $tiltaRequestData = new DataBag(is_array($tiltaDataArray) ? $tiltaDataArray : []);
         $tiltaPaymentMethod = $tiltaRequestData->getAlnum('payment_method');
         $buyerExternalId = $tiltaRequestData->get('buyer_external_id'); // do not use `getAlnum` because the value could be more than alphanumerics
 
