@@ -14,7 +14,7 @@
 
 {% block page_checkout_aside_actions %}
     {# allow submitting order only if the buyer can checkoput #}
-    {% if not page.extensions.tilta or page.extensions.tilta.allowedPaymentMethods %}
+    {% if not page.extensions.tilta or page.extensions.tilta.allowedPaymentTerms %}
         {{ parent() }}
     {% endif %}
 {% endblock %}

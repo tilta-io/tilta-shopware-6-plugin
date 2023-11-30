@@ -24,6 +24,8 @@ use Shopware\Core\Framework\Struct\ArrayStruct;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Tilta\Sdk\Enum\PaymentMethodEnum;
+use Tilta\Sdk\Enum\PaymentTermEnum;
 use Tilta\Sdk\Exception\GatewayException\Facility\FacilityExceededException;
 use Tilta\Sdk\Exception\GatewayException\Facility\NoActiveFacilityFoundException;
 use Tilta\Sdk\Exception\GatewayException\NotFoundException\BuyerNotFoundException;
@@ -116,7 +118,8 @@ class TiltaCheckoutDataRouteTest extends TestCase
             ],
             'payment_terms' => [
                 [
-                    'payment_method' => 'BNPL30',
+                    'payment_method' => PaymentMethodEnum::TRANSFER,
+                    'payment_term' => PaymentTermEnum::BNPL30,
                     'name' => 'invoice',
                     'due_date' => (new DateTime())->modify('+1 day')->getTimestamp(),
                     'amount' => [
@@ -138,7 +141,7 @@ class TiltaCheckoutDataRouteTest extends TestCase
         static::assertInstanceOf(ArrayStruct::class, $response);
         static::assertEquals(null, $response->get('error'));
         static::assertEquals(null, $response->get('action'));
-        static::assertEquals([$expectedPaymentTermsResponse], $response->get('allowedPaymentMethods'));
+        static::assertEquals([$expectedPaymentTermsResponse], $response->get('allowedPaymentTerms'));
         static::assertEquals('buyer-external-id', $response->get('buyerExternalId'));
     }
 
@@ -217,7 +220,7 @@ class TiltaCheckoutDataRouteTest extends TestCase
         static::assertInstanceOf(ArrayStruct::class, $response);
         static::assertEquals('facility-too-low', $response->get('error'));
         static::assertEquals(null, $response->get('action'));
-        static::assertEquals(null, $response->get('allowedPaymentMethods'));
+        static::assertEquals(null, $response->get('allowedPaymentTerms'));
         static::assertEquals(null, $response->get('buyerExternalId'));
     }
 
@@ -239,7 +242,7 @@ class TiltaCheckoutDataRouteTest extends TestCase
         static::assertInstanceOf(ArrayStruct::class, $response);
         static::assertEquals($expectedError, $response->get('error'));
         static::assertEquals($expectedAction, $response->get('action'));
-        static::assertEquals(null, $response->get('allowedPaymentMethods'));
+        static::assertEquals(null, $response->get('allowedPaymentTerms'));
         static::assertEquals(null, $response->get('buyerExternalId'));
 
         if ($response->get('action') === 'buyer-registration-required' || $response->get('action') === 'facility-request-required') {

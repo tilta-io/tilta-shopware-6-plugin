@@ -50,7 +50,7 @@ class CreateOrderRequestModelFactory
     /**
      * @throws InvalidFieldValueException
      */
-    public function createModel(OrderEntity $orderEntity, string $tiltaPaymentMethod, string $buyerExternalId): CreateOrderRequestModel
+    public function createModel(OrderEntity $orderEntity, string $tiltaPaymentMethod, string $tiltaPaymentTerm, string $buyerExternalId): CreateOrderRequestModel
     {
         $orderRequestModel = new CreateOrderRequestModel();
 
@@ -58,6 +58,7 @@ class CreateOrderRequestModelFactory
             ->setMerchantExternalId($this->configService->getMerchantExternalId())
             ->setBuyerExternalId($buyerExternalId)
             ->setPaymentMethod($tiltaPaymentMethod)
+            ->setPaymentTerm($tiltaPaymentTerm)
             ->setOrderedAt($orderEntity->getCreatedAt())
             ->setOrderExternalId($orderEntity->getOrderNumber())
             ->setAmount($this->amountModelFactory->createAmountForOrder($orderEntity));
