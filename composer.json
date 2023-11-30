@@ -48,7 +48,7 @@
     "require": {
         "php": "^7.4 || ^8.0",
 		"shopware/core": "~6.4.14",
-        "tilta-io/tilta-php-sdk": "dev-dev"
+        "tilta-io/tilta-php-sdk": "1.0.0-alpha3"
     },
     "scripts": {
         "rector-fix": "./vendor/bin/rector process --clear-cache",
