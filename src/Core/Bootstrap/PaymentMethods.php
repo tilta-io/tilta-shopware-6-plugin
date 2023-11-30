@@ -44,7 +44,7 @@ class PaymentMethods extends AbstractBootstrap
     /**
      * @var EntityRepository<EntityCollection<PaymentMethodEntity>>
      */
-    private EntityRepository $paymentRepository;
+    private object $paymentRepository;
 
     public function injectServices(): void
     {
