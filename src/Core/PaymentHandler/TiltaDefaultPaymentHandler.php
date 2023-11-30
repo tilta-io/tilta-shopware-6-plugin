@@ -80,6 +80,7 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
             'tilta',
             (new DataValidationDefinition())
                 ->add('payment_method', new NotBlank(), new Type('string'))
+                ->add('payment_term', new NotBlank(), new Type('string'))
                 ->add('buyer_external_id', new NotBlank(), new Type('string'))
         );
         try {
@@ -91,6 +92,7 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
         $tiltaDataArray = $dataBag->all()['tilta'] ?? [];
         $tiltaRequestData = new DataBag(is_array($tiltaDataArray) ? $tiltaDataArray : []);
         $tiltaPaymentMethod = $tiltaRequestData->getAlnum('payment_method');
+        $tiltaPaymentTerm = $tiltaRequestData->getAlnum('payment_term');
         $buyerExternalId = $tiltaRequestData->get('buyer_external_id'); // do not use `getAlnum` because the value could be more than alphanumerics
 
         if (!is_string($buyerExternalId)) {
@@ -98,7 +100,7 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
         }
 
         try {
-            $requestModel = $this->requestModelFactory->createModel($orderEntity, $tiltaPaymentMethod, $buyerExternalId);
+            $requestModel = $this->requestModelFactory->createModel($orderEntity, $tiltaPaymentMethod, $tiltaPaymentTerm, $buyerExternalId);
             $responseModel = $this->createOrderRequest->execute($requestModel);
         } catch (TiltaException $tiltaException) {
             $this->eventDispatcher->dispatch(new TiltaPaymentFailedEvent($tiltaException, $orderEntity, $transaction->getOrderTransaction(), $requestModel ?? null));

@@ -134,7 +134,7 @@ class TiltaCheckoutDataRoute
                     'days' => $term->getDueDate()->diff((new DateTime())->setTime(0, 0))->days,
                 ]), $paymentTerms->getPaymentTerms());
 
-                $extensionData->set('allowedPaymentMethods', $terms);
+                $extensionData->set('allowedPaymentTerms', $terms);
                 $extensionData->set('buyerExternalId', BuyerService::getBuyerExternalId($customerAddress));
             } else {
                 $extensionData->set('action', 'buyer-registration-required');

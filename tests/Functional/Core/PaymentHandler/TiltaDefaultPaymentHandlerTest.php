@@ -20,6 +20,9 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidator;
+use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
+use Tilta\Sdk\Enum\PaymentMethodEnum;
+use Tilta\Sdk\Enum\PaymentTermEnum;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\Sdk\Model\Order;
 use Tilta\Sdk\Model\Request\Order\CreateOrderRequestModel;
@@ -35,7 +38,7 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
     /**
      * @dataProvider tiltaDataMissingDataProvider
      */
-    public function testTiltaDataMissing(array $returnData)
+    public function testTiltaDataMissing(array $returnData, string $missingField = null)
     {
         $handler = new TiltaDefaultPaymentHandler(
             $createOrderRequest = $this->createMock(CreateOrderRequest::class),
@@ -67,10 +70,23 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         try {
             $handler->pay($transactionStruct, new RequestDataBag($returnData), $context);
         } catch (SyncPaymentProcessException $exception) {
+            $previousException = $exception->getPrevious();
+            static::assertInstanceOf(ConstraintViolationException::class, $previousException);
+            if ($missingField) {
+                static::assertCount(1, $previousException->getViolations(), 'Expected exactly 1 violation');
+                $violations = $previousException->getViolations($path = '/tilta/' . $missingField);
+                static::assertCount(1, $violations, 'Expected on validation error on path ' . $path);
+            } else {
+                static::assertCount(3, $previousException->getViolations(), 'Expected exactly 3 violations');
+            }
+
             // deprecated: ShopwareHttpException::parameters has been added in 6.4.15 - can be adjusted for 6.5 (or >=6.4.15)
             if (method_exists(SyncPaymentProcessException::class, 'getParameter')) {
                 static::assertNotNull($exception->getParameter('errorMessage'));
                 static::assertMatchesRegularExpression('/missing/i', $exception->getParameter('errorMessage'));
+                if ($missingField) {
+                    static::assertMatchesRegularExpression('/missing/i', $exception->getParameter('errorMessage'));
+                }
             } else {
                 throw $exception;
             }
@@ -79,32 +95,39 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
 
     public static function tiltaDataMissingDataProvider(): array
     {
+        $validData = [
+            'payment_method' => PaymentMethodEnum::CASH,
+            'payment_term' => PaymentTermEnum::BNPL7,
+            'buyer_external_id' => 'buyer external id',
+        ];
+
+        $list = [];
+        foreach (array_keys($validData) as $key) {
+            $data = $validData;
+            unset($data[$key]);
+            $list[] = [[
+                'tilta' => $data,
+            ], $key];
+
+            $data = $validData;
+            $data[$key] = null;
+            $list[] = [[
+                'tilta' => $data,
+            ], $key];
+
+            $data = $validData;
+            $data[$key] = '';
+            $list[] = [[
+                'tilta' => $data,
+            ], $key];
+        }
+
         return [
             [[]],
             [[
                 'tilta' => [],
             ]],
-            [[
-                'tilta' => [
-                    'payment_method' => '',
-                    'buyer_external_id' => '',
-
-                ],
-            ]],
-            [[
-                'tilta' => [
-                    'payment_method' => '',
-                    'buyer_external_id' => 'buyer external id',
-
-                ],
-            ]],
-            [[
-                'tilta' => [
-                    'payment_method' => 'BNPL30',
-                    'buyer_external_id' => '',
-
-                ],
-            ]],
+            ...$list,
         ];
     }
 
@@ -138,7 +161,8 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
 
         $handler->pay($transactionStruct, new RequestDataBag([
             'tilta' => [
-                'payment_method' => 'BNPL30',
+                'payment_method' => PaymentMethodEnum::CASH,
+                'payment_term' => PaymentTermEnum::BNPL30,
                 'buyer_external_id' => 'buyer-external-id',
 
             ],
@@ -175,7 +199,8 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         try {
             $handler->pay($transactionStruct, new RequestDataBag([
                 'tilta' => [
-                    'payment_method' => 'BNPL30',
+                    'payment_method' => PaymentMethodEnum::CASH,
+                    'payment_term' => PaymentTermEnum::BNPL30,
                     'buyer_external_id' => 'buyer-external-id',
 
                 ],
@@ -222,7 +247,8 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
         try {
             $handler->pay($transactionStruct, new RequestDataBag([
                 'tilta' => [
-                    'payment_method' => 'BNPL30',
+                    'payment_method' => PaymentMethodEnum::CASH,
+                    'payment_term' => PaymentTermEnum::BNPL30,
                     'buyer_external_id' => 'buyer-external-id',
 
                 ],
@@ -272,7 +298,8 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
 
         $handler->pay($transactionStruct, new RequestDataBag([
             'tilta' => [
-                'payment_method' => 'BNPL30',
+                'payment_method' => PaymentMethodEnum::CASH,
+                'payment_term' => PaymentTermEnum::BNPL30,
                 'buyer_external_id' => 'buyer-external-id',
 
             ],

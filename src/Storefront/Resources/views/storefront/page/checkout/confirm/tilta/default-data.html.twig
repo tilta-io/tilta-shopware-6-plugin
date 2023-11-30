@@ -9,37 +9,32 @@
                     {% endblock %}
 
                     <div class="tilta--billing-form">
-                        {% if tiltaData.error %}
-                            {% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
-                                type: "danger",
-                                content: "tilta.messages.checkout."~tiltaData.error|trans|sw_sanitize
-                            } %}
-                        {% endif %}
-
-                        {% if tiltaData.action === 'buyer-registration-required' || tiltaData.action === 'facility-request-required' %}
-                            {% sw_include '@TiltaStorefrontBundle/storefront/page/checkout/confirm/tilta/buyer-registration.html.twig' with {
-                                tiltaData: page.extensions.tilta
-                            } %}
-                        {% endif %}
-
-                        {% if tiltaData.allowedPaymentMethods %}
-                            <input type="hidden" form="confirmOrderForm" name="tilta[buyer_external_id]" value="{{ tiltaData.buyerExternalId }}">
-                            {% if tiltaData.allowedPaymentMethods|length == 1 %}
-                                <input type="hidden" form="confirmOrderForm" name="tilta[payment_method]" value="{{ tiltaData.allowedPaymentMethods[0].payment_method }}">
-                                <p>{{ "tilta.checkout.informationAboutDuration"|trans({"%duration": tiltaData.allowedPaymentMethods[0].days}) }}</p>
-                            {% else %}
-                                <div class="form-row">
-                                    <div class="form-group col-md-3 col-sm-6">
-                                        <label class="form-label" for="tilta-payment-method-select">{{ "tilta.checkout.paymentMethodSelectField"|trans }}</label>
-                                        <select id="tilta-payment-method-select" class="form-control" form="confirmOrderForm" name="tilta[payment_method]">
-                                            {% for method in tiltaData.allowedPaymentMethods %}
-{#                                                <option value="{{ method }}">{{ method }}</option>#}
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
+                        {% block page_checkout_confirm_tilta_alerts %}
+                            {% if tiltaData.error %}
+                                {% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
+                                    type: "danger",
+                                    content: "tilta.messages.checkout."~tiltaData.error|trans|sw_sanitize
+                                } %}
                             {% endif %}
-                        {% endif %}
+                        {% endblock %}
+
+                        {% block page_checkout_confirm_tilta_buyer_registration %}
+                            {% if tiltaData.action === 'buyer-registration-required' || tiltaData.action === 'facility-request-required' %}
+                                {% sw_include '@TiltaStorefrontBundle/storefront/page/checkout/confirm/tilta/buyer-registration.html.twig' with {
+                                    tiltaData: page.extensions.tilta
+                                } %}
+                            {% endif %}
+                        {% endblock %}
+
+                        {# Please note: as you can see, this has been not implemented fully. Currently only the first payment term should be used. If you wan't you can override this block and implenent it like you want. Please please check carefully for one of the next updates. #}
+                        {% block page_checkout_confirm_tilta_buyer_payment_term %}
+                            {% if tiltaData.allowedPaymentTerms %}
+                                <input type="hidden" form="confirmOrderForm" name="tilta[buyer_external_id]" value="{{ tiltaData.buyerExternalId }}">
+                                <input type="hidden" form="confirmOrderForm" name="tilta[payment_method]" value="{{ tiltaData.allowedPaymentTerms[0].payment_method }}">
+                                <input type="hidden" form="confirmOrderForm" name="tilta[payment_term]" value="{{ tiltaData.allowedPaymentTerms[0].payment_term }}">
+                                <p>{{ "tilta.checkout.informationAboutDuration"|trans({"%duration": tiltaData.allowedPaymentTerms[0].days}) }}</p>
+                            {% endif %}
+                        {% endblock %}
                     </div>
                 </div>
             </div>
