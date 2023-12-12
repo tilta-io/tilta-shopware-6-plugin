@@ -115,7 +115,7 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
             $price = $order->getPrice();
         } else {
             $customer = $context->getCustomer();
-            $billingAddress = $customer instanceof CustomerEntity ? $customer->getActiveBillingAddress() : null;
+            $billingAddress = $customer instanceof CustomerEntity && !$customer->getGuest() ? $customer->getActiveBillingAddress() : null;
             $price = $this->cartService->getCart($context->getToken(), $context)->getPrice();
         }
 
