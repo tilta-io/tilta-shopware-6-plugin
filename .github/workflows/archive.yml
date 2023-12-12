@@ -16,16 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-        ######## TEMPORARY ########
-        ## util sdk got released ##
-        ######## TEMPORARY ########
-      - run: |
-          composer config prefer-stable true
-          composer config minimum-stability dev
-        ######## TEMPORARY ########
-        ########    END    ########
-        ######## TEMPORARY ########
-
       - uses: actions/setup-go@v4
 
       - run: go install github.com/FriendsOfShopware/shopware-cli@latest
