@@ -1,7 +1,7 @@
 {
     "name": "tilta/shopware6-payment-module",
     "description": "Tilta as payment method for Shopware 6",
-    "version": "dev-1.0",
+    "version": "1.0.0",
     "license": "MIT",
 	"type": "shopware-platform-plugin",
     "authors": [
