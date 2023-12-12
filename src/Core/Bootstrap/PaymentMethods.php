@@ -26,7 +26,7 @@ class PaymentMethods extends AbstractBootstrap
         TiltaDefaultPaymentHandler::class => [
             'handlerIdentifier' => TiltaDefaultPaymentHandler::class,
             'name' => 'Tilta Invoice',
-            'description' => 'Todo',
+            'description' => 'Invoice Payment allows you to delay payment for your order until a more convenient time.',
             'afterOrderEnabled' => true,
             'translations' => [
                 'de-DE' => [
