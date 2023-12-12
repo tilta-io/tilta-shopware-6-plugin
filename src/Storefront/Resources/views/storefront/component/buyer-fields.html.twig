@@ -61,6 +61,10 @@
                                name="phoneNumber"
                                value="{{ data.get('phoneNumber') }}"
                                required="required">
+
+                        {% block tcf_component_additional_details_fields_phone_number_notice %}
+                            <small class="text-muted">{{ "tilta.address.phoneNumberNotice"|trans|sw_sanitize }}</small>
+                        {% endblock %}
                     {% endblock %}
 
                     {% block tcf_component_additional_details_fields_phone_input_error %}

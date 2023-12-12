@@ -66,6 +66,12 @@
 			"buyerRegistration": {
 				"intro": "For utilizing this payment method, please request a credit availability limit from the payment service provider Tilta Fintech GmbH. Once approved, you can continue with your order."
 			}
+		},
+		"address": {
+			"phoneNumberNotice": "Please note the correct format of the phone number. It must start with the country code and should not contain any spaces. Example: +491731010101."
 		}
+	},
+	"error": {
+		"VIOLATION::REGEX_FAILED_ERROR": "The field does not match the specified pattern."
 	}
 }

@@ -19,7 +19,7 @@
 {% block component_address_form_phone_number %}
     {% set hasTiltaExternalBuyerId = data.extensions and data.extensions.tiltaData and data.extensions.tiltaData.buyerExternalId is not null %}
     {% if config('core.loginRegistration.showPhoneNumberField') or not hasTiltaExternalBuyerId %}
-        {{ parent }}
+        {{ parent() }}
     {% else %}
         {% block component_address_form_phone_number_tilta_override %}
             <div class="form-group col-md-6">

@@ -67,6 +67,12 @@
 			"buyerRegistration": {
 				"intro": "Um diese Zahlungsart zu nutzen, bitten wir Sie, einen Kreditverfügbarkeitsrahmen beim Zahlungsdienstleister Tilta Fintech GmbH anzufragen. Nach erfolgreicher Anfrage können Sie mit Ihrer Bestellung fortfahren."
 			}
+		},
+		"address": {
+			"phoneNumberNotice": "Bitte beachten Sie die korrekte Schreibweise der Telefonnummer. Diese muss mit dem Ländercode beginnen und darf keine Leerzeichen enthalten. Beispiel: +491731010101"
 		}
+	},
+	"error": {
+		"VIOLATION::REGEX_FAILED_ERROR": "Das Feld entspricht nicht dem vorgegebenen Pattern."
 	}
 }

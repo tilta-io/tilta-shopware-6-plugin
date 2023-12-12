@@ -98,7 +98,7 @@ class CreateFacilityRouteTest extends TestCase
             'incorporatedAtMonth' => 5,
             'incorporatedAtYear' => 2000,
             'salutationId' => $this->getValidSalutationId(),
-            'phoneNumber' => '0123456789',
+            'phoneNumber' => '+491731010101',
             'legalForm' => 'DE_GMBH',
             'toc' => '1',
         ]);
@@ -111,43 +111,87 @@ class CreateFacilityRouteTest extends TestCase
     /**
      * @dataProvider failureDataProvider
      */
-    public function testFailure(string $field, $value): void
+    public function testFailure(string $field, $value, string $expectedError = null, string $violationField = null): void
     {
-        $this->expectException(ConstraintViolationException::class);
-
         $requestData = new RequestDataBag([
             'incorporatedAtDay' => 20,
             'incorporatedAtMonth' => 5,
             'incorporatedAtYear' => 2000,
             'salutationId' => $this->getValidSalutationId(),
-            'phoneNumber' => '0123456789',
+            'phoneNumber' => '+491731010101',
             'legalForm' => 'DE_GMBH',
             'toc' => '1',
         ]);
 
         $requestData->set($field, $value);
 
-        $response = $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
-
-        static::assertInstanceOf(SuccessResponse::class, $response);
+        try {
+            $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
+            $this->fail('ConstraintViolationException was not thrown');
+        } catch (ConstraintViolationException $constraintViolationException) {
+            $violations = $constraintViolationException->getViolations();
+            static::assertEquals(1, $violations->count(), 'there should by exactly one violations');
+            static::assertEquals('/' . ($violationField ?? $field), $violations->get(1)->getPropertyPath());
+            if ($expectedError !== null) {
+                static::assertEquals($expectedError, $violations->get(1)->getCode());
+            }
+        }
     }
 
     public function failureDataProvider(): array
     {
+        // we won't validate for message on the date-fields, because of different messages within different SW-Versions
         return [
-            ['incorporatedAtDay', null],
-            ['incorporatedAtDay', 99],
-            ['incorporatedAtMonth', null],
-            ['incorporatedAtMonth', 99],
-            ['incorporatedAtYear', null],
-            ['incorporatedAtYear', 0],
-            ['salutationId', null],
-            ['salutationId', Uuid::randomHex()],
-            ['phoneNumber', null],
-            ['legalForm', null],
-            ['legalForm', 'invalid-value'],
-            ['toc', null],
-            ['toc', 'invalid-value'],
+            ['incorporatedAtDay', null, null, 'incorporatedAt'],
+            ['incorporatedAtDay', 99, null, 'incorporatedAt'],
+            ['incorporatedAtMonth', null, null, 'incorporatedAt'],
+            ['incorporatedAtMonth', 99, null, 'incorporatedAt'],
+            ['incorporatedAtYear', null, null, 'incorporatedAt'],
+            ['incorporatedAtYear', 0, null, 'incorporatedAt'],
+            ['salutationId', null, 'VIOLATION::IS_BLANK_ERROR'],
+            ['salutationId', Uuid::randomHex(), 'VIOLATION::NO_SUCH_CHOICE_ERROR'],
+            ['phoneNumber', null, 'VIOLATION::IS_BLANK_ERROR'],
+            ['legalForm', null, 'VIOLATION::IS_BLANK_ERROR'],
+            ['legalForm', 'invalid-value', 'VIOLATION::NO_SUCH_CHOICE_ERROR'],
+            ['toc', null, 'VIOLATION::IS_BLANK_ERROR'],
+            ['toc', 'invalid-value', 'VIOLATION::NOT_EQUAL_ERROR'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidPhoneNumbersProvider
+     */
+    public function testInvalidPhoneNumbers(string $value): void
+    {
+        $requestData = new RequestDataBag([
+            'incorporatedAtDay' => 20,
+            'incorporatedAtMonth' => 5,
+            'incorporatedAtYear' => 2000,
+            'salutationId' => $this->getValidSalutationId(),
+            'phoneNumber' => $value,
+            'legalForm' => 'DE_GMBH',
+            'toc' => '1',
+        ]);
+
+        try {
+            $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
+            $this->fail('ConstraintViolationException was not thrown');
+        } catch (ConstraintViolationException $constraintViolationException) {
+            $violations = $constraintViolationException->getViolations();
+            static::assertEquals(1, $violations->count(), 'there should by exactly one violations');
+            static::assertEquals('/phoneNumber', $violations->get(1)->getPropertyPath());
+            static::assertEquals('VIOLATION::REGEX_FAILED_ERROR', $violations->get(1)->getCode());
+        }
+    }
+
+    public function invalidPhoneNumbersProvider(): array
+    {
+        return [
+            ['01731010101'],
+            ['491731010101'],
+            ['+49 1731010101'],
+            ['+49 173 1010101'],
+            ['+49 173 101 010 1'],
         ];
     }
 }

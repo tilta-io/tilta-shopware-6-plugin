@@ -35,6 +35,7 @@ use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Tilta\Sdk\Exception\TiltaException;
@@ -112,7 +113,7 @@ class CreateFacilityRoute
             $requestDataBag->all(),
             (new DataValidationDefinition())
                 ->add('salutationId', new NotBlank(), new Choice($this->getSalutationIds()))
-                ->add('phoneNumber', new NotBlank(), new Type('string'))
+                ->add('phoneNumber', new NotBlank(), new Type('string'), new Regex('/^\+[1-9]{2}\d+/'))
                 ->add('legalForm', new NotBlank(), new Choice($this->legalFormService->getLegalFormsOnlyCodes($country->getIso() ?? '-')))
                 ->add('incorporatedAt', new NotBlank(), new Type('string'), new Date())
                 ->add('toc', new NotBlank(), new EqualTo('1'))
@@ -122,7 +123,7 @@ class CreateFacilityRoute
             $incorporatedAt = $requestDataBag->get('incorporatedAt');
             $this->buyerService->updateCustomerAddressData($customerAddress, [
                 'salutationId' => $requestDataBag->getAlnum('salutationId'),
-                'phoneNumber' => $requestDataBag->getAlnum('phoneNumber'),
+                'phoneNumber' => $requestDataBag->get('phoneNumber'),
                 'legalForm' => $requestDataBag->get('legalForm'),
                 'incorporatedAt' => is_string($incorporatedAt) ? DateTime::createFromFormat('Y-m-d', $incorporatedAt) : null,
             ]);
