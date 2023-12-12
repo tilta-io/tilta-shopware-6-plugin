@@ -50,10 +50,20 @@
         </service>
 
         <service id="Tilta\TiltaPaymentSW6\Core\Util\EntityHelper" />
+        <service id="Tilta\TiltaPaymentSW6\Core\Util\OrderHelper" >
+            <argument key="$documentRepository" type="service" id="document.repository"/>
+        </service>
 
         <service id="Tilta\TiltaPaymentSW6\Core\PaymentHandler\TiltaDefaultPaymentHandler">
             <argument key="$logger" type="service" id="tilta.default-logger"/>
             <tag name="shopware.payment.method.sync"/>
+        </service>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\StateMachine\Service\StateMachineRegistryDecorator"
+                 decorates="Shopware\Core\System\StateMachine\StateMachineRegistry">
+            <argument key="$innerService" id=".inner" type="service"/>
+            <argument key="$orderRepository" id="order.repository" type="service" />
+            <argument key="$orderDeliveryRepository" id="order_delivery.repository" type="service" />
         </service>
 
     </services>

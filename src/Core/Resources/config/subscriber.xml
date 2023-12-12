@@ -8,7 +8,10 @@
             <tag name="kernel.event_subscriber" />
         </defaults>
 
-
+        <service id="Tilta\TiltaPaymentSW6\Core\StateMachine\Subscriber\TransitionSubscriber">
+            <argument key="$orderRepository" id="order.repository" type="service" />
+            <argument key="$orderDeliveryRepository" id="order_delivery.repository" type="service" />
+        </service>
 
     </services>
 </container>

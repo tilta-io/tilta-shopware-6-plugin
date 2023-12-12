@@ -1,0 +1,9 @@
+{
+    "tilta": {
+        "transition": {
+            "errors": {
+                "invoiceNumberMissing": "The delivery status cannot be changed as long as no invoice number is available! Create a new invoice document or insert the external invoice details within the tab 'Tilta payment'."
+            }
+        }
+    }
+}

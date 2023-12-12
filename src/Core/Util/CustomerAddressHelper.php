@@ -65,14 +65,4 @@ class CustomerAddressHelper
         // TODO validate
         return $this->addressRepository->search($criteria, Context::createDefaultContext())->first();
     }
-
-    /**
-     * @param OrderAddressEntity|CustomerAddressEntity $addressEntity
-     */
-    public static function mergeAdditionalAddressLines($addressEntity): ?string
-    {
-        $additionalLines = array_filter([$addressEntity->getAdditionalAddressLine1(), $addressEntity->getAdditionalAddressLine2()], static fn ($value): bool => !empty($value));
-
-        return $additionalLines !== [] ? implode("\n", $additionalLines) : null;
-    }
 }

@@ -28,9 +28,20 @@
         <service id="Tilta\Sdk\Service\Request\Facility\CreateFacilityRequest"/>
         <service id="Tilta\Sdk\Service\Request\Order\GetPaymentTermsRequest"/>
         <service id="Tilta\Sdk\Service\Request\Order\CreateOrderRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Order\CancelOrderRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Order\GetOrderDetailsRequest"/>
+        <service id="Tilta\Sdk\Service\Request\Invoice\CreateInvoiceRequest"/>
+        <service id="Tilta\Sdk\Service\Request\CreditNote\CreateCreditNoteRequest"/>
 
         <!-- request model factories -->
+        <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\AddressModelFactory"/>
+        <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\AmountModelFactory"/>
         <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\CreateOrderRequestModelFactory"/>
+        <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\LineItemsFactory"/>
+
+        <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\OperationService">
+            <argument key="$logger" type="service" id="tilta.default-logger" />
+        </service>
 
     </services>
 </container>
