@@ -1,19 +1,21 @@
 {
     "name": "tilta/shopware6-payment-module",
-    "description": "Tilta payment method for Shopware 6",
+    "description": "Tilta as payment method for Shopware 6",
     "version": "dev-1.0",
     "license": "MIT",
+	"type": "shopware-platform-plugin",
     "authors": [
         {
-            "name": "Tilta Fintech GmbH"
-        },
+            "name": "Tilta Fintech GmbH",
+			"email": "support@tilta.io",
+			"role": "Maintainer"
+		},
         {
             "name": "WEBiDEA",
             "email": "github@webidea24.de",
             "role": "Developer"
         }
     ],
-    "type": "shopware-platform-plugin",
     "autoload": {
         "psr-4": {
             "Tilta\\TiltaPaymentSW6\\": "src/"
@@ -33,16 +35,16 @@
             "en-GB": "Tilta"
         },
         "description": {
-            "de-DE": "TODO",
-            "en-GB": "Todo"
+            "de-DE": "Tilta als Zahlungsmethode für Shopware 6",
+            "en-GB": "Tilta as payment method for Shopware 6"
         },
         "manufacturerLink": {
             "de-DE": "https://www.tilta.io",
             "en-GB": "https://www.tilta.io"
         },
         "supportLink": {
-            "de-DE": "TODO",
-            "en-GB": "TODO"
+            "de-DE": "https://www.tilta.io/book-a-demo",
+            "en-GB": "https://www.tilta.io/book-a-demo"
         }
     },
     "require": {
