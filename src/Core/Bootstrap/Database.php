@@ -41,10 +41,8 @@ class Database extends AbstractBootstrap
         }
 
         $method = MigrationHelper::getExecuteStatementMethod();
-        $this->connection->{$method === 'executeStatement' ? $method : 'exec'}('SET FOREIGN_KEY_CHECKS=0;');
         $this->connection->{$method === 'executeStatement' ? $method : 'exec'}('DROP TABLE IF EXISTS tilta_address_data;');
         $this->connection->{$method === 'executeStatement' ? $method : 'exec'}('DROP TABLE IF EXISTS tilta_order_data;');
-        $this->connection->{$method === 'executeStatement' ? $method : 'exec'}('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     public function activate(): void
