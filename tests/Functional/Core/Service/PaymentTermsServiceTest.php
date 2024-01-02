@@ -18,6 +18,7 @@ use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
+use Shopware\Core\Framework\Context;
 use Tilta\Sdk\Model\Response\PaymentTerm\GetPaymentTermsResponseModel;
 use Tilta\Sdk\Service\Request\PaymentTerm\GetPaymentTermsRequest;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
@@ -44,26 +45,27 @@ class PaymentTermsServiceTest extends TestCase
         static::assertNull($terms, 'no terms should be available, because customer is not logged in.');
 
         $orderEntity = new OrderEntity();
-        $terms = $service->getPaymentTermsForOrder($orderEntity);
+        $terms = $service->getPaymentTermsForOrder($orderEntity, $context->getContext());
         static::assertNull($terms, 'no terms should be available, because order-customer is not set on order');
 
         $orderEntity = new OrderEntity();
         $orderEntity->setBillingAddress(new OrderAddressEntity());
-        $terms = $service->getPaymentTermsForOrder($orderEntity);
+        $terms = $service->getPaymentTermsForOrder($orderEntity, $context->getContext());
         static::assertNull($terms, 'no terms should be available, because no customer address can be found with billing address');
     }
 
     public function testNoBuyerExternalId()
     {
+        $context = Context::createDefaultContext();
         $service = $this->getContainer()->get(PaymentTermsService::class);
         $price = new CartPrice(100.00, 100.00, 100.00, new CalculatedTaxCollection([]), new TaxRuleCollection([]), '');
 
-        $terms = $service->getPaymentTermsForCustomerAddress(new CustomerAddressEntity(), $price, 'EUR');
+        $terms = $service->getPaymentTermsForCustomerAddress(new CustomerAddressEntity(), $price, 'EUR', $context);
         static::assertNull($terms, 'no terms should be available, because no Tilta data has been set');
 
         $address = new CustomerAddressEntity();
         $address->addExtension(CustomerAddressEntityExtension::TILTA_DATA, new TiltaCustomerAddressDataEntity());
-        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR');
+        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR', $context);
         static::assertNull($terms, 'no terms should be available, because no buyer-external-id has been set');
 
         $address = new CustomerAddressEntity();
@@ -71,7 +73,7 @@ class PaymentTermsServiceTest extends TestCase
             TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => null,
         ]);
         $address->addExtension(CustomerAddressEntityExtension::TILTA_DATA, $tiltaData);
-        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR');
+        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR', $context);
         static::assertNull($terms, 'no terms should be available, because buyer-external-id is empty');
 
         $address = new CustomerAddressEntity();
@@ -79,7 +81,7 @@ class PaymentTermsServiceTest extends TestCase
             TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => '',
         ]);
         $address->addExtension(CustomerAddressEntityExtension::TILTA_DATA, $tiltaData);
-        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR');
+        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR', $context);
         static::assertNull($terms, 'no terms should be available, because buyer-external-id is empty');
     }
 
@@ -114,7 +116,7 @@ class PaymentTermsServiceTest extends TestCase
             TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => 'buyer-external-id',
         ]);
         $address->addExtension(CustomerAddressEntityExtension::TILTA_DATA, $tiltaData);
-        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR');
+        $terms = $service->getPaymentTermsForCustomerAddress($address, $price, 'EUR', Context::createDefaultContext());
         static::assertInstanceOf(GetPaymentTermsResponseModel::class, $terms);
     }
 }

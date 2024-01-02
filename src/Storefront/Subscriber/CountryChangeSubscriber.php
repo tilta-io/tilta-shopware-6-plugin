@@ -36,7 +36,7 @@ class CountryChangeSubscriber implements EventSubscriberInterface
     public function onAddressPageLoaded(AddressDetailPageLoadedEvent $event): void
     {
         $address = $event->getPage()->getAddress();
-        if (!$address instanceof CustomerAddressEntity || $this->addressHelper->canCountryChanged($address->getId())) {
+        if (!$address instanceof CustomerAddressEntity || $this->addressHelper->canCountryChanged($event->getContext(), $address->getId())) {
             return;
         }
 

@@ -12,6 +12,7 @@ namespace Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory;
 
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\Struct\ExtendableInterface;
 use Tilta\Sdk\Model\Address;
 use Tilta\Sdk\Util\AddressHelper;
@@ -26,27 +27,27 @@ class AddressModelFactory
         $this->entityHelper = $entityHelper;
     }
 
-    public function createFromOrderAddress(OrderAddressEntity $addressEntity): Address
+    public function createFromOrderAddress(OrderAddressEntity $addressEntity, Context $context): Address
     {
-        return $this->createTiltaAddressFromAddress($addressEntity);
+        return $this->createTiltaAddressFromAddress($addressEntity, $context);
     }
 
-    public function createFromCustomerAddress(CustomerAddressEntity $addressEntity): Address
+    public function createFromCustomerAddress(CustomerAddressEntity $addressEntity, Context $context): Address
     {
-        return $this->createTiltaAddressFromAddress($addressEntity);
+        return $this->createTiltaAddressFromAddress($addressEntity, $context);
     }
 
     /**
      * @param CustomerAddressEntity|OrderAddressEntity $addressEntity
      */
-    private function createTiltaAddressFromAddress(ExtendableInterface $addressEntity): Address
+    private function createTiltaAddressFromAddress(ExtendableInterface $addressEntity, Context $context): Address
     {
         return (new Address())
             ->setStreet(AddressHelper::getStreetName($addressEntity->getStreet()) ?: '')
             ->setHouseNumber(AddressHelper::getHouseNumber($addressEntity->getStreet()) ?: '')
             ->setPostcode($addressEntity->getZipcode())
             ->setCity($addressEntity->getCity())
-            ->setCountry($this->entityHelper->getCountryCode($addressEntity) ?: '')
+            ->setCountry($this->entityHelper->getCountryCode($addressEntity, $context) ?: '')
             ->setAdditional(self::mergeAdditionalAddressLines($addressEntity));
     }
 

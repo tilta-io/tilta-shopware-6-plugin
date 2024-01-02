@@ -18,6 +18,7 @@ use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
 use Shopware\Core\Checkout\Payment\SalesChannel\AbstractPaymentMethodRoute;
 use Shopware\Core\Checkout\Payment\SalesChannel\PaymentMethodRouteResponse;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -111,7 +112,7 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
             $order = $this->orderRepository->search($criteria, $context->getContext())->first();
             // info: we can only create a facility for a customer-address to make sure the customer is registered
             // we are trying to fetch the customer-address entity, if it is equal to the order-address
-            $billingAddress = $this->customerAddressHelper->getCustomerAddressForOrder($order);
+            $billingAddress = $this->customerAddressHelper->getCustomerAddressForOrder($order, $context->getContext());
             $price = $order->getPrice();
         } else {
             $customer = $context->getCustomer();
@@ -119,21 +120,21 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
             $price = $this->cartService->getCart($context->getToken(), $context)->getPrice();
         }
 
-        if (!$billingAddress instanceof CustomerAddressEntity || $this->shouldRemovePaymentMethods($billingAddress, $price)) {
+        if (!$billingAddress instanceof CustomerAddressEntity || $this->shouldRemovePaymentMethods($billingAddress, $price, $context->getContext())) {
             return $this->removeAllTiltaMethods($response, $context);
         }
 
         return $response;
     }
 
-    private function shouldRemovePaymentMethods(CustomerAddressEntity $customerAddress, CartPrice $price): bool
+    private function shouldRemovePaymentMethods(CustomerAddressEntity $customerAddress, CartPrice $price, Context $context): bool
     {
         if ($customerAddress->getCompany() === null || trim($customerAddress->getCompany()) === '') {
             return true;
         }
 
         // total amount of facility is lower than order amount -> customer can not buy
-        return !$this->facilityService->checkCartAmount($customerAddress, $price);
+        return !$this->facilityService->checkCartAmount($customerAddress, $price, $context);
     }
 
     private function removeAllTiltaMethods(PaymentMethodRouteResponse $response, SalesChannelContext $context): PaymentMethodRouteResponse

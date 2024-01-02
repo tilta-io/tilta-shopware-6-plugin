@@ -96,11 +96,11 @@ class OperationService
         $this->cancelOrderRequest = $cancelOrderRequest;
     }
 
-    public function createInvoice(OrderEntity $orderEntity): bool
+    public function createInvoice(OrderEntity $orderEntity, Context $context): bool
     {
-        [$invoiceNumber, $invoiceExternalId] = $this->orderHelper->getInvoiceNumberAndExternalId($orderEntity) ?: [];
+        [$invoiceNumber, $invoiceExternalId] = $this->orderHelper->getInvoiceNumberAndExternalId($orderEntity, $context) ?: [];
 
-        $billingAddress = $orderEntity->getBillingAddress() ?? $this->entityHelper->getOrderAddress($orderEntity->getBillingAddressId());
+        $billingAddress = $orderEntity->getBillingAddress() ?? $this->entityHelper->getOrderAddress($orderEntity->getBillingAddressId(), $context);
 
         if (!$billingAddress instanceof OrderAddressEntity) {
             throw new RuntimeException('Order address was not found.');
@@ -114,8 +114,8 @@ class OperationService
             ->setOrderExternalIds([$orderEntity->getOrderNumber()])
             ->setInvoiceNumber($invoiceNumber)
             ->setInvoiceExternalId($invoiceExternalId)
-            ->setBillingAddress($this->addressModelFactory->createFromOrderAddress($billingAddress))
-            ->setAmount($this->amountModelFactory->createAmountForOrder($orderEntity))
+            ->setBillingAddress($this->addressModelFactory->createFromOrderAddress($billingAddress, $context))
+            ->setAmount($this->amountModelFactory->createAmountForOrder($orderEntity, $context))
             ->setInvoicedAt(new DateTime()); // TODO should this saved/provided separately?
 
         $data->setLineItems($this->lineItemsFactory->createFromOrder($orderEntity, $data->getAmount()->getCurrency()));
@@ -124,7 +124,7 @@ class OperationService
             $invoiceResponse = $this->createInvoiceRequest->execute($data);
             sleep(1); // we have to wait one second, so the invoice has been published into the internal systems of tilta.
 
-            $this->updateTransactionStatus($orderEntity, [
+            $this->updateTransactionStatus($context, $orderEntity, [
                 TiltaOrderDataEntity::FIELD_INVOICE_NUMBER => $invoiceResponse->getInvoiceNumber(),
                 TiltaOrderDataEntity::FIELD_INVOICE_EXTERNAL_ID => $invoiceResponse->getInvoiceExternalId(),
             ]);
@@ -144,15 +144,15 @@ class OperationService
         return false;
     }
 
-    public function refundInvoice(OrderEntity $orderEntity): bool
+    public function refundInvoice(OrderEntity $orderEntity, Context $context): bool
     {
-        [$invoiceNumber, $invoiceExternalId] = $this->orderHelper->getInvoiceNumberAndExternalId($orderEntity) ?: [];
+        [$invoiceNumber, $invoiceExternalId] = $this->orderHelper->getInvoiceNumberAndExternalId($orderEntity, $context) ?: [];
 
         if ($invoiceExternalId === null) {
             throw new RuntimeException('order has not been invoiced yet, or external-invoice-id has been deleted.');
         }
 
-        $billingAddress = $orderEntity->getBillingAddress() ?? $this->entityHelper->getOrderAddress($orderEntity->getBillingAddressId());
+        $billingAddress = $orderEntity->getBillingAddress() ?? $this->entityHelper->getOrderAddress($orderEntity->getBillingAddressId(), $context);
 
         if (!$billingAddress instanceof OrderAddressEntity) {
             throw new RuntimeException('Order address was not found.');
@@ -169,8 +169,8 @@ class OperationService
             ->setBuyerExternalId($tiltaData->getBuyerExternalId())
             ->setOrderExternalIds([$orderEntity->getOrderNumber()])
             ->setCreditNoteExternalId($invoiceExternalId . '-refund')
-            ->setBillingAddress($this->addressModelFactory->createFromOrderAddress($billingAddress))
-            ->setAmount($this->amountModelFactory->createAmountForOrder($orderEntity))
+            ->setBillingAddress($this->addressModelFactory->createFromOrderAddress($billingAddress, $context))
+            ->setAmount($this->amountModelFactory->createAmountForOrder($orderEntity, $context))
             ->setInvoicedAt(new DateTime());
 
         $data->setLineItems($this->lineItemsFactory->createFromOrder($orderEntity, $data->getAmount()->getCurrency()));
@@ -179,7 +179,7 @@ class OperationService
             $this->createCreditNoteRequest->execute($data); // we do not process the response.
             sleep(1);                                       // we have to wait one second, so the invoice has been published into the internal systems of tilta.
 
-            $this->updateTransactionStatus($orderEntity);
+            $this->updateTransactionStatus($context, $orderEntity);
 
             return true;
         } catch (TiltaException $tiltaException) {
@@ -197,7 +197,7 @@ class OperationService
         }
     }
 
-    public function cancelOrder(OrderEntity $orderEntity): bool
+    public function cancelOrder(OrderEntity $orderEntity, Context $context): bool
     {
         /** @var TiltaOrderDataEntity|null $tiltaData */
         $tiltaData = $orderEntity->getExtension(OrderDataEntityExtension::EXTENSION_NAME);
@@ -211,7 +211,7 @@ class OperationService
             $this->cancelOrderRequest->execute($requestModel);
             sleep(1); // we have to wait one second, so the invoice has been published into the internal systems of tilta.
 
-            $this->updateTransactionStatus($orderEntity);
+            $this->updateTransactionStatus($context, $orderEntity);
 
             return true;
         } catch (TiltaException $tiltaException) {
@@ -228,7 +228,7 @@ class OperationService
         }
     }
 
-    private function updateTransactionStatus(OrderEntity $orderEntity, array $additionalData = []): void
+    private function updateTransactionStatus(Context $context, OrderEntity $orderEntity, array $additionalData = []): void
     {
         try {
             if ($orderEntity->getOrderNumber() === null) {
@@ -250,7 +250,7 @@ class OperationService
                     TiltaOrderDataEntity::FIELD_STATUS => $tiltaOrder->getStatus(),
 
                 ], $additionalData),
-            ], Context::createDefaultContext());
+            ], $context);
         } catch (Exception $exception) {
             $this->logger->critical(
                 'Order state can not be updated. (Exception: ' . $exception->getMessage() . ')',

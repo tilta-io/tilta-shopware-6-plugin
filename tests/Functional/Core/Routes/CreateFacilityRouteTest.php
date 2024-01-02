@@ -103,7 +103,7 @@ class CreateFacilityRouteTest extends TestCase
             'toc' => '1',
         ]);
 
-        $response = $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
+        $response = $this->route->requestFacilityPost(Context::createDefaultContext(), $requestData, $this->customer, $this->customerAddress->getId());
 
         static::assertInstanceOf(SuccessResponse::class, $response);
     }
@@ -126,7 +126,7 @@ class CreateFacilityRouteTest extends TestCase
         $requestData->set($field, $value);
 
         try {
-            $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
+            $this->route->requestFacilityPost(Context::createDefaultContext(), $requestData, $this->customer, $this->customerAddress->getId());
             $this->fail('ConstraintViolationException was not thrown');
         } catch (ConstraintViolationException $constraintViolationException) {
             $violations = $constraintViolationException->getViolations();
@@ -174,7 +174,7 @@ class CreateFacilityRouteTest extends TestCase
         ]);
 
         try {
-            $this->route->requestFacilityPost($requestData, $this->customer, $this->customerAddress->getId());
+            $this->route->requestFacilityPost(Context::createDefaultContext(), $requestData, $this->customer, $this->customerAddress->getId());
             $this->fail('ConstraintViolationException was not thrown');
         } catch (ConstraintViolationException $constraintViolationException) {
             $violations = $constraintViolationException->getViolations();

@@ -80,7 +80,7 @@ class StateMachineRegistryDecorator extends StateMachineRegistry // we must exte
             $paymentMethod = $transaction instanceof OrderTransactionEntity ? $transaction->getPaymentMethod() : null;
             if ($order instanceof OrderEntity && $paymentMethod instanceof PaymentMethodEntity
                 && PaymentMethodHelper::isTiltaPaymentMethod($paymentMethod)
-                && $this->orderHelper->getInvoiceNumberAndExternalId($order) === null
+                && $this->orderHelper->getInvoiceNumberAndExternalId($order, $context) === null
             ) {
                 throw new InvoiceNumberMissingException();
             }

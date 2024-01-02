@@ -93,7 +93,7 @@ class PaymentMethods extends AbstractBootstrap
                     ->addFilter(new EqualsFilter('handlerIdentifier', $paymentMethod['handlerIdentifier']))
                     ->setLimit(1)
             ),
-            $this->defaultContext
+            $this->context
         );
 
         /** @var PaymentMethodEntity|null $paymentEntity */
@@ -103,7 +103,7 @@ class PaymentMethods extends AbstractBootstrap
         }
 
         $paymentMethod['pluginId'] = $this->plugin->getId();
-        $this->paymentRepository->upsert([$paymentMethod], $this->defaultContext);
+        $this->paymentRepository->upsert([$paymentMethod], $this->context);
     }
 
     protected function setActiveFlags(bool $activated): void
@@ -111,7 +111,7 @@ class PaymentMethods extends AbstractBootstrap
         /** @var PaymentMethodEntity[] $paymentEntities */
         $paymentEntities = $this->paymentRepository->search(
             (new Criteria())->addFilter(new EqualsFilter('pluginId', $this->plugin->getId())),
-            $this->defaultContext
+            $this->context
         )->getElements();
 
         $updateData = array_map(static fn (PaymentMethodEntity $entity): array => [
@@ -119,6 +119,6 @@ class PaymentMethods extends AbstractBootstrap
             'active' => $activated,
         ], $paymentEntities);
 
-        $this->paymentRepository->update(array_values($updateData), $this->defaultContext);
+        $this->paymentRepository->update(array_values($updateData), $this->context);
     }
 }

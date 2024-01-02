@@ -19,15 +19,15 @@ abstract class AbstractBootstrap
 {
     protected InstallContext $installContext;
 
-    protected Context $defaultContext;
+    protected Context $context;
 
     protected PluginEntity $plugin;
 
     protected ContainerInterface $container;
 
-    final public function __construct()
+    final public function __construct(Context $context)
     {
-        $this->defaultContext = Context::createDefaultContext();
+        $this->context = $context;
     }
 
     abstract public function install(): void;

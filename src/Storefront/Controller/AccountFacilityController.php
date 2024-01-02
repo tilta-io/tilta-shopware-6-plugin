@@ -14,6 +14,7 @@ use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEnt
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Customer\Exception\AddressNotFoundException;
 use Shopware\Core\Checkout\Customer\SalesChannel\AbstractListAddressRoute;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
@@ -89,10 +90,10 @@ class AccountFacilityController extends StorefrontController
     /**
      * @Route(name="frontend.account.tilta.credit-facility.requestForm.post", path="/request/{addressId}", methods={"POST"})
      */
-    public function requestFacilityPost(RequestDataBag $requestData, CustomerEntity $customerEntity, string $addressId): Response
+    public function requestFacilityPost(Context $context, RequestDataBag $requestData, CustomerEntity $customerEntity, string $addressId): Response
     {
         try {
-            $response = $this->createFacilityRoute->requestFacilityPost($requestData, $customerEntity, $addressId);
+            $response = $this->createFacilityRoute->requestFacilityPost($context, $requestData, $customerEntity, $addressId);
         } catch (ConstraintViolationException $constraintViolationException) {
             return $this->forwardToRoute(
                 'frontend.account.tilta.credit-facility.requestForm',

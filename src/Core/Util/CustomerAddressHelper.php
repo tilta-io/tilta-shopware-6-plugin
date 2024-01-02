@@ -55,7 +55,7 @@ class CustomerAddressHelper
         $this->tiltaCustomerAddressDataRepository = $tiltaCustomerAddressDataRepository;
     }
 
-    public function getCustomerAddressForOrder(OrderEntity $orderEntity): ?CustomerAddressEntity
+    public function getCustomerAddressForOrder(OrderEntity $orderEntity, Context $context): ?CustomerAddressEntity
     {
         $customerId = $orderEntity->getOrderCustomer() instanceof OrderCustomerEntity ? $orderEntity->getOrderCustomer()->getCustomerId() : null;
         if (!$customerId) {
@@ -64,7 +64,7 @@ class CustomerAddressHelper
 
         $billingAddress = $orderEntity->getBillingAddress();
         if (!$billingAddress instanceof OrderAddressEntity) {
-            $billingAddress = $this->orderAddressRepository->search(new Criteria([$orderEntity->getBillingAddressId()]), Context::createDefaultContext())->first();
+            $billingAddress = $this->orderAddressRepository->search(new Criteria([$orderEntity->getBillingAddressId()]), $context)->first();
         }
 
         if (!$billingAddress instanceof OrderAddressEntity) {
@@ -85,13 +85,13 @@ class CustomerAddressHelper
             ->addFilter(new EqualsFilter('phoneNumber', $billingAddress->getPhoneNumber()));
 
         // TODO validate
-        $addressEntity = $this->addressRepository->search($criteria, Context::createDefaultContext())->first();
+        $addressEntity = $this->addressRepository->search($criteria, $context)->first();
 
         // check is only for PHPStan
         return $addressEntity instanceof CustomerAddressEntity ? $addressEntity : null;
     }
 
-    public function canCountryChanged(string $addressId, string $newCountryId = null): bool
+    public function canCountryChanged(Context $context, string $addressId, string $newCountryId = null): bool
     {
         if ($newCountryId === null) {
             $criteria = new Criteria();
@@ -101,7 +101,7 @@ class CustomerAddressHelper
                 null
             )]));
 
-            return $this->tiltaCustomerAddressDataRepository->searchIds($criteria, Context::createDefaultContext())->getIds() === [];
+            return $this->tiltaCustomerAddressDataRepository->searchIds($criteria, $context)->getIds() === [];
         }
 
         $criteria = new Criteria([$addressId]);
@@ -111,7 +111,7 @@ class CustomerAddressHelper
         )]));
 
         /** @var CustomerAddressEntity|null $existingAddress */
-        $existingAddress = $this->addressRepository->search($criteria, Context::createDefaultContext())->first();
+        $existingAddress = $this->addressRepository->search($criteria, $context)->first();
 
         return !$existingAddress instanceof CustomerAddressEntity || $existingAddress->getCountryId() === $newCountryId;
     }

@@ -61,16 +61,16 @@ class FacilityService
      * @throws MissingBuyerInformationException
      * @throws BuyerNotFoundException
      */
-    public function createFacilityForBuyerIfNotExist(CustomerAddressEntity $address, bool $withBuyerUpdate = false): Facility
+    public function createFacilityForBuyerIfNotExist(Context $context, CustomerAddressEntity $address, bool $withBuyerUpdate = false): Facility
     {
         $buyerExternalId = BuyerService::generateBuyerExternalId($address);
         /** @var TiltaCustomerAddressDataEntity $tiltaData */
         $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
 
         if (!$tiltaData instanceof TiltaCustomerAddressDataEntity || ($tiltaData->getBuyerExternalId() === null || $tiltaData->getBuyerExternalId() === '')) {
-            $this->buyerService->createBuyerIfNotExist($address);
+            $this->buyerService->createBuyerIfNotExist($address, $context);
         } elseif ($withBuyerUpdate) {
-            $this->buyerService->updateBuyer($address);
+            $this->buyerService->updateBuyer($address, $context);
         }
 
         try {
@@ -80,9 +80,9 @@ class FacilityService
         } catch (DuplicateFacilityException $duplicateFacilityException) {
             // do nothing - just jump into finally.
         } finally {
-            $facility = $this->getFacility($address);
+            $facility = $this->getFacility($address, $context);
             if ($facility instanceof Facility) {
-                $this->updateFacilityOnCustomerAddress($address, $facility);
+                $this->updateFacilityOnCustomerAddress($context, $address, $facility);
             }
         }
 
@@ -90,14 +90,14 @@ class FacilityService
         return $facility;
     }
 
-    public function getFacility(CustomerAddressEntity $address): ?Facility
+    public function getFacility(CustomerAddressEntity $address, Context $context): ?Facility
     {
         /** @var GetFacilityRequest $request */
         $request = $this->container->get(GetFacilityRequest::class);
 
         try {
             $facility = $request->execute(new GetFacilityRequestModel(BuyerService::generateBuyerExternalId($address)));
-            $this->updateFacilityOnCustomerAddress($address, $facility);
+            $this->updateFacilityOnCustomerAddress($context, $address, $facility);
 
             return $facility;
         } catch (NoActiveFacilityFoundException $noActiveFacilityFoundException) {
@@ -105,16 +105,16 @@ class FacilityService
         }
     }
 
-    public function updateFacilityOnCustomerAddress(CustomerAddressEntity $customerAddress, Facility $facility = null): void
+    public function updateFacilityOnCustomerAddress(Context $context, CustomerAddressEntity $customerAddress, Facility $facility = null): void
     {
         $this->tiltaDataRepository->upsert([[
             TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID => $customerAddress->getId(),
             TiltaCustomerAddressDataEntity::FIELD_TOTAL_AMOUNT => $facility instanceof Facility ? $facility->getTotalAmount() : null,
             TiltaCustomerAddressDataEntity::FIELD_VALID_UNTIL => $facility instanceof Facility ? $facility->getExpiresAt() : null,
-        ]], Context::createDefaultContext());
+        ]], $context);
     }
 
-    public function checkCartAmount(CustomerAddressEntity $customerAddress, CartPrice $price): bool
+    public function checkCartAmount(CustomerAddressEntity $customerAddress, CartPrice $price, Context $context): bool
     {
         /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
         $tiltaData = $customerAddress->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
@@ -132,7 +132,7 @@ class FacilityService
         if ($tiltaData->getValidUntil()->getTimestamp() < time()) {
             try {
                 // fetching facility will update the facility in the database
-                $this->getFacility($customerAddress);
+                $this->getFacility($customerAddress, $context);
             } catch (Exception $exception) {
                 // error during facility fetching -> facility seems to be not valid
                 return false;

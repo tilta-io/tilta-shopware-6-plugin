@@ -15,6 +15,7 @@ use Shopware\Core\Checkout\Cart\Price\Struct\CartPrice;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Tilta\Sdk\Exception\GatewayException\Facility\FacilityExceededException;
 use Tilta\Sdk\Exception\GatewayException\Facility\NoActiveFacilityFoundException;
@@ -70,7 +71,8 @@ class PaymentTermsService
         return $this->getPaymentTermsForCustomerAddress(
             $customerAddress,
             $cart->getPrice(),
-            $salesChannelContext->getCurrency()->getIsoCode()
+            $salesChannelContext->getCurrency()->getIsoCode(),
+            $salesChannelContext->getContext()
         );
     }
 
@@ -79,9 +81,9 @@ class PaymentTermsService
      * @throws NoActiveFacilityFoundException
      * @throws FacilityExceededException
      */
-    public function getPaymentTermsForOrder(OrderEntity $orderEntity): ?GetPaymentTermsResponseModel
+    public function getPaymentTermsForOrder(OrderEntity $orderEntity, Context $context): ?GetPaymentTermsResponseModel
     {
-        $customerAddress = $this->customerAddressHelper->getCustomerAddressForOrder($orderEntity);
+        $customerAddress = $this->customerAddressHelper->getCustomerAddressForOrder($orderEntity, $context);
         if (!$customerAddress instanceof CustomerAddressEntity) {
             return null;
         }
@@ -89,7 +91,8 @@ class PaymentTermsService
         return $this->getPaymentTermsForCustomerAddress(
             $customerAddress,
             $orderEntity->getPrice(),
-            $this->entityHelper->getCurrencyCode($orderEntity)
+            $this->entityHelper->getCurrencyCode($orderEntity, $context),
+            $context
         );
     }
 
@@ -98,7 +101,7 @@ class PaymentTermsService
      * @throws NoActiveFacilityFoundException
      * @throws FacilityExceededException
      */
-    public function getPaymentTermsForCustomerAddress(CustomerAddressEntity $customerAddress, CartPrice $price, string $currencyCode): ?GetPaymentTermsResponseModel
+    public function getPaymentTermsForCustomerAddress(CustomerAddressEntity $customerAddress, CartPrice $price, string $currencyCode, Context $context): ?GetPaymentTermsResponseModel
     {
         $tiltaData = $customerAddress->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
         if (!$tiltaData instanceof TiltaCustomerAddressDataEntity) {
@@ -122,7 +125,7 @@ class PaymentTermsService
 
         $paymentTerms = $this->paymentTermsRequest->execute($requestModel);
 
-        $this->facilityService->updateFacilityOnCustomerAddress($customerAddress, $paymentTerms->getFacility());
+        $this->facilityService->updateFacilityOnCustomerAddress($context, $customerAddress, $paymentTerms->getFacility());
 
         return $paymentTerms;
     }

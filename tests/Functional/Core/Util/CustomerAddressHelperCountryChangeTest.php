@@ -35,28 +35,34 @@ class CustomerAddressHelperCountryChangeTest extends TestCase
 
     public function testIfReturnTrueIfBlankCustomer()
     {
-        static::assertTrue($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId()), 'Changing the country should be possible, because the customer does not have any tilta data.');
-        static::assertTrue($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId(), Uuid::randomHex()), 'Changing the country should be possible, because the customer does not have any tilta data.');
-        static::assertTrue($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId(), $this->getDeCountryId()), 'Changing to the same country as actutal should be always possible.');
+        $context = Context::createDefaultContext();
+
+        static::assertTrue($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId()), 'Changing the country should be possible, because the customer does not have any tilta data.');
+        static::assertTrue($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId(), Uuid::randomHex()), 'Changing the country should be possible, because the customer does not have any tilta data.');
+        static::assertTrue($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId(), $this->getDeCountryId()), 'Changing to the same country as actual should be always possible.');
     }
 
     public function testIfReturnTrueIfNoBuyerId()
     {
+        $context = Context::createDefaultContext();
+
         /** @var EntityRepository $repo */
         $repo = $this->getContainer()->get('tilta_address_data.repository');
         $repo->upsert([[
             TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID => $this->customer->getDefaultBillingAddressId(),
             TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'DE_GMBH',
             TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT => new \DateTime(),
-        ]], Context::createDefaultContext());
+        ]], $context);
 
-        static::assertTrue($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId()), 'Changing the country should be possible, because the customer does not have any tilta data.');
-        static::assertTrue($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId(), Uuid::randomHex()), 'Changing the country should be possible, because the customer does not have any tilta data.');
-        static::assertTrue($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId(), $this->getDeCountryId()), 'Changing to the same country as actutal should be always possible.');
+        static::assertTrue($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId()), 'Changing the country should be possible, because the customer does not have any tilta data.');
+        static::assertTrue($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId(), Uuid::randomHex()), 'Changing the country should be possible, because the customer does not have any tilta data.');
+        static::assertTrue($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId(), $this->getDeCountryId()), 'Changing to the same country as actutal should be always possible.');
     }
 
     public function testIfReturnFalseIfHasBuyerId()
     {
+        $context = Context::createDefaultContext();
+
         /** @var EntityRepository $repo */
         $repo = $this->getContainer()->get('tilta_address_data.repository');
         $repo->upsert([[
@@ -64,10 +70,10 @@ class CustomerAddressHelperCountryChangeTest extends TestCase
             TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM => 'DE_GMBH',
             TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT => new \DateTime(),
             TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => 'test-company',
-        ]], Context::createDefaultContext());
+        ]], $context);
 
-        static::assertFalse($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId()), 'Changing the country should be prevent, because the customer does have a buyer id.');
-        static::assertFalse($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId(), Uuid::randomHex()), 'Changing the country should be prevent, because the customer does have a buyer id.');
-        static::assertTrue($this->helper->canCountryChanged($this->customer->getDefaultBillingAddressId(), $this->getDeCountryId()), 'Changing to the same country as actutal should be always possible.');
+        static::assertFalse($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId()), 'Changing the country should be prevent, because the customer does have a buyer id.');
+        static::assertFalse($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId(), Uuid::randomHex()), 'Changing the country should be prevent, because the customer does have a buyer id.');
+        static::assertTrue($this->helper->canCountryChanged($context, $this->customer->getDefaultBillingAddressId(), $this->getDeCountryId()), 'Changing to the same country as actual should be always possible.');
     }
 }

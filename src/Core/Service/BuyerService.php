@@ -105,9 +105,8 @@ class BuyerService
         return $externalId !== null && $externalId !== '' ? $externalId : ((!empty($customer->getCustomerNumber()) ? $customer->getCustomerNumber() : $customer->getId()) . '-' . $address->getId());
     }
 
-    public function updateCustomerAddressData(CustomerAddressEntity $addressEntity, array $data): void
+    public function updateCustomerAddressData(CustomerAddressEntity $addressEntity, array $data, Context $context): void
     {
-        $context = Context::createDefaultContext();
         $this->customerAddressRepository->upsert([
             [
                 'id' => $addressEntity->getId(),
@@ -136,7 +135,7 @@ class BuyerService
     /**
      * @throws TiltaException
      */
-    public function createBuyerIfNotExist(CustomerAddressEntity $address): Buyer
+    public function createBuyerIfNotExist(CustomerAddressEntity $address, Context $context): Buyer
     {
         $this->validateAdditionalData($address);
 
@@ -148,7 +147,7 @@ class BuyerService
 
             $buyer = $buyerRequest->execute(new GetBuyerDetailsRequestModel($buyerExternalId));
         } catch (BuyerNotFoundException $buyerNotFoundException) {
-            $buyerRequestModel = $this->createCreateBuyerRequestModel($address);
+            $buyerRequestModel = $this->createCreateBuyerRequestModel($address, $context);
 
             /** @var CreateBuyerRequest $createBuyerRequest */
             $createBuyerRequest = $this->container->get(CreateBuyerRequest::class);
@@ -163,14 +162,14 @@ class BuyerService
                 TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID => $address->getId(),
                 TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID => $buyer->getBuyerExternalId(),
             ],
-        ], Context::createDefaultContext());
+        ], $context);
 
         return $buyer;
     }
 
-    public function updateBuyer(CustomerAddressEntity $address): void
+    public function updateBuyer(CustomerAddressEntity $address, Context $context): void
     {
-        $buyerRequestModel = $this->createUpdateBuyerRequestModel($address);
+        $buyerRequestModel = $this->createUpdateBuyerRequestModel($address, $context);
 
         /** @var UpdateBuyerRequest $requestService */
         $requestService = $this->container->get(UpdateBuyerRequest::class);
@@ -181,24 +180,26 @@ class BuyerService
     /**
      * @throws MissingBuyerInformationException
      */
-    public function createCreateBuyerRequestModel(CustomerAddressEntity $address): CreateBuyerRequestModel
+    public function createCreateBuyerRequestModel(CustomerAddressEntity $address, Context $context): CreateBuyerRequestModel
     {
         return $this->getRequestModel(
             CreateBuyerRequestModel::class,
             $address,
-            'tilta_create_buyer_request_built'
+            'tilta_create_buyer_request_built',
+            $context
         );
     }
 
     /**
      * @throws MissingBuyerInformationException
      */
-    public function createUpdateBuyerRequestModel(CustomerAddressEntity $address): UpdateBuyerRequestModel
+    public function createUpdateBuyerRequestModel(CustomerAddressEntity $address, Context $context): UpdateBuyerRequestModel
     {
         return $this->getRequestModel(
             UpdateBuyerRequestModel::class,
             $address,
-            'tilta_update_buyer_request_built'
+            'tilta_update_buyer_request_built',
+            $context
         );
     }
 
@@ -234,10 +235,10 @@ class BuyerService
         }
     }
 
-    public function isCustomerValidTiltaBuyer(CustomerAddressEntity $customerAddress): bool
+    public function isCustomerValidTiltaBuyer(CustomerAddressEntity $customerAddress, Context $context): bool
     {
         /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
-        $tiltaData = $this->tiltaAddressDataRepository->search(new Criteria([$customerAddress->getId()]), Context::createDefaultContext())->first();
+        $tiltaData = $this->tiltaAddressDataRepository->search(new Criteria([$customerAddress->getId()]), $context)->first();
 
         return $tiltaData instanceof TiltaCustomerAddressDataEntity && $tiltaData->getBuyerExternalId();
     }
@@ -270,14 +271,14 @@ class BuyerService
      * @return T
      * @throws MissingBuyerInformationException
      */
-    private function getRequestModel(string $class, CustomerAddressEntity $address, string $eventName)
+    private function getRequestModel(string $class, CustomerAddressEntity $address, string $eventName, Context $context)
     {
         $this->validateAdditionalData($address);
 
         /** @var TiltaCustomerAddressDataEntity $tiltaData */ // is never null, cause validated in `validateAdditionalData`
         $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
 
-        $customer = $this->entityHelper->getCustomerFromAddress($address);
+        $customer = $this->entityHelper->getCustomerFromAddress($address, $context);
 
         $buyerExternalId = self::generateBuyerExternalId($address);
         switch ($class) {
@@ -298,7 +299,7 @@ class BuyerService
             ->setLegalForm($tiltaData->getLegalForm())
             ->setRegisteredAt($customer->getCreatedAt() ?? new DateTime()) // should be always set.
             ->setIncorporatedAt($tiltaData->getIncorporatedAt())
-            ->setBusinessAddress($this->addressModelFactory->createFromCustomerAddress($address))
+            ->setBusinessAddress($this->addressModelFactory->createFromCustomerAddress($address, $context))
             ->setCustomData([
                 'source' => 'Shopware',
             ]);

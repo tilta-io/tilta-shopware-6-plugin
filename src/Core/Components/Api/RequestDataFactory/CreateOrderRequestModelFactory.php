@@ -16,6 +16,7 @@ use Shopware\Core\Checkout\Order\Aggregate\OrderAddress\OrderAddressEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderDelivery\OrderDeliveryCollection;
 use Shopware\Core\Checkout\Order\Aggregate\OrderDelivery\OrderDeliveryEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
+use Shopware\Core\Framework\Context;
 use Tilta\Sdk\Exception\Validation\InvalidFieldValueException;
 use Tilta\Sdk\Model\Request\Order\CreateOrderRequestModel;
 use Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\Event\CreateOrderRequestModelBuiltEvent;
@@ -50,7 +51,7 @@ class CreateOrderRequestModelFactory
     /**
      * @throws InvalidFieldValueException
      */
-    public function createModel(OrderEntity $orderEntity, string $tiltaPaymentMethod, string $tiltaPaymentTerm, string $buyerExternalId): CreateOrderRequestModel
+    public function createModel(OrderEntity $orderEntity, string $tiltaPaymentMethod, string $tiltaPaymentTerm, string $buyerExternalId, Context $context): CreateOrderRequestModel
     {
         $orderRequestModel = new CreateOrderRequestModel();
 
@@ -61,7 +62,7 @@ class CreateOrderRequestModelFactory
             ->setPaymentTerm($tiltaPaymentTerm)
             ->setOrderedAt($orderEntity->getCreatedAt())
             ->setOrderExternalId($orderEntity->getOrderNumber())
-            ->setAmount($this->amountModelFactory->createAmountForOrder($orderEntity));
+            ->setAmount($this->amountModelFactory->createAmountForOrder($orderEntity, $context));
 
         if (!$orderEntity->getDeliveries() instanceof OrderDeliveryCollection) {
             throw new RuntimeException('oder deliveries has to be loaded');
@@ -71,7 +72,7 @@ class CreateOrderRequestModelFactory
         $deliveryAddressEntity = $deliveryEntity instanceof OrderDeliveryEntity ? $deliveryEntity->getShippingOrderAddress() : null;
         if ($deliveryAddressEntity instanceof OrderAddressEntity) {
             $orderRequestModel->setDeliveryAddress(
-                $this->addressModelFactory->createFromOrderAddress($deliveryAddressEntity)
+                $this->addressModelFactory->createFromOrderAddress($deliveryAddressEntity, $context)
             );
         }
 

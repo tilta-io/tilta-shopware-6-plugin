@@ -42,7 +42,7 @@ class OrderHelper
         $this->documentRepository = $documentRepository;
     }
 
-    public function getInvoiceNumberAndExternalId(OrderEntity $orderEntity): ?array
+    public function getInvoiceNumberAndExternalId(OrderEntity $orderEntity, Context $context): ?array
     {
         /** @var TiltaOrderDataEntity|null $tiltaData */
         $tiltaData = $orderEntity->getExtension(OrderDataEntityExtension::EXTENSION_NAME);
@@ -55,7 +55,7 @@ class OrderHelper
         $invoiceExternalId = $tiltaData->getInvoiceExternalId();
 
         if ($invoiceNumber === null || $invoiceExternalId === null) {
-            $fallback = $this->getInvoiceNumberAndExternalIdFromDocument($orderEntity);
+            $fallback = $this->getInvoiceNumberAndExternalIdFromDocument($orderEntity, $context);
             if ($fallback !== null) {
                 $invoiceNumber = $invoiceNumber ?: $fallback[0];
                 $invoiceExternalId = $invoiceExternalId ?: $fallback[1];
@@ -73,7 +73,7 @@ class OrderHelper
         return !$tiltaData instanceof TiltaOrderDataEntity || $tiltaData->getStatus() === OrderStatusEnum::PENDING_CONFIRMATION;
     }
 
-    private function getInvoiceNumberAndExternalIdFromDocument(OrderEntity $orderEntity): ?array
+    private function getInvoiceNumberAndExternalIdFromDocument(OrderEntity $orderEntity, Context $context): ?array
     {
         $documents = $orderEntity->getDocuments();
         if (!$documents instanceof DocumentCollection) {
@@ -82,7 +82,7 @@ class OrderHelper
             $documentCriteria->addFilter(new EqualsFilter('orderId', $orderEntity->getId()));
             $documentCriteria->addFilter(new EqualsFilter('document.type', InvoiceRenderer::TYPE));
             $documentCriteria->addSorting(new FieldSorting('createdAt', FieldSorting::DESCENDING));
-            $documents = $this->documentRepository->search($documentCriteria, Context::createDefaultContext());
+            $documents = $this->documentRepository->search($documentCriteria, $context);
         }
 
         /** @var DocumentEntity $document */

@@ -93,13 +93,13 @@ class TiltaCheckoutDataRoute
 
     public function getCheckoutDataForOrderEntity(SalesChannelContext $context, OrderEntity $order, RequestDataBag $initialDataForForm = null): ?ArrayStruct
     {
-        $customerAddress = $this->customerAddressHelper->getCustomerAddressForOrder($order);
+        $customerAddress = $this->customerAddressHelper->getCustomerAddressForOrder($order, $context->getContext());
         if (!$customerAddress instanceof CustomerAddressEntity) {
             return null;
         }
 
         return $this->getStructData(
-            fn (): ?GetPaymentTermsResponseModel => $this->paymentTermsService->getPaymentTermsForOrder($order),
+            fn (): ?GetPaymentTermsResponseModel => $this->paymentTermsService->getPaymentTermsForOrder($order, $context->getContext()),
             $context,
             $customerAddress,
             $order->getPrice(),
@@ -150,7 +150,7 @@ class TiltaCheckoutDataRoute
             $extensionData->set('error', 'facility-exceeded');
 
             try {
-                $facility = $this->facilityService->getFacility($customerAddress);
+                $facility = $this->facilityService->getFacility($customerAddress, $context->getContext());
                 if ($facility && $facility->getTotalAmount() < AmountHelper::toSdk($totalAmount->getTotalPrice())) {
                     // facility is not exceeded, the facility is too low to be get used for this order.
                     $extensionData->set('error', 'facility-too-low');

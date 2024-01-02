@@ -53,7 +53,7 @@ class GetAddressesWithFacilityRoute
         foreach ($addressList as $address) {
             $address->setCustomer($customer);
             try {
-                $facility = $this->facilityService->getFacility($address);
+                $facility = $this->facilityService->getFacility($address, $salesChannelContext->getContext());
                 if ($facility instanceof Facility) {
                     $address->addExtension('tiltaFacility', new ArrayStruct($facility->toArray()));
                 }

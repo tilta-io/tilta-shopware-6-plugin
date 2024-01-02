@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\Bootstrap;
 
-use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -80,7 +79,7 @@ class PluginConfig extends AbstractBootstrap
         $criteria = new Criteria();
         $criteria->addFilter(new EqualsFilter('salutationKey', $key));
 
-        $results = $this->salutationRepository->searchIds($criteria, Context::createDefaultContext());
+        $results = $this->salutationRepository->searchIds($criteria, $this->context);
 
         return $results->firstId();
     }

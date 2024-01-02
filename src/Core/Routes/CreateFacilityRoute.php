@@ -94,9 +94,9 @@ class CreateFacilityRoute
     /**
      * @Route(path="/facility/create/{addressId}", methods={"POST"})
      */
-    public function requestFacilityPost(RequestDataBag $requestDataBag, CustomerEntity $customer, string $addressId): Response
+    public function requestFacilityPost(Context $context, RequestDataBag $requestDataBag, CustomerEntity $customer, string $addressId): Response
     {
-        $customerAddress = $this->getAddressForCustomer($customer, $addressId);
+        $customerAddress = $this->getAddressForCustomer($customer, $addressId, $context);
         if (!$customerAddress instanceof CustomerAddressEntity) {
             throw new AddressNotFoundException($addressId);
         }
@@ -112,7 +112,7 @@ class CreateFacilityRoute
         $this->dataValidator->validate(
             $requestDataBag->all(),
             (new DataValidationDefinition())
-                ->add('salutationId', new NotBlank(), new Choice($this->getSalutationIds()))
+                ->add('salutationId', new NotBlank(), new Choice($this->getSalutationIds($context)))
                 ->add('phoneNumber', new NotBlank(), new Type('string'), new Regex('/^\+[1-9]{2}\d+/'))
                 ->add('legalForm', new NotBlank(), new Choice($this->legalFormService->getLegalFormsOnlyCodes($country->getIso() ?? '-')))
                 ->add('incorporatedAt', new NotBlank(), new Type('string'), new Date())
@@ -121,18 +121,22 @@ class CreateFacilityRoute
 
         try {
             $incorporatedAt = $requestDataBag->get('incorporatedAt');
-            $this->buyerService->updateCustomerAddressData($customerAddress, [
-                'salutationId' => $requestDataBag->getAlnum('salutationId'),
-                'phoneNumber' => $requestDataBag->get('phoneNumber'),
-                'legalForm' => $requestDataBag->get('legalForm'),
-                'incorporatedAt' => is_string($incorporatedAt) ? DateTime::createFromFormat('Y-m-d', $incorporatedAt) : null,
-            ]);
+            $this->buyerService->updateCustomerAddressData(
+                $customerAddress,
+                [
+                    'salutationId' => $requestDataBag->getAlnum('salutationId'),
+                    'phoneNumber' => $requestDataBag->get('phoneNumber'),
+                    'legalForm' => $requestDataBag->get('legalForm'),
+                    'incorporatedAt' => is_string($incorporatedAt) ? DateTime::createFromFormat('Y-m-d', $incorporatedAt) : null,
+                ],
+                $context
+            );
 
             // reload address, because entity data has been changed. - address will be never null
             /** @var CustomerAddressEntity $customerAddress */
-            $customerAddress = $this->getAddressForCustomer($customer, $addressId);
+            $customerAddress = $this->getAddressForCustomer($customer, $addressId, $context);
 
-            $this->facilityService->createFacilityForBuyerIfNotExist($customerAddress, true);
+            $this->facilityService->createFacilityForBuyerIfNotExist($context, $customerAddress, true);
         } catch (MissingBuyerInformationException $missingBuyerInformationException) {
             throw new ConstraintViolationException(new ConstraintViolationList($missingBuyerInformationException->getErrorMessages()), $requestDataBag->all());
         } catch (TiltaException $tiltaException) {
@@ -151,7 +155,7 @@ class CreateFacilityRoute
         return new SuccessResponse();
     }
 
-    private function getAddressForCustomer(CustomerEntity $customer, string $addressId): ?CustomerAddressEntity
+    private function getAddressForCustomer(CustomerEntity $customer, string $addressId, Context $context): ?CustomerAddressEntity
     {
         // reload address, because entity data has been changed.
         $addressCriteria = (new Criteria([$addressId]))
@@ -159,7 +163,7 @@ class CreateFacilityRoute
             ->addAssociation('country')
             ->addAssociation('customer');
 
-        $address = $this->addressRepository->search($addressCriteria, Context::createDefaultContext())->first();
+        $address = $this->addressRepository->search($addressCriteria, $context)->first();
 
         // check is only for PHPStan
         return $address instanceof CustomerAddressEntity ? $address : null;
@@ -168,10 +172,10 @@ class CreateFacilityRoute
     /**
      * @return string[]
      */
-    private function getSalutationIds(): array
+    private function getSalutationIds(Context $context): array
     {
         /** @var string[] $list */
-        $list = $this->salutationRepository->searchIds(new Criteria(), Context::createDefaultContext())->getIds();
+        $list = $this->salutationRepository->searchIds(new Criteria(), $context)->getIds();
 
         return array_values($list);
     }

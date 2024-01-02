@@ -58,7 +58,7 @@ class BuyerRequestFormDataRoute extends AbstractBuyerRequestFormDataRoute
             'page' => [
                 'address' => $customerAddress,
                 'salutations' => $this->getSalutations($context),
-                'legalForms' => $this->legalFormService->getLegalForms($this->entityHelper->getCountryCode($customerAddress) ?? ''),
+                'legalForms' => $this->legalFormService->getLegalForms($this->entityHelper->getCountryCode($customerAddress, $context->getContext()) ?? ''),
             ],
             'data' => new ArrayStruct([
                 'salutationId' => $requestDataBag->get('salutationId', $customerAddress->getSalutationId()),

@@ -143,9 +143,9 @@ class TiltaPaymentSW6 extends Plugin
     {
         /** @var AbstractBootstrap[] $bootstrapper */
         $bootstrapper = [
-            new Database(),
-            new PluginConfig(),
-            new PaymentMethods(),
+            new Database($context->getContext()),
+            new PluginConfig($context->getContext()),
+            new PaymentMethods($context->getContext()),
         ];
 
         /** @var EntityRepository<EntityCollection<PluginEntity>> $pluginRepository */

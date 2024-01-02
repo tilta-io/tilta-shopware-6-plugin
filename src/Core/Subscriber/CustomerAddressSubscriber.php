@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressDefinition;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerDefinition;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenEvent;
@@ -105,7 +106,7 @@ class CustomerAddressSubscriber implements EventSubscriberInterface
         /** @var EntityCollection<CustomerAddressEntity> $addresses */
         $addresses = $this->customerAddressRepository->search($criteria, $event->getContext());
 
-        $this->updateAddressList($addresses->getElements());
+        $this->updateAddressList($addresses->getElements(), $event->getContext());
     }
 
     public function onWrittenCustomerAddress(EntityWrittenEvent $event): void
@@ -125,13 +126,13 @@ class CustomerAddressSubscriber implements EventSubscriberInterface
         /** @var EntityCollection<CustomerAddressEntity> $addresses */
         $addresses = $this->customerAddressRepository->search($criteria, $event->getContext());
 
-        $this->updateAddressList($addresses->getElements());
+        $this->updateAddressList($addresses->getElements(), $event->getContext());
     }
 
     /**
      * @param CustomerAddressEntity[] $elements
      */
-    private function updateAddressList(array $elements): void
+    private function updateAddressList(array $elements, Context $context): void
     {
         foreach ($elements as $customerAddress) {
             $tiltaData = $customerAddress->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
@@ -141,7 +142,7 @@ class CustomerAddressSubscriber implements EventSubscriberInterface
             }
 
             try {
-                $this->buyerService->updateBuyer($customerAddress);
+                $this->buyerService->updateBuyer($customerAddress, $context);
             } catch (Exception $exception) {
                 $additionalData = [];
                 if ($exception instanceof MissingBuyerInformationException) {

@@ -100,7 +100,7 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
         }
 
         try {
-            $requestModel = $this->requestModelFactory->createModel($orderEntity, $tiltaPaymentMethod, $tiltaPaymentTerm, $buyerExternalId);
+            $requestModel = $this->requestModelFactory->createModel($orderEntity, $tiltaPaymentMethod, $tiltaPaymentTerm, $buyerExternalId, $salesChannelContext->getContext());
             $responseModel = $this->createOrderRequest->execute($requestModel);
         } catch (TiltaException $tiltaException) {
             $this->eventDispatcher->dispatch(new TiltaPaymentFailedEvent($tiltaException, $orderEntity, $transaction->getOrderTransaction(), $requestModel ?? null));

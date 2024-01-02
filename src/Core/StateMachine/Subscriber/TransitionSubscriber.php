@@ -90,13 +90,13 @@ class TransitionSubscriber implements EventSubscriberInterface
 
         switch ($event->getToPlace()->getTechnicalName()) {
             case $this->configService->getStateForShip():
-                $this->operationService->createInvoice($order);
+                $this->operationService->createInvoice($order, $event->getContext());
                 break;
             case $this->configService->getStateCancel():
-                $this->operationService->cancelOrder($order);
+                $this->operationService->cancelOrder($order, $event->getContext());
                 break;
             case $this->configService->getStateReturn():
-                $this->operationService->refundInvoice($order);
+                $this->operationService->refundInvoice($order, $event->getContext());
                 break;
         }
     }

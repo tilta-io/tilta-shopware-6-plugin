@@ -14,6 +14,7 @@ use DateTime;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Test\TestCaseBase\KernelTestBehaviour;
 use Shopware\Core\System\Country\CountryEntity;
@@ -171,7 +172,8 @@ class BuyerServiceTest extends TestCase
                 'salutationId' => 'updated-abc',
                 'incorporatedAt' => (new DateTime())->setDate(2000, 5, 15),
                 'legalForm' => 'updated-GMBH',
-            ]
+            ],
+            Context::createDefaultContext()
         );
     }
 
@@ -192,7 +194,7 @@ class BuyerServiceTest extends TestCase
             'TiltaPaymentSW6.config.salutationFallback', null, 'MR',
         ]);
 
-        $requestModel = $buyerService->createCreateBuyerRequestModel($this->getValidAddress());
+        $requestModel = $buyerService->createCreateBuyerRequestModel($this->getValidAddress(), Context::createDefaultContext());
         static::assertInstanceOf(CreateBuyerRequestModel::class, $requestModel);
         $requestModel->validateFields();
         static::assertIsArray($requestModel->toArray());
@@ -216,7 +218,7 @@ class BuyerServiceTest extends TestCase
             'TiltaPaymentSW6.config.salutationFallback', null, 'MR',
         ]);
 
-        $requestModel = $buyerService->createUpdateBuyerRequestModel($this->getValidAddress());
+        $requestModel = $buyerService->createUpdateBuyerRequestModel($this->getValidAddress(), Context::createDefaultContext());
         static::assertInstanceOf(UpdateBuyerRequestModel::class, $requestModel);
         $requestModel->validateFields();
         static::assertIsArray($requestModel->toArray());

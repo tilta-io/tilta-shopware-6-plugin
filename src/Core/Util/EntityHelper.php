@@ -65,13 +65,13 @@ class EntityHelper
     /**
      * @internal
      */
-    public function getCurrencyCode(OrderEntity $orderEntity): string
+    public function getCurrencyCode(OrderEntity $orderEntity, Context $context): string
     {
         if ($orderEntity->getCurrency() instanceof CurrencyEntity) {
             $currency = $orderEntity->getCurrency();
         } else {
             /** @var CurrencyEntity|null $currency */
-            $currency = $this->currencyRepository->search(new Criteria([$orderEntity->getCurrencyId()]), Context::createDefaultContext())->first();
+            $currency = $this->currencyRepository->search(new Criteria([$orderEntity->getCurrencyId()]), $context)->first();
         }
 
         if ($currency instanceof CurrencyEntity) {
@@ -86,13 +86,13 @@ class EntityHelper
      * @param CustomerAddressEntity|OrderAddressEntity $addressEntity
      * @internal
      */
-    public function getCountryCode($addressEntity): ?string
+    public function getCountryCode($addressEntity, Context $context): ?string
     {
         if ($addressEntity->getCountry() instanceof CountryEntity) {
             $country = $addressEntity->getCountry();
         } else {
             /** @var CountryEntity|null $country */
-            $country = $this->countryRepository->search(new Criteria([$addressEntity->getCountryId()]), Context::createDefaultContext())->first();
+            $country = $this->countryRepository->search(new Criteria([$addressEntity->getCountryId()]), $context)->first();
         }
 
         if ($country instanceof CountryEntity) {
@@ -103,21 +103,21 @@ class EntityHelper
         throw new RuntimeException('Country for order-address `' . $addressEntity->getId() . '` does not exist (anymore).');
     }
 
-    public function getOrderAddress(string $addressId): ?OrderAddressEntity
+    public function getOrderAddress(string $addressId, Context $context): ?OrderAddressEntity
     {
-        $orderAddress = $this->orderAddressRepository->search(new Criteria([$addressId]), Context::createDefaultContext())->first();
+        $orderAddress = $this->orderAddressRepository->search(new Criteria([$addressId]), $context)->first();
 
         // check is only for PHPStan
         return $orderAddress instanceof OrderAddressEntity ? $orderAddress : null;
     }
 
-    public function getCustomerFromAddress(CustomerAddressEntity $customerAddressEntity): CustomerEntity
+    public function getCustomerFromAddress(CustomerAddressEntity $customerAddressEntity, Context $context): CustomerEntity
     {
         if ($customerAddressEntity->getCustomer() instanceof CustomerEntity) {
             return $customerAddressEntity->getCustomer();
         }
 
-        $customer = $this->customerRepository->search(new Criteria([$customerAddressEntity->getCustomerId()]), Context::createDefaultContext())->first();
+        $customer = $this->customerRepository->search(new Criteria([$customerAddressEntity->getCustomerId()]), $context)->first();
 
         if (!$customer instanceof CustomerEntity) {
             throw new RuntimeException('customer can not be found for address');
