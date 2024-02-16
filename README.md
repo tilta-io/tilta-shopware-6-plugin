@@ -73,7 +73,7 @@ composer require tilta/shopware6-payment-module
 Update the extension by executing the following command in the root of your project.
 
 ```
-./bin/console plugin:upgrade TiltaPaymentSW6
+./bin/console plugin:update TiltaPaymentSW6
 ```
 
 ### Installation via download of release
