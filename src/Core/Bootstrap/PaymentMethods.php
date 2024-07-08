@@ -19,10 +19,7 @@ use Tilta\TiltaPaymentSW6\Core\PaymentHandler\TiltaDefaultPaymentHandler;
 
 class PaymentMethods extends AbstractBootstrap
 {
-    /**
-     * @var array<string, array<string, (class-string<TiltaDefaultPaymentHandler> | bool | array<string, array<string, string>> | string)>>
-     */
-    public const PAYMENT_METHODS = [
+    final public const PAYMENT_METHODS = [
         TiltaDefaultPaymentHandler::class => [
             'handlerIdentifier' => TiltaDefaultPaymentHandler::class,
             'name' => 'Tilta Invoice',

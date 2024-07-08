@@ -18,7 +18,7 @@ class Migration1693570976TiltaOrderData extends MigrationStep
 {
     public function getCreationTimestamp(): int
     {
-        return 1693570976;
+        return 1_693_570_976;
     }
 
     public function update(Connection $connection): void

@@ -18,32 +18,32 @@ class TiltaCustomerAddressDataEntity extends Entity
     /**
      * @var string
      */
-    public const FIELD_CUSTOMER_ADDRESS_ID = 'customerAddressId';
+    final public const FIELD_CUSTOMER_ADDRESS_ID = 'customerAddressId';
 
     /**
      * @var string
      */
-    public const FIELD_LEGAL_FORM = 'legalForm';
+    final public const FIELD_LEGAL_FORM = 'legalForm';
 
     /**
      * @var string
      */
-    public const FIELD_BUYER_EXTERNAL_ID = 'buyerExternalId';
+    final public const FIELD_BUYER_EXTERNAL_ID = 'buyerExternalId';
 
     /**
      * @var string
      */
-    public const FIELD_INCORPORATED_AT = 'incorporatedAt';
+    final public const FIELD_INCORPORATED_AT = 'incorporatedAt';
 
     /**
      * @var string
      */
-    public const FIELD_TOTAL_AMOUNT = 'totalAmount';
+    final public const FIELD_TOTAL_AMOUNT = 'totalAmount';
 
     /**
      * @var string
      */
-    public const FIELD_VALID_UNTIL = 'validUntil';
+    final public const FIELD_VALID_UNTIL = 'validUntil';
 
     protected string $customerAddressId;
 

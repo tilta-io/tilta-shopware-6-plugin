@@ -20,10 +20,7 @@ use Tilta\TiltaPaymentSW6\Core\Extension\Definition\TiltaOrderDataDefinition;
 
 class OrderDataEntityExtension extends EntityExtension
 {
-    /**
-     * @var string
-     */
-    public const EXTENSION_NAME = 'tiltaData';
+    final public const EXTENSION_NAME = 'tiltaData';
 
     public function extendFields(FieldCollection $collection): void
     {

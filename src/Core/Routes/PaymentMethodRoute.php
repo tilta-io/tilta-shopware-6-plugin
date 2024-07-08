@@ -102,7 +102,7 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
 
     private function shouldRemovePaymentMethods(CustomerAddressEntity $customerAddress, CartPrice $price, Context $context): bool
     {
-        if ($customerAddress->getCompany() === null || trim($customerAddress->getCompany()) === '') {
+        if ($customerAddress->getCompany() === null || trim((string) $customerAddress->getCompany()) === '') {
             return true;
         }
 

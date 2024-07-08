@@ -53,9 +53,9 @@
         "tilta-io/tilta-php-sdk": "^1.0"
     },
     "scripts": {
-        "rector-fix": "./vendor/bin/rector process --clear-cache",
-        "rector-lint": "./vendor/bin/rector process --clear-cache --dry-run",
-        "phpstan-lint": "./vendor/bin/phpstan analyse",
+        "rector-fix": "./vendor/bin/rector process --autoload-file ../../../vendor/autoload.php",
+        "rector-lint": "./vendor/bin/rector process --dry-run --autoload-file ../../../vendor/autoload.php",
+        "phpstan-lint": "./vendor/bin/phpstan analyse --autoload-file ../../../vendor/autoload.php",
         "code-style-fix": "./vendor/bin/ecs --fix --clear-cache",
         "code-style-lint": "./vendor/bin/ecs --clear-cache",
         "lint": [

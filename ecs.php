@@ -38,5 +38,6 @@ file that was distributed with this source code.', 'separate' => 'bottom', 'loca
         NotOperatorWithSuccessorSpaceFixer::class,
         AssignmentInConditionSniff::class,
         ConsistentPregDelimiterRector::class, // rule does not exist in further releases of ecs
+        __DIR__ . '/tests/TestCaseBase',
     ]);
 };

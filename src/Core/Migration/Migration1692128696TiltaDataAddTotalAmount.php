@@ -18,7 +18,7 @@ class Migration1692128696TiltaDataAddTotalAmount extends MigrationStep
 {
     public function getCreationTimestamp(): int
     {
-        return 1692128696;
+        return 1_692_128_696;
     }
 
     public function update(Connection $connection): void

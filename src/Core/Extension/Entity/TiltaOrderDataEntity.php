@@ -18,52 +18,52 @@ class TiltaOrderDataEntity extends Entity
     /**
      * @var string
      */
-    public const FIELD_ID = 'id';
+    final public const FIELD_ID = 'id';
 
     /**
      * @var string
      */
-    public const FIELD_ORDER_ID = 'orderId';
+    final public const FIELD_ORDER_ID = 'orderId';
 
     /**
      * @var string
      */
-    public const FIELD_ORDER = 'order';
+    final public const FIELD_ORDER = 'order';
 
     /**
      * @var string
      */
-    public const FIELD_ORDER_VERSION_ID = 'orderVersionId';
+    final public const FIELD_ORDER_VERSION_ID = 'orderVersionId';
 
     /**
      * @var string
      */
-    public const FIELD_ORDER_EXTERNAL_ID = 'orderExternalId';
+    final public const FIELD_ORDER_EXTERNAL_ID = 'orderExternalId';
 
     /**
      * @var string
      */
-    public const FIELD_BUYER_EXTERNAL_ID = 'buyerExternalId';
+    final public const FIELD_BUYER_EXTERNAL_ID = 'buyerExternalId';
 
     /**
      * @var string
      */
-    public const FIELD_MERCHANT_EXTERNAL_ID = 'merchantExternalId';
+    final public const FIELD_MERCHANT_EXTERNAL_ID = 'merchantExternalId';
 
     /**
      * @var string
      */
-    public const FIELD_STATUS = 'status';
+    final public const FIELD_STATUS = 'status';
 
     /**
      * @var string
      */
-    public const FIELD_INVOICE_NUMBER = 'invoiceNumber';
+    final public const FIELD_INVOICE_NUMBER = 'invoiceNumber';
 
     /**
      * @var string
      */
-    public const FIELD_INVOICE_EXTERNAL_ID = 'invoiceExternalId';
+    final public const FIELD_INVOICE_EXTERNAL_ID = 'invoiceExternalId';
 
     protected string $id;
 

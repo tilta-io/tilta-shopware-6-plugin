@@ -19,7 +19,8 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__ . '/src/TiltaPaymentSW6.php', // seems to be a problem with rector and traits
         ],
         \Rector\CodeQuality\Rector\Catch_\ThrowWithPreviousExceptionRector::class,
-        \Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector::class
+        \Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector::class,
+        __DIR__ . '/tests/TestCaseBase',
     ]);
 
     $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);

@@ -12,7 +12,7 @@ namespace Tilta\TiltaPaymentSW6\Tests;
 
 use DateTime;
 use Shopware\Core\Checkout\Cart\Cart;
-use Shopware\Core\Checkout\Cart\LineItemFactoryHandler\ProductLineItemFactory;
+use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
@@ -174,9 +174,13 @@ trait TiltaTestBehavior
 
     protected function addProductToCart(string $id, SalesChannelContext $context): Cart
     {
-        $product = $this->getContainer()->get(ProductLineItemFactory::class)->create(['id' => $id], $context);
-        $cart = $this->getContainer()->get(CartService::class)->getCart($context->getToken(), $context);
+        $lineItem = (new LineItem($id, LineItem::PRODUCT_LINE_ITEM_TYPE, $id))
+            ->setRemovable(true)
+            ->setStackable(true);
 
-        return $this->getContainer()->get(CartService::class)->add($cart, $product, $context);
+        $cartService = $this->getContainer()->get(CartService::class);
+        $cart = $cartService->getCart($context->getToken(), $context);
+
+        return $cartService->add($cart, $lineItem, $context);
     }
 }

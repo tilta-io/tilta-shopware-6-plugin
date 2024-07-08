@@ -18,7 +18,7 @@ class Migration1691162896TiltaCustomerAddressData extends MigrationStep
 {
     public function getCreationTimestamp(): int
     {
-        return 1691162896;
+        return 1_691_162_896;
     }
 
     public function update(Connection $connection): void

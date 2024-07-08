@@ -152,7 +152,7 @@ class TiltaPaymentSW6 extends Plugin
             new DirectoryLoader($container, $locator),
         ]);
         (new DelegatingLoader($resolver))
-            ->load(\rtrim($this->getPath(), '/') . '/Resources/config/{packages}/*.yaml', 'glob');
+            ->load(\rtrim((string) $this->getPath(), '/') . '/Resources/config/{packages}/*.yaml', 'glob');
     }
 
     /**

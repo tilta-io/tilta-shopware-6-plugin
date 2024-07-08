@@ -21,7 +21,7 @@ class CustomerAddressEntityExtension extends EntityExtension
     /**
      * @var string
      */
-    public const TILTA_DATA = 'tiltaData';
+    final public const TILTA_DATA = 'tiltaData';
 
     public function extendFields(FieldCollection $collection): void
     {
