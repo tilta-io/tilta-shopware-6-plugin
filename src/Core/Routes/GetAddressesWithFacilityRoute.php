@@ -18,6 +18,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
 use Shopware\Core\Framework\Struct\ArrayStruct;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Tilta\Sdk\Exception\GatewayException\NotFoundException\BuyerNotFoundException;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\Sdk\Model\Response\Facility;
 use Tilta\TiltaPaymentSW6\Core\Routes\Response\AddressesWithFacilityResponse;
@@ -57,6 +58,8 @@ class GetAddressesWithFacilityRoute
                 if ($facility instanceof Facility) {
                     $address->addExtension('tiltaFacility', new ArrayStruct($facility->toArray()));
                 }
+            } catch (BuyerNotFoundException) {
+                // do nothing.
             } catch (TiltaException $tiltaException) {
                 $this->logger->error(sprintf('Error during fetching facilities for address. (%s)', $tiltaException->getMessage()), [
                     'customer-id' => $customer->getId(),
