@@ -31,15 +31,6 @@ use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
 
 class CustomerAddressSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
-     */
-    private EntityRepository $customerAddressRepository;
-
-    private BuyerService $buyerService;
-
-    private LoggerInterface $logger;
-
     private array $fieldsToWatch = [
         CustomerAddressDefinition::ENTITY_NAME => [
             'countryId',
@@ -63,15 +54,12 @@ class CustomerAddressSubscriber implements EventSubscriberInterface
      * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $customerAddressRepository
      */
     public function __construct(
-        EntityRepository $customerAddressRepository,
-        BuyerService $buyerService,
-        LoggerInterface $logger,
+        private readonly EntityRepository $customerAddressRepository,
+        private readonly BuyerService $buyerService,
+        private readonly LoggerInterface $logger,
         array $additionalCustomerAddressFieldsToWatch = [],
         array $additionalCustomerFieldsToWatch = []
     ) {
-        $this->customerAddressRepository = $customerAddressRepository;
-        $this->buyerService = $buyerService;
-        $this->logger = $logger;
         $this->fieldsToWatch[CustomerAddressDefinition::ENTITY_NAME] = array_merge($this->fieldsToWatch[CustomerAddressDefinition::ENTITY_NAME], $additionalCustomerAddressFieldsToWatch);
         $this->fieldsToWatch[CustomerDefinition::ENTITY_NAME] = array_merge($this->fieldsToWatch[CustomerDefinition::ENTITY_NAME], $additionalCustomerFieldsToWatch);
     }

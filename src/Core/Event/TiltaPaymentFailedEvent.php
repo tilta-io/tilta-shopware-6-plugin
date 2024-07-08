@@ -17,20 +17,12 @@ use Tilta\Sdk\Model\Request\Order\CreateOrderRequestModel;
 
 class TiltaPaymentFailedEvent
 {
-    private Exception $exception;
-
-    private OrderEntity $orderEntity;
-
-    private OrderTransactionEntity $orderTransactionEntity;
-
-    private ?CreateOrderRequestModel $orderRequestModel;
-
-    public function __construct(Exception $exception, OrderEntity $orderEntity, OrderTransactionEntity $orderTransactionEntity, ?CreateOrderRequestModel $orderRequestModel = null)
-    {
-        $this->exception = $exception;
-        $this->orderEntity = $orderEntity;
-        $this->orderTransactionEntity = $orderTransactionEntity;
-        $this->orderRequestModel = $orderRequestModel;
+    public function __construct(
+        private readonly Exception $exception,
+        private readonly OrderEntity $orderEntity,
+        private readonly OrderTransactionEntity $orderTransactionEntity,
+        private readonly ?CreateOrderRequestModel $orderRequestModel = null
+    ) {
     }
 
     public function getException(): Exception

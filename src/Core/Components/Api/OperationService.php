@@ -42,58 +42,22 @@ use Tilta\TiltaPaymentSW6\Core\Util\OrderHelper;
  */
 class OperationService
 {
-    private CreateInvoiceRequest $createInvoiceRequest;
-
-    private GetOrderDetailsRequest $orderDetailsRequest;
-
-    private Logger $logger;
-
-    /**
-     * @var EntityRepository<EntityCollection<TiltaOrderDataEntity>>
-     */
-    private EntityRepository $tiltaOrderDataRepository;
-
-    private OrderHelper $orderHelper;
-
-    private EntityHelper $entityHelper;
-
-    private AmountModelFactory $amountModelFactory;
-
-    private AddressModelFactory $addressModelFactory;
-
-    private LineItemsFactory $lineItemsFactory;
-
-    private CreateCreditNoteRequest $createCreditNoteRequest;
-
-    private CancelOrderRequest $cancelOrderRequest;
-
     /**
      * @param EntityRepository<EntityCollection<TiltaOrderDataEntity>> $tiltaOrderDataRepository
      */
     public function __construct(
-        CreateInvoiceRequest $createInvoiceRequest,
-        GetOrderDetailsRequest $orderDetailsRequest,
-        CreateCreditNoteRequest $createCreditNoteRequest,
-        CancelOrderRequest $cancelOrderRequest,
-        EntityRepository $tiltaOrderDataRepository,
-        OrderHelper $orderHelper,
-        EntityHelper $entityHelper,
-        AmountModelFactory $amountModelFactory,
-        AddressModelFactory $addressModelFactory,
-        LineItemsFactory $lineItemsFactory,
-        Logger $logger
+        private readonly CreateInvoiceRequest $createInvoiceRequest,
+        private readonly GetOrderDetailsRequest $orderDetailsRequest,
+        private readonly CreateCreditNoteRequest $createCreditNoteRequest,
+        private readonly CancelOrderRequest $cancelOrderRequest,
+        private readonly EntityRepository $tiltaOrderDataRepository,
+        private readonly OrderHelper $orderHelper,
+        private readonly EntityHelper $entityHelper,
+        private readonly AmountModelFactory $amountModelFactory,
+        private readonly AddressModelFactory $addressModelFactory,
+        private readonly LineItemsFactory $lineItemsFactory,
+        private readonly Logger $logger
     ) {
-        $this->createInvoiceRequest = $createInvoiceRequest;
-        $this->createCreditNoteRequest = $createCreditNoteRequest;
-        $this->logger = $logger;
-        $this->tiltaOrderDataRepository = $tiltaOrderDataRepository;
-        $this->orderHelper = $orderHelper;
-        $this->entityHelper = $entityHelper;
-        $this->amountModelFactory = $amountModelFactory;
-        $this->addressModelFactory = $addressModelFactory;
-        $this->lineItemsFactory = $lineItemsFactory;
-        $this->orderDetailsRequest = $orderDetailsRequest;
-        $this->cancelOrderRequest = $cancelOrderRequest;
     }
 
     public function createInvoice(OrderEntity $orderEntity, Context $context): bool

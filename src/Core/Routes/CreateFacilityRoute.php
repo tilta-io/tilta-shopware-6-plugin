@@ -48,46 +48,19 @@ use UnexpectedValueException;
 #[Route(path: '/store-api/tilta', defaults: ['_loginRequired' => true, '_loginRequiredAllowGuest' => true, '_routeScope' => ['store-api']])]
 class CreateFacilityRoute
 {
-    private DataValidator $dataValidator;
-
-    private BuyerService $buyerService;
-
-    private FacilityService $facilityService;
-
-    /**
-     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
-     */
-    private EntityRepository $addressRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<SalutationEntity>>
-     */
-    private EntityRepository $salutationRepository;
-
-    private LoggerInterface $logger;
-
-    private LegalFormService $legalFormService;
-
     /**
      * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $addressRepository
      * @param EntityRepository<EntityCollection<SalutationEntity>> $salutationRepository
      */
     public function __construct(
-        DataValidator $dataValidator,
-        BuyerService $buyerService,
-        FacilityService $facilityService,
-        EntityRepository $addressRepository,
-        EntityRepository $salutationRepository,
-        LoggerInterface $logger,
-        LegalFormService $legalFormService
+        private readonly DataValidator $dataValidator,
+        private readonly BuyerService $buyerService,
+        private readonly FacilityService $facilityService,
+        private readonly EntityRepository $addressRepository,
+        private readonly EntityRepository $salutationRepository,
+        private readonly LoggerInterface $logger,
+        private readonly LegalFormService $legalFormService
     ) {
-        $this->dataValidator = $dataValidator;
-        $this->buyerService = $buyerService;
-        $this->facilityService = $facilityService;
-        $this->addressRepository = $addressRepository;
-        $this->salutationRepository = $salutationRepository;
-        $this->logger = $logger;
-        $this->legalFormService = $legalFormService;
     }
 
     #[Route(path: '/facility/create/{addressId}', methods: ['POST'])]

@@ -18,11 +18,9 @@ use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
 class AmountModelFactory
 {
-    private EntityHelper $entityHelper;
-
-    public function __construct(EntityHelper $entityHelper)
-    {
-        $this->entityHelper = $entityHelper;
+    public function __construct(
+        private readonly EntityHelper $entityHelper
+    ) {
     }
 
     public function createAmountForOrder(OrderEntity $orderEntity, Context $context): Amount

@@ -28,20 +28,11 @@ use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
 class BuyerRequestFormDataRoute extends AbstractBuyerRequestFormDataRoute
 {
-    private LegalFormService $legalFormService;
-
-    private AbstractSalutationRoute $salutationRoute;
-
-    private EntityHelper $entityHelper;
-
     public function __construct(
-        LegalFormService $legalFormService,
-        AbstractSalutationRoute $salutationRoute,
-        EntityHelper $entityHelper
+        private readonly LegalFormService $legalFormService,
+        private readonly AbstractSalutationRoute $salutationRoute,
+        private readonly EntityHelper $entityHelper
     ) {
-        $this->legalFormService = $legalFormService;
-        $this->salutationRoute = $salutationRoute;
-        $this->entityHelper = $entityHelper;
     }
 
     public function getDecorated(): AbstractBuyerRequestFormDataRoute

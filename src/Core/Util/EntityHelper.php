@@ -25,41 +25,17 @@ use Shopware\Core\System\Currency\CurrencyEntity;
 class EntityHelper
 {
     /**
-     * @var EntityRepository<EntityCollection<CurrencyEntity>>
-     */
-    private EntityRepository $currencyRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<CountryEntity>>
-     */
-    private EntityRepository $countryRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<OrderAddressEntity>>
-     */
-    private EntityRepository $orderAddressRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<CustomerEntity>>
-     */
-    private EntityRepository $customerRepository;
-
-    /**
      * @param EntityRepository<EntityCollection<CurrencyEntity>> $currencyRepository
      * @param EntityRepository<EntityCollection<CountryEntity>> $countryRepository
      * @param EntityRepository<EntityCollection<OrderAddressEntity>> $orderAddressRepository
      * @param EntityRepository<EntityCollection<CustomerEntity>> $customerRepository
      */
     public function __construct(
-        EntityRepository $currencyRepository,
-        EntityRepository $countryRepository,
-        EntityRepository $orderAddressRepository,
-        EntityRepository $customerRepository
+        private readonly EntityRepository $currencyRepository,
+        private readonly EntityRepository $countryRepository,
+        private readonly EntityRepository $orderAddressRepository,
+        private readonly EntityRepository $customerRepository
     ) {
-        $this->currencyRepository = $currencyRepository;
-        $this->countryRepository = $countryRepository;
-        $this->orderAddressRepository = $orderAddressRepository;
-        $this->customerRepository = $customerRepository;
     }
 
     /**

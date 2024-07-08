@@ -28,34 +28,16 @@ use Tilta\TiltaPaymentSW6\Core\Service\ConfigService;
 
 class TransitionSubscriber implements EventSubscriberInterface
 {
-    private ConfigService $configService;
-
-    /**
-     * @var EntityRepository<EntityCollection<OrderDeliveryEntity>>
-     */
-    private EntityRepository $orderDeliveryRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<OrderEntity>>
-     */
-    private EntityRepository $orderRepository;
-
-    private OperationService $operationService;
-
     /**
      * @param EntityRepository<EntityCollection<OrderDeliveryEntity>> $orderDeliveryRepository
      * @param EntityRepository<EntityCollection<OrderEntity>> $orderRepository
      */
     public function __construct(
-        EntityRepository $orderDeliveryRepository,
-        EntityRepository $orderRepository,
-        ConfigService $configService,
-        OperationService $operationService
+        private readonly EntityRepository $orderDeliveryRepository,
+        private readonly EntityRepository $orderRepository,
+        private readonly ConfigService $configService,
+        private readonly OperationService $operationService
     ) {
-        $this->orderDeliveryRepository = $orderDeliveryRepository;
-        $this->orderRepository = $orderRepository;
-        $this->configService = $configService;
-        $this->operationService = $operationService;
     }
 
     public static function getSubscribedEvents(): array

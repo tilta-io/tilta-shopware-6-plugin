@@ -26,20 +26,11 @@ use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
 
 class GetAddressesWithFacilityRoute
 {
-    private AbstractListAddressRoute $listAddressRoute;
-
-    private FacilityService $facilityService;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        AbstractListAddressRoute $listAddressRoute,
-        FacilityService $facilityService,
-        LoggerInterface $logger
+        private readonly AbstractListAddressRoute $listAddressRoute,
+        private readonly FacilityService $facilityService,
+        private readonly LoggerInterface $logger
     ) {
-        $this->listAddressRoute = $listAddressRoute;
-        $this->facilityService = $facilityService;
-        $this->logger = $logger;
     }
 
     public function listCreditFacilities(SalesChannelContext $salesChannelContext, CustomerEntity $customer): AddressesWithFacilityResponse

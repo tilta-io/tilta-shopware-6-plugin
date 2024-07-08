@@ -34,24 +34,12 @@ use Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute;
 #[Route(path: '/account/credit-facilities', defaults: ['_loginRequired' => true, '_routeScope' => ['storefront']])]
 class AccountFacilityController extends StorefrontController
 {
-    private AbstractListAddressRoute $listAddressRoute;
-
-    private CreateFacilityRoute $createFacilityRoute;
-
-    private GetAddressesWithFacilityRoute $addressesWithFacilityRoute;
-
-    private AbstractBuyerRequestFormDataRoute $buyerRequestFormDataRoute;
-
     public function __construct(
-        AbstractListAddressRoute $listAddressRoute,
-        CreateFacilityRoute $createFacilityRoute,
-        GetAddressesWithFacilityRoute $addressesWithFacilityRoute,
-        AbstractBuyerRequestFormDataRoute $buyerRequestFormDataRoute
+        private readonly AbstractListAddressRoute $listAddressRoute,
+        private readonly CreateFacilityRoute $createFacilityRoute,
+        private readonly GetAddressesWithFacilityRoute $addressesWithFacilityRoute,
+        private readonly AbstractBuyerRequestFormDataRoute $buyerRequestFormDataRoute
     ) {
-        $this->listAddressRoute = $listAddressRoute;
-        $this->createFacilityRoute = $createFacilityRoute;
-        $this->addressesWithFacilityRoute = $addressesWithFacilityRoute;
-        $this->buyerRequestFormDataRoute = $buyerRequestFormDataRoute;
     }
 
     #[Route(path: '/', name: 'frontend.account.tilta.credit-facility.list')]

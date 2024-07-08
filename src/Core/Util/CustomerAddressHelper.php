@@ -26,33 +26,15 @@ use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
 class CustomerAddressHelper
 {
     /**
-     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
-     */
-    private EntityRepository $addressRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<OrderAddressEntity>>
-     */
-    private EntityRepository $orderAddressRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>>
-     */
-    private EntityRepository $tiltaCustomerAddressDataRepository;
-
-    /**
      * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $addressRepository
      * @param EntityRepository<EntityCollection<OrderAddressEntity>> $orderAddressRepository
      * @param EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>> $tiltaCustomerAddressDataRepository
      */
     public function __construct(
-        EntityRepository $addressRepository,
-        EntityRepository $orderAddressRepository,
-        EntityRepository $tiltaCustomerAddressDataRepository
+        private readonly EntityRepository $addressRepository,
+        private readonly EntityRepository $orderAddressRepository,
+        private readonly EntityRepository $tiltaCustomerAddressDataRepository
     ) {
-        $this->addressRepository = $addressRepository;
-        $this->orderAddressRepository = $orderAddressRepository;
-        $this->tiltaCustomerAddressDataRepository = $tiltaCustomerAddressDataRepository;
     }
 
     public function getCustomerAddressForOrder(OrderEntity $orderEntity, Context $context): ?CustomerAddressEntity

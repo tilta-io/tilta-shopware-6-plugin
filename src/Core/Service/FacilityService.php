@@ -34,26 +34,14 @@ use Tilta\TiltaPaymentSW6\Core\Util\AmountHelper;
 
 class FacilityService
 {
-    private ContainerInterface $container;
-
-    private BuyerService $buyerService;
-
-    /**
-     * @var EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>>
-     */
-    private EntityRepository $tiltaDataRepository;
-
     /**
      * @param EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>> $tiltaDataRepository
      */
     public function __construct(
-        ContainerInterface $container,
-        BuyerService $buyerService,
-        EntityRepository $tiltaDataRepository
+        private readonly ContainerInterface $container,
+        private readonly BuyerService $buyerService,
+        private readonly EntityRepository $tiltaDataRepository
     ) {
-        $this->container = $container;
-        $this->buyerService = $buyerService;
-        $this->tiltaDataRepository = $tiltaDataRepository;
     }
 
     /**

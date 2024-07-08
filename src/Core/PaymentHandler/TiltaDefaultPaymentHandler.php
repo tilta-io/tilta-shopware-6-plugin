@@ -40,38 +40,17 @@ use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaOrderDataEntity as Transact
 
 class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, TiltaPaymentMethod
 {
-    private CreateOrderRequest $createOrderRequest;
-
-    private CreateOrderRequestModelFactory $requestModelFactory;
-
-    /**
-     * @var EntityRepository<EntityCollection<TiltaOrderDataEntity>>
-     */
-    private EntityRepository $tiltaOrderDataRepository;
-
-    private LoggerInterface $logger;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    private DataValidator $dataValidator;
-
     /**
      * @param EntityRepository<EntityCollection<TiltaOrderDataEntity>> $tiltaOrderDataRepository
      */
     public function __construct(
-        CreateOrderRequest $createOrderRequest,
-        CreateOrderRequestModelFactory $requestModelFactory,
-        EntityRepository $tiltaOrderDataRepository,
-        LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
-        DataValidator $dataValidator
+        private readonly CreateOrderRequest $createOrderRequest,
+        private readonly CreateOrderRequestModelFactory $requestModelFactory,
+        private readonly EntityRepository $tiltaOrderDataRepository,
+        private readonly LoggerInterface $logger,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly DataValidator $dataValidator
     ) {
-        $this->createOrderRequest = $createOrderRequest;
-        $this->requestModelFactory = $requestModelFactory;
-        $this->tiltaOrderDataRepository = $tiltaOrderDataRepository;
-        $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->dataValidator = $dataValidator;
     }
 
     public function pay(SyncPaymentTransactionStruct $transaction, RequestDataBag $dataBag, SalesChannelContext $salesChannelContext): void

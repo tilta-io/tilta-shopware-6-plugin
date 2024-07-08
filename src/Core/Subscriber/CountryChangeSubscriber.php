@@ -28,21 +28,12 @@ use Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper;
 class CountryChangeSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
-     */
-    private EntityRepository $customerAddressRepository;
-
-    private CustomerAddressHelper $customerAddressHelper;
-
-    /**
      * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $customerAddressRepository
      */
     public function __construct(
-        EntityRepository $customerAddressRepository,
-        CustomerAddressHelper $customerAddressHelper
+        private readonly EntityRepository $customerAddressRepository,
+        private readonly CustomerAddressHelper $customerAddressHelper
     ) {
-        $this->customerAddressRepository = $customerAddressRepository;
-        $this->customerAddressHelper = $customerAddressHelper;
     }
 
     public static function getSubscribedEvents(): array

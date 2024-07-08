@@ -17,22 +17,13 @@ use Tilta\Sdk\Model\Order;
 
 class TiltaPaymentSuccessfulEvent
 {
-    private OrderEntity $orderEntity;
-
-    private OrderTransactionEntity $orderTransactionEntity;
-
-    private Order $order;
-
     public function __construct(
-        OrderEntity $orderEntity,
-        OrderTransactionEntity $orderTransactionEntity,
-        Order $order,
-        private SalesChannelContext $salesChannelContext
+        private readonly OrderEntity $orderEntity,
+        private readonly OrderTransactionEntity $orderTransactionEntity,
+        private readonly Order $order,
+        private readonly SalesChannelContext $salesChannelContext
     )
     {
-        $this->orderEntity = $orderEntity;
-        $this->orderTransactionEntity = $orderTransactionEntity;
-        $this->order = $order;
     }
 
     public function getOrderEntity(): OrderEntity

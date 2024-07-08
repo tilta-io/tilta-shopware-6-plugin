@@ -32,38 +32,17 @@ use Tilta\TiltaPaymentSW6\Core\Util\PaymentMethodHelper;
 
 class StateMachineRegistryDecorator extends StateMachineRegistry // we must extend it, cause there is no interface
 {
-    protected ConfigService $configService;
-
-    /**
-     * @var EntityRepository<EntityCollection<OrderEntity>>
-     */
-    protected EntityRepository $orderRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<OrderDeliveryEntity>>
-     */
-    protected EntityRepository $orderDeliveryRepository;
-
-    private StateMachineRegistry $innerService;
-
-    private OrderHelper $orderHelper;
-
     /**
      * @param EntityRepository<EntityCollection<OrderEntity>> $orderRepository
      * @param EntityRepository<EntityCollection<OrderDeliveryEntity>> $orderDeliveryRepository
      */
     public function __construct(
-        StateMachineRegistry $innerService,
-        ConfigService $configService,
-        OrderHelper $orderHelper,
-        EntityRepository $orderRepository,
-        EntityRepository $orderDeliveryRepository
+        private readonly StateMachineRegistry $innerService,
+        private readonly ConfigService $configService,
+        private readonly OrderHelper $orderHelper,
+        private readonly EntityRepository $orderRepository,
+        private readonly EntityRepository $orderDeliveryRepository
     ) {
-        $this->innerService = $innerService;
-        $this->configService = $configService;
-        $this->orderRepository = $orderRepository;
-        $this->orderDeliveryRepository = $orderDeliveryRepository;
-        $this->orderHelper = $orderHelper;
     }
 
     public function transition(Transition $transition, Context $context): StateMachineStateCollection

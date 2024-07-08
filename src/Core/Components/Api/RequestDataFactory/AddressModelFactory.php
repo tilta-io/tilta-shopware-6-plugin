@@ -20,11 +20,9 @@ use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
 class AddressModelFactory
 {
-    private EntityHelper $entityHelper;
-
-    public function __construct(EntityHelper $entityHelper)
-    {
-        $this->entityHelper = $entityHelper;
+    public function __construct(
+        private readonly EntityHelper $entityHelper
+    ) {
     }
 
     public function createFromOrderAddress(OrderAddressEntity $addressEntity, Context $context): Address

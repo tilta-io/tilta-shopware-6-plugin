@@ -22,12 +22,9 @@ use Tilta\TiltaPaymentSW6\Core\Util\PaymentMethodHelper;
 
 class CheckoutSubscriber implements EventSubscriberInterface
 {
-    private TiltaCheckoutDataRoute $checkoutDataRoute;
-
     public function __construct(
-        TiltaCheckoutDataRoute $checkoutDataRoute
+        private readonly TiltaCheckoutDataRoute $checkoutDataRoute
     ) {
-        $this->checkoutDataRoute = $checkoutDataRoute;
     }
 
     public static function getSubscribedEvents(): array

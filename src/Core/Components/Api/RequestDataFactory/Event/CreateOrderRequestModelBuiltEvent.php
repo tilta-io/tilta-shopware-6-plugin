@@ -15,14 +15,10 @@ use Tilta\Sdk\Model\Request\Order\CreateOrderRequestModel;
 
 class CreateOrderRequestModelBuiltEvent
 {
-    private OrderEntity $orderEntity;
-
-    private CreateOrderRequestModel $model;
-
-    public function __construct(OrderEntity $orderEntity, CreateOrderRequestModel $model)
-    {
-        $this->orderEntity = $orderEntity;
-        $this->model = $model;
+    public function __construct(
+        private readonly OrderEntity $orderEntity,
+        private CreateOrderRequestModel $model
+    ) {
     }
 
     public function getModel(): CreateOrderRequestModel

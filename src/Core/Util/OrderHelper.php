@@ -29,17 +29,11 @@ use Tilta\TiltaPaymentSW6\Core\Extension\OrderDataEntityExtension;
 class OrderHelper
 {
     /**
-     * @var EntityRepository<EntityCollection<DocumentEntity>>
-     */
-    private EntityRepository $documentRepository;
-
-    /**
      * @param EntityRepository<EntityCollection<DocumentEntity>> $documentRepository
      */
     public function __construct(
-        EntityRepository $documentRepository
+        private readonly EntityRepository $documentRepository
     ) {
-        $this->documentRepository = $documentRepository;
     }
 
     public function getInvoiceNumberAndExternalId(OrderEntity $orderEntity, Context $context): ?array

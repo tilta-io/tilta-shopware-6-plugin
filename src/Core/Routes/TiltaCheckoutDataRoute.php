@@ -36,32 +36,14 @@ use Tilta\TiltaPaymentSW6\Core\Util\PaymentMethodHelper;
 
 class TiltaCheckoutDataRoute
 {
-    private PaymentTermsService $paymentTermsService;
-
-    private BuyerRequestFormDataRoute $buyerRequestFormDataRoute;
-
-    private CustomerAddressHelper $customerAddressHelper;
-
-    private FacilityService $facilityService;
-
-    private CartService $cartService;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        PaymentTermsService $paymentTermsService,
-        BuyerRequestFormDataRoute $buyerRequestFormDataRoute,
-        CustomerAddressHelper $customerAddressHelper,
-        FacilityService $facilityService,
-        CartService $cartService,
-        LoggerInterface $logger
+        private readonly PaymentTermsService $paymentTermsService,
+        private readonly BuyerRequestFormDataRoute $buyerRequestFormDataRoute,
+        private readonly CustomerAddressHelper $customerAddressHelper,
+        private readonly FacilityService $facilityService,
+        private readonly CartService $cartService,
+        private readonly LoggerInterface $logger
     ) {
-        $this->paymentTermsService = $paymentTermsService;
-        $this->buyerRequestFormDataRoute = $buyerRequestFormDataRoute;
-        $this->customerAddressHelper = $customerAddressHelper;
-        $this->facilityService = $facilityService;
-        $this->cartService = $cartService;
-        $this->logger = $logger;
     }
 
     public function getCheckoutDataForSalesChannelContext(SalesChannelContext $context, RequestDataBag $initialDataForForm = null): ?ArrayStruct

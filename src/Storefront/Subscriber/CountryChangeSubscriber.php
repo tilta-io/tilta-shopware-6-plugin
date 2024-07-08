@@ -18,12 +18,9 @@ use Tilta\TiltaPaymentSW6\Core\Util\CustomerAddressHelper;
 
 class CountryChangeSubscriber implements EventSubscriberInterface
 {
-    private CustomerAddressHelper $addressHelper;
-
     public function __construct(
-        CustomerAddressHelper $addressHelper
+        private readonly CustomerAddressHelper $addressHelper
     ) {
-        $this->addressHelper = $addressHelper;
     }
 
     public static function getSubscribedEvents(): array

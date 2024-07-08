@@ -14,6 +14,7 @@ use Shopware\Core\Checkout\Cart\Price\Struct\CartPrice;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
+use Shopware\Core\Checkout\Order\OrderCollection;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
 use Shopware\Core\Checkout\Payment\SalesChannel\AbstractPaymentMethodRoute;
@@ -35,46 +36,19 @@ use Tilta\TiltaPaymentSW6\Core\Util\PaymentMethodHelper;
 
 class PaymentMethodRoute extends AbstractPaymentMethodRoute
 {
-    private ConfigService $configService;
-
-    private AbstractPaymentMethodRoute $innerService;
-
-    private RequestStack $requestStack;
-
     /**
-     * @var EntityRepository<EntityCollection<OrderEntity>>
-     */
-    private EntityRepository $orderRepository;
-
-    private CustomerAddressHelper $customerAddressHelper;
-
-    private CartService $cartService;
-
-    private FacilityService $facilityService;
-
-    private AbstractContextSwitchRoute $contextSwitchRoute;
-
-    /**
-     * @param EntityRepository<EntityCollection<OrderEntity>> $orderRepository
+     * @param EntityRepository<OrderCollection> $orderRepository
      */
     public function __construct(
-        AbstractPaymentMethodRoute $innerService,
-        ConfigService $configService,
-        RequestStack $requestStack,
-        EntityRepository $orderRepository,
-        CustomerAddressHelper $customerAddressHelper,
-        CartService $cartService,
-        FacilityService $facilityService,
-        AbstractContextSwitchRoute $contextSwitchRoute
+        private readonly AbstractPaymentMethodRoute $innerService,
+        private readonly ConfigService $configService,
+        private readonly RequestStack $requestStack,
+        private readonly EntityRepository $orderRepository,
+        private readonly CustomerAddressHelper $customerAddressHelper,
+        private readonly CartService $cartService,
+        private readonly FacilityService $facilityService,
+        private readonly AbstractContextSwitchRoute $contextSwitchRoute
     ) {
-        $this->innerService = $innerService;
-        $this->requestStack = $requestStack;
-        $this->configService = $configService;
-        $this->orderRepository = $orderRepository;
-        $this->customerAddressHelper = $customerAddressHelper;
-        $this->cartService = $cartService;
-        $this->facilityService = $facilityService;
-        $this->contextSwitchRoute = $contextSwitchRoute;
     }
 
     public function getDecorated(): AbstractPaymentMethodRoute

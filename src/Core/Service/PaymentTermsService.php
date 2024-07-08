@@ -32,28 +32,13 @@ use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 
 class PaymentTermsService
 {
-    private GetPaymentTermsRequest $paymentTermsRequest;
-
-    private ConfigService $configService;
-
-    private CustomerAddressHelper $customerAddressHelper;
-
-    private FacilityService $facilityService;
-
-    private EntityHelper $entityHelper;
-
     public function __construct(
-        GetPaymentTermsRequest $paymentTermsRequest,
-        ConfigService $configService,
-        CustomerAddressHelper $customerAddressHelper,
-        FacilityService $facilityService,
-        EntityHelper $entityHelper
+        private readonly GetPaymentTermsRequest $paymentTermsRequest,
+        private readonly ConfigService $configService,
+        private readonly CustomerAddressHelper $customerAddressHelper,
+        private readonly FacilityService $facilityService,
+        private readonly EntityHelper $entityHelper
     ) {
-        $this->paymentTermsRequest = $paymentTermsRequest;
-        $this->configService = $configService;
-        $this->customerAddressHelper = $customerAddressHelper;
-        $this->facilityService = $facilityService;
-        $this->entityHelper = $entityHelper;
     }
 
     /**

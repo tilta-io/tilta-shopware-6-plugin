@@ -17,14 +17,10 @@ use Tilta\Sdk\Service\Request\Util\GetLegalFormsRequest;
 
 class LegalFormService
 {
-    private CacheInterface $cache;
-
-    private GetLegalFormsRequest $legalFormsRequest;
-
-    public function __construct(CacheInterface $cache, GetLegalFormsRequest $legalFormsRequest)
-    {
-        $this->cache = $cache;
-        $this->legalFormsRequest = $legalFormsRequest;
+    public function __construct(
+        private readonly CacheInterface $cache,
+        private readonly GetLegalFormsRequest $legalFormsRequest
+    ) {
     }
 
     public function getLegalForms(string $countryCode): array

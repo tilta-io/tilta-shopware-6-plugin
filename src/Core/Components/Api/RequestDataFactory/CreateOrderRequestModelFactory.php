@@ -24,28 +24,13 @@ use Tilta\TiltaPaymentSW6\Core\Service\ConfigService;
 
 class CreateOrderRequestModelFactory
 {
-    private ConfigService $configService;
-
-    private EventDispatcherInterface $eventDispatcher;
-
-    private AddressModelFactory $addressModelFactory;
-
-    private AmountModelFactory $amountModelFactory;
-
-    private LineItemsFactory $lineItemsFactory;
-
     public function __construct(
-        ConfigService $configService,
-        EventDispatcherInterface $eventDispatcher,
-        AddressModelFactory $addressModelFactory,
-        AmountModelFactory $amountModelFactory,
-        LineItemsFactory $lineItemsFactory
+        private readonly ConfigService $configService,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly AddressModelFactory $addressModelFactory,
+        private readonly AmountModelFactory $amountModelFactory,
+        private readonly LineItemsFactory $lineItemsFactory
     ) {
-        $this->configService = $configService;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->amountModelFactory = $amountModelFactory;
-        $this->lineItemsFactory = $lineItemsFactory;
-        $this->addressModelFactory = $addressModelFactory;
     }
 
     /**

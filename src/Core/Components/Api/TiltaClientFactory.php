@@ -18,14 +18,10 @@ use Tilta\Sdk\Util\Logging;
 
 class TiltaClientFactory
 {
-    private SystemConfigService $configService;
-
-    private ?LoggerInterface $logger = null;
-
-    public function __construct(SystemConfigService $configService, LoggerInterface $logger = null)
-    {
-        $this->configService = $configService;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly SystemConfigService $configService,
+        private readonly ?LoggerInterface $logger = null
+    ) {
     }
 
     public function createTiltaClient(): TiltaClient

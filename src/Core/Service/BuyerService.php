@@ -41,45 +41,18 @@ use Tilta\TiltaPaymentSW6\Core\Util\EntityHelper;
 class BuyerService
 {
     /**
-     * @var EntityRepository<EntityCollection<CustomerAddressEntity>>
-     */
-    private EntityRepository $customerAddressRepository;
-
-    /**
-     * @var EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>>
-     */
-    private EntityRepository $tiltaAddressDataRepository;
-
-    private TranslatorInterface $translator;
-
-    private ContainerInterface $container;
-
-    private SystemConfigService $configService;
-
-    private AddressModelFactory $addressModelFactory;
-
-    private EntityHelper $entityHelper;
-
-    /**
      * @param EntityRepository<EntityCollection<CustomerAddressEntity>> $customerAddressRepository
      * @param EntityRepository<EntityCollection<TiltaCustomerAddressDataEntity>> $tiltaAddressDataRepository
      */
     public function __construct(
-        EntityRepository $customerAddressRepository,
-        EntityRepository $tiltaAddressDataRepository,
-        TranslatorInterface $translator,
-        ContainerInterface $container,
-        SystemConfigService $configService,
-        AddressModelFactory $addressModelFactory,
-        EntityHelper $entityHelper
+        private readonly EntityRepository $customerAddressRepository,
+        private readonly EntityRepository $tiltaAddressDataRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly ContainerInterface $container,
+        private readonly SystemConfigService $configService,
+        private readonly AddressModelFactory $addressModelFactory,
+        private readonly EntityHelper $entityHelper
     ) {
-        $this->customerAddressRepository = $customerAddressRepository;
-        $this->tiltaAddressDataRepository = $tiltaAddressDataRepository;
-        $this->translator = $translator;
-        $this->container = $container;
-        $this->configService = $configService;
-        $this->addressModelFactory = $addressModelFactory;
-        $this->entityHelper = $entityHelper;
     }
 
     /**
@@ -281,17 +254,11 @@ class BuyerService
         $customer = $this->entityHelper->getCustomerFromAddress($address, $context);
 
         $buyerExternalId = self::generateBuyerExternalId($address);
-        switch ($class) {
-            case CreateBuyerRequestModel::class:
-                $requestModel = (new CreateBuyerRequestModel())
-                    ->setExternalId($buyerExternalId);
-                break;
-            case UpdateBuyerRequestModel::class:
-                $requestModel = new UpdateBuyerRequestModel($buyerExternalId);
-                break;
-            default:
-                throw new RuntimeException('invalid request class');
-        }
+        $requestModel = match ($class) {
+            CreateBuyerRequestModel::class => (new CreateBuyerRequestModel())->setExternalId($buyerExternalId),
+            UpdateBuyerRequestModel::class => new UpdateBuyerRequestModel($buyerExternalId),
+            default => throw new RuntimeException('invalid request class'),
+        };
 
         $requestModel
             ->setLegalName($address->getCompany() ?: '')
