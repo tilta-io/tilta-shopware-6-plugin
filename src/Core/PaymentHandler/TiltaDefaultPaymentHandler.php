@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\PaymentHandler;
 
+use Throwable;
+use RuntimeException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Exception\SyncPaymentProcessException;
+use Shopware\Core\Checkout\Payment\PaymentException;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -86,7 +89,7 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
         try {
             $this->dataValidator->validate($dataBag->all(), $dataValidationDefinition);
         } catch (ConstraintViolationException $constraintViolationException) {
-            throw new SyncPaymentProcessException($transaction->getOrderTransaction()->getId(), 'Missing required Tilta data in request data.', $constraintViolationException);
+            throw $this->syncProcessInterrupted($transaction->getOrderTransaction()->getId(), 'Missing required Tilta data in request data.', $constraintViolationException);
         }
 
         $tiltaDataArray = $dataBag->all()['tilta'] ?? [];
@@ -102,7 +105,7 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
             $responseModel = $this->createOrderRequest->execute($requestModel);
         } catch (TiltaException $tiltaException) {
             $this->eventDispatcher->dispatch(new TiltaPaymentFailedEvent($tiltaException, $orderEntity, $transaction->getOrderTransaction(), $requestModel ?? null));
-            throw new SyncPaymentProcessException($transaction->getOrderTransaction()->getId(), $tiltaException->getMessage(), $tiltaException);
+            throw $this->syncProcessInterrupted($transaction->getOrderTransaction()->getId(), $tiltaException->getMessage(), $tiltaException);
         }
 
         try {
@@ -123,5 +126,18 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
         }
 
         $this->eventDispatcher->dispatch(new TiltaPaymentSuccessfulEvent($orderEntity, $transaction->getOrderTransaction(), $responseModel, $salesChannelContext));
+    }
+
+    private function syncProcessInterrupted(string $orderTransactionId, string $errorMessage, ?Throwable $e = null): Throwable
+    {
+        if (class_exists(PaymentException::class)) {
+            return PaymentException::syncProcessInterrupted($orderTransactionId, $errorMessage, $e);
+        } elseif (class_exists(SyncPaymentProcessException::class)) {
+            // required for shopware version <= 6.5.3
+            return new SyncPaymentProcessException($orderTransactionId, $errorMessage, $e); // @phpstan-ignore-line
+        }
+
+        // should never occur - just to be safe
+        return new RuntimeException('payment interrupted: ' . $errorMessage, 0, $e);
     }
 }
