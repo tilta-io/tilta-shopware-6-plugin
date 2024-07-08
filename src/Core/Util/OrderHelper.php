@@ -87,7 +87,7 @@ class OrderHelper
 
             if ($document->getDocumentType()->getTechnicalName() === InvoiceRenderer::TYPE) {
                 $config = $document->getConfig();
-                $invoiceNumber = $config['custom']['invoiceNumber'] ?? null;
+                $invoiceNumber = is_array($config['custom']) ? $config['custom']['invoiceNumber'] ?? null : null;
 
                 return [
                     $invoiceNumber ?: $document->getId(),

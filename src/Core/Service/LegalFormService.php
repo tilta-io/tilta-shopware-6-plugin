@@ -43,6 +43,7 @@ class LegalFormService
             return $options;
         });
 
+        // @phpstan-ignore-next-line
         return is_array($return) ? $return : [];
     }
 
