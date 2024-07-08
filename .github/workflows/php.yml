@@ -15,19 +15,59 @@ permissions:
 
 jobs:
     lint:
-        name: Lint / PHPUnit (Shopware ${{ matrix.shopware-version }}, PHP ${{ matrix.php-version }}, MySQL ${{ matrix.mysql-versions }} on ${{ matrix.operating-system }})
+        name: Lint / PHPUnit (Shopware ${{ matrix.shopware-version }}, PHP ${{ matrix.php-version }}, MySQL ${{ matrix.mysql-version }} on ${{ matrix.operating-system }})
         runs-on: ${{ matrix.operating-system }}
         strategy:
             matrix:
                 operating-system: [ 'ubuntu-latest' ]
-                php-version: [ '8.1', '8.2' ]
-                mysql-versions: [ '5.7', '8.0' ]
-                shopware-version: [ 'v6.5.0.0', 'v6.5.1.0', 'v6.5.2.0', 'v6.5.3.0', 'v6.5.4.0', 'v6.5.5.0', 'v6.5.6.0' ]
+                php-version: [ '8.1', '8.2', '8.3' ]
+                mysql-version: [ '5.7', '8.0' ]
+                shopware-version: ['v6.5.0.0', 'v6.5.1.0', 'v6.5.2.0', 'v6.5.3.0', 'v6.5.4.0', 'v6.5.5.0', 'v6.5.6.0', 'v6.5.7.0', 'v6.5.8.0', 'v6.5.8.11', 'v6.6.0.0', 'v6.6.1.0', 'v6.6.2.0', 'v6.6.3.0', 'v6.6.4.0']
+                exclude:
+                    - php-version: '8.3'
+                      shopware-version: 'v6.5.0.0'
+                    - php-version: '8.3'
+                      shopware-version: 'v6.5.1.0'
+                    - php-version: '8.3'
+                      shopware-version: 'v6.5.2.0'
+                    - php-version: '8.3'
+                      shopware-version: 'v6.5.3.0'
+                    - php-version: '8.3'
+                      shopware-version: 'v6.5.4.0'
+                    - php-version: '8.3'
+                      shopware-version:  'v6.5.5.0'
+                    - php-version: '8.3'
+                      shopware-version: 'v6.5.6.0'
+                    - php-version: '8.3'
+                      shopware-version: 'v6.5.7.0'
+
+                    - php-version: '8.1'
+                      shopware-version: 'v6.6.0.0'
+                    - php-version: '8.1'
+                      shopware-version: 'v6.6.1.0'
+                    - php-version: '8.1'
+                      shopware-version: 'v6.6.2.0'
+                    - php-version: '8.1'
+                      shopware-version: 'v6.6.3.0'
+                    - php-version: '8.1'
+                      shopware-version: 'v6.6.4.0'
+
+                    - mysql-version: "5.7"
+                      shopware-version: 'v6.6.0.0'
+                    - mysql-version: "5.7"
+                      shopware-version: 'v6.6.1.0'
+                    - mysql-version: "5.7"
+                      shopware-version: 'v6.6.2.0'
+                    - mysql-version: "5.7"
+                      shopware-version: 'v6.6.3.0'
+                    - mysql-version: "5.7"
+                      shopware-version: 'v6.6.4.0'
+
             fail-fast: false
             max-parallel: 10
         services:
             mysql:
-                image: mysql:${{ matrix.mysql-versions }}
+                image: mysql:${{ matrix.mysql-version }}
                 env:
                     MYSQL_DATABASE: shopware
                     MYSQL_ROOT_PASSWORD: root
