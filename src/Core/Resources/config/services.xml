@@ -13,11 +13,6 @@
     <services>
         <defaults autowire="true" />
 
-        <service id="tilta.default-logger" class="Monolog\Logger">
-            <argument type="string">tilta-payment</argument>
-            <factory service="Shopware\Core\Framework\Log\LoggerFactory" method="createRotating"/>
-        </service>
-
         <service id="Tilta\TiltaPaymentSW6\Core\Service\LegalFormService">
             <argument key="$cache" type="service" id="cache.object" />
         </service>
@@ -70,7 +65,7 @@
         </service>
 
         <service id="Tilta\TiltaPaymentSW6\Core\PaymentHandler\TiltaDefaultPaymentHandler">
-            <argument key="$logger" type="service" id="tilta.default-logger"/>
+            <argument key="$logger" type="service" id="monolog.logger.tilta" />
             <argument key="$tiltaOrderDataRepository" type="service" id="tilta_order_data.repository" />
             <tag name="shopware.payment.method.sync"/>
         </service>

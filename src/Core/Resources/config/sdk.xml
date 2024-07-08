@@ -6,14 +6,9 @@
 
         <defaults public="true" autowire="true"/>
 
-        <service id="tilta.api-request.logger" class="Monolog\Logger">
-            <argument type="string">tilta-api-requests</argument>
-            <factory service="Shopware\Core\Framework\Log\LoggerFactory" method="createRotating"/>
-        </service>
-
         <!-- Factory for TiltaClient -->
         <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\TiltaClientFactory">
-            <argument key="$logger" type="service" id="tilta.api-request.logger"/>
+            <argument key="$logger" type="service" id="monolog.logger.tilta_request"/>
         </service>
 
         <service id="Tilta\Sdk\HttpClient\TiltaClient">
@@ -42,7 +37,7 @@
 
         <service id="Tilta\TiltaPaymentSW6\Core\Components\Api\OperationService">
             <argument key="$tiltaOrderDataRepository" type="service" id="tilta_order_data.repository" />
-            <argument key="$logger" type="service" id="tilta.default-logger" />
+            <argument key="$logger" type="service" id="monolog.logger.tilta" />
         </service>
 
     </services>

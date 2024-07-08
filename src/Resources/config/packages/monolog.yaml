@@ -1,0 +1,14 @@
+monolog:
+    channels: ['tilta', 'tilta_request']
+
+    handlers:
+        tiltaLogHandler:
+            type: rotating_file
+            path: "%kernel.logs_dir%/tilta_%kernel.environment%.log"
+            level: error
+            channels: [ 'tilta' ]
+        tiltaRequestLogHandler:
+            type: rotating_file
+            path: "%kernel.logs_dir%/tilta_request_%kernel.environment%.log"
+            level: debug
+            channels: [ 'tilta_request' ]

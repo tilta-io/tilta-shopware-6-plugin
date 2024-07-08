@@ -23,6 +23,13 @@ use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin\Context\UpdateContext;
 use Shopware\Core\Framework\Plugin\PluginEntity;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\DirectoryLoader;
+use Symfony\Component\DependencyInjection\Loader\GlobFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Tilta\TiltaPaymentSW6\Administration\TiltaAdministrationBundle;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\AbstractBootstrap;
 use Tilta\TiltaPaymentSW6\Core\Bootstrap\Database;
@@ -165,5 +172,19 @@ class TiltaPaymentSW6 extends Plugin
         }
 
         return $bootstrapper;
+    }
+
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $locator = new FileLocator('Resources/config');
+        $resolver = new LoaderResolver([
+            new YamlFileLoader($container, $locator),
+            new GlobFileLoader($container, $locator),
+            new DirectoryLoader($container, $locator),
+        ]);
+        (new DelegatingLoader($resolver))
+            ->load(\rtrim($this->getPath(), '/') . '/Resources/config/{packages}/*.yaml', 'glob');
     }
 }
