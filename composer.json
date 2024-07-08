@@ -3,13 +3,13 @@
     "description": "Tilta as payment method for Shopware 6",
     "version": "2.0.0",
     "license": "MIT",
-	"type": "shopware-platform-plugin",
+    "type": "shopware-platform-plugin",
     "authors": [
         {
             "name": "Tilta Fintech GmbH",
-			"email": "support@tilta.io",
-			"role": "Maintainer"
-		},
+            "email": "support@tilta.io",
+            "role": "Maintainer"
+        },
         {
             "name": "WEBiDEA",
             "email": "github@webidea24.de",
@@ -21,12 +21,12 @@
             "Tilta\\TiltaPaymentSW6\\": "src/"
         }
     },
-	"autoload-dev": {
-		"psr-4": {
-			"Tilta\\TiltaPaymentSW6\\Tests\\": "tests/"
-		}
-	},
-	"extra": {
+    "autoload-dev": {
+        "psr-4": {
+            "Tilta\\TiltaPaymentSW6\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
         "shopware-plugin-class": "Tilta\\TiltaPaymentSW6\\TiltaPaymentSW6",
         "copyright": "(c) by Tilta Fintech GmbH",
         "plugin-icon": "src/Resources/public/plugin.png",
@@ -49,7 +49,7 @@
     },
     "require": {
         "php": "^8.0",
-		"shopware/core": "~6.5.0",
+        "shopware/core": "~6.5.0",
         "tilta-io/tilta-php-sdk": "^1.0"
     },
     "scripts": {
