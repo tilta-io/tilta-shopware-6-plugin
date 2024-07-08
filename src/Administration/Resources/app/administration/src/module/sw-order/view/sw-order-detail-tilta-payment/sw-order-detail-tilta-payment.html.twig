@@ -29,14 +29,14 @@
             <sw-description-list columns="1fr" grid="1fr">
                 <dt>{{ $tc('tilta.orderData.fields.invoiceNumber.label') }}</dt>
                 <dd>
-                    <sw-text-field v-model="order.extensions.tiltaData.invoiceNumber"></sw-text-field>
+                    <sw-text-field v-model:value="order.extensions.tiltaData.invoiceNumber"></sw-text-field>
                 </dd>
             </sw-description-list>
 
             <sw-description-list columns="1fr" grid="1fr">
                 <dt>{{ $tc('tilta.orderData.fields.invoiceExternalId.label') }}</dt>
                 <dd>
-                    <sw-text-field v-model="order.extensions.tiltaData.invoiceExternalId"></sw-text-field>
+                    <sw-text-field v-model:value="order.extensions.tiltaData.invoiceExternalId"></sw-text-field>
                 </dd>
             </sw-description-list>
 
