@@ -45,9 +45,7 @@ use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
 use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
 use UnexpectedValueException;
 
-/**
- * @Route(path="/store-api/tilta", defaults={"_loginRequired"=true, "_loginRequiredAllowGuest"=false, "_routeScope"={"store-api"}})
- */
+#[Route(path: '/store-api/tilta', defaults: ['_loginRequired' => true, '_loginRequiredAllowGuest' => true, '_routeScope' => ['store-api']])]
 class CreateFacilityRoute
 {
     private DataValidator $dataValidator;
@@ -92,9 +90,7 @@ class CreateFacilityRoute
         $this->legalFormService = $legalFormService;
     }
 
-    /**
-     * @Route(path="/facility/create/{addressId}", methods={"POST"})
-     */
+    #[Route(path: '/facility/create/{addressId}', methods: ['POST'])]
     public function requestFacilityPost(Context $context, RequestDataBag $requestDataBag, CustomerEntity $customer, string $addressId): Response
     {
         $customerAddress = $this->getAddressForCustomer($customer, $addressId, $context);

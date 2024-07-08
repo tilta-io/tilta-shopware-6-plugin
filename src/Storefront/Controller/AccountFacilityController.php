@@ -31,9 +31,7 @@ use Tilta\TiltaPaymentSW6\Core\Routes\AbstractBuyerRequestFormDataRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute;
 
-/**
- * @Route(path="/account/credit-facilities", defaults={"_loginRequired"=true, "_routeScope"={"storefront"}})
- */
+#[Route(path: '/account/credit-facilities', defaults: ['_loginRequired' => true, '_routeScope' => ['storefront']])]
 class AccountFacilityController extends StorefrontController
 {
     private AbstractListAddressRoute $listAddressRoute;
@@ -56,9 +54,7 @@ class AccountFacilityController extends StorefrontController
         $this->buyerRequestFormDataRoute = $buyerRequestFormDataRoute;
     }
 
-    /**
-     * @Route(name="frontend.account.tilta.credit-facility.list", path="/")
-     */
+    #[Route(path: '/', name: 'frontend.account.tilta.credit-facility.list')]
     public function listCreditFacilities(SalesChannelContext $salesChannelContext): Response
     {
         $customer = $salesChannelContext->getCustomer();
@@ -71,9 +67,7 @@ class AccountFacilityController extends StorefrontController
         ]);
     }
 
-    /**
-     * @Route(name="frontend.account.tilta.credit-facility.requestForm", path="/request/{addressId}", methods={"GET"})
-     */
+    #[Route(path: '/request/{addressId}', name: 'frontend.account.tilta.credit-facility.requestForm', methods: ['GET'])]
     public function requestFacilityForm(Request $request, SalesChannelContext $context, string $addressId): Response
     {
         $address = $this->getAddressOrRedirect($context, $addressId);
@@ -87,9 +81,7 @@ class AccountFacilityController extends StorefrontController
         return $this->render('@TiltaStorefront/storefront/page/account/tilta-credit-facilities/request-form.html.twig', $data->getObject()->getVars());
     }
 
-    /**
-     * @Route(name="frontend.account.tilta.credit-facility.requestForm.post", path="/request/{addressId}", methods={"POST"})
-     */
+    #[Route(path: '/request/{addressId}', name: 'frontend.account.tilta.credit-facility.requestForm.post', methods: ['POST'])]
     public function requestFacilityPost(Context $context, RequestDataBag $requestData, CustomerEntity $customerEntity, string $addressId): Response
     {
         try {
