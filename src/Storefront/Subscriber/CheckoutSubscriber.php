@@ -54,7 +54,7 @@ class CheckoutSubscriber implements EventSubscriberInterface
 
             $tiltaData = $this->checkoutDataRoute->getCheckoutDataForOrderEntity($event->getSalesChannelContext(), $event->getPage()->getOrder(), new RequestDataBag($event->getRequest()->request->all()));
         } else {
-            throw new RuntimeException('not supported event: ' . get_class($event));
+            throw new RuntimeException('not supported event: ' . $event::class);
         }
 
         if ($tiltaData instanceof ArrayStruct) {

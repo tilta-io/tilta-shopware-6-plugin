@@ -49,10 +49,7 @@ class AddressModelFactory
             ->setAdditional(self::mergeAdditionalAddressLines($addressEntity));
     }
 
-    /**
-     * @param OrderAddressEntity|CustomerAddressEntity $addressEntity
-     */
-    private function mergeAdditionalAddressLines($addressEntity): ?string
+    private function mergeAdditionalAddressLines(CustomerAddressEntity|OrderAddressEntity $addressEntity): ?string
     {
         $additionalLines = array_filter([$addressEntity->getAdditionalAddressLine1(), $addressEntity->getAdditionalAddressLine2()], static fn ($value): bool => !empty($value));
 

@@ -14,7 +14,6 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->skip([
-        \Rector\Php74\Rector\LNumber\AddLiteralSeparatorToNumberRector::class,
         \Rector\CodeQuality\Rector\Ternary\SwitchNegatedTernaryRector::class,
         \Rector\CodeQuality\Rector\Class_\CompleteDynamicPropertiesRector::class => [
             __DIR__ . '/src/TiltaPaymentSW6.php', // seems to be a problem with rector and traits
@@ -26,6 +25,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->rule(InlineConstructorDefaultToPropertyRector::class);
     $rectorConfig->rule(ExplicitBoolCompareRector::class);
 
+    $rectorConfig->removeUnusedImports(true);
     $rectorConfig->importNames(true, true);
 
     // define sets of rules
@@ -33,7 +33,7 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::CODE_QUALITY,
         SetList::TYPE_DECLARATION,
         SetList::CODING_STYLE,
-        LevelSetList::UP_TO_PHP_74,
+        LevelSetList::UP_TO_PHP_81,
     ]);
 
     $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');

@@ -45,7 +45,11 @@ use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
 use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
 use UnexpectedValueException;
 
-#[Route(path: '/store-api/tilta', defaults: ['_loginRequired' => true, '_loginRequiredAllowGuest' => true, '_routeScope' => ['store-api']])]
+#[Route(path: '/store-api/tilta', defaults: [
+    '_loginRequired' => true,
+    '_loginRequiredAllowGuest' => true,
+    '_routeScope' => ['store-api'],
+])]
 class CreateFacilityRoute
 {
     /**
@@ -77,7 +81,7 @@ class CreateFacilityRoute
         if ($requestDataBag->has('incorporatedAtDay') && $requestDataBag->has('incorporatedAtMonth') && $requestDataBag->has('incorporatedAtYear')) {
             try {
                 $requestDataBag->set('incorporatedAt', sprintf('%02d-%02d-%02d', $requestDataBag->getAlnum('incorporatedAtYear'), $requestDataBag->getAlnum('incorporatedAtMonth'), $requestDataBag->getAlnum('incorporatedAtDay')));
-            } catch (UnexpectedValueException $unexpectedValueException) {
+            } catch (UnexpectedValueException) {
                 // do nothing. Validation exception got thrown later.
             }
         }

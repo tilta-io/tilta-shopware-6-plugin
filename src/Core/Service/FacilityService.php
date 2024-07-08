@@ -65,7 +65,7 @@ class FacilityService
             /** @var CreateFacilityRequest $createFacilityRequest */
             $createFacilityRequest = $this->container->get(CreateFacilityRequest::class);
             $createFacilityRequest->execute(new CreateFacilityRequestModel($buyerExternalId));
-        } catch (DuplicateFacilityException $duplicateFacilityException) {
+        } catch (DuplicateFacilityException) {
             // do nothing - just jump into finally.
         } finally {
             $facility = $this->getFacility($address, $context);
@@ -88,7 +88,7 @@ class FacilityService
             $this->updateFacilityOnCustomerAddress($context, $address, $facility);
 
             return $facility;
-        } catch (NoActiveFacilityFoundException $noActiveFacilityFoundException) {
+        } catch (NoActiveFacilityFoundException) {
             return null;
         }
     }
@@ -121,7 +121,7 @@ class FacilityService
             try {
                 // fetching facility will update the facility in the database
                 $this->getFacility($customerAddress, $context);
-            } catch (Exception $exception) {
+            } catch (Exception) {
                 // error during facility fetching -> facility seems to be not valid
                 return false;
             }

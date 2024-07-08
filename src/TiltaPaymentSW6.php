@@ -141,6 +141,20 @@ class TiltaPaymentSW6 extends Plugin
         ];
     }
 
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $locator = new FileLocator('Resources/config');
+        $resolver = new LoaderResolver([
+            new YamlFileLoader($container, $locator),
+            new GlobFileLoader($container, $locator),
+            new DirectoryLoader($container, $locator),
+        ]);
+        (new DelegatingLoader($resolver))
+            ->load(\rtrim($this->getPath(), '/') . '/Resources/config/{packages}/*.yaml', 'glob');
+    }
+
     /**
      * @return AbstractBootstrap[]
      */
@@ -172,19 +186,5 @@ class TiltaPaymentSW6 extends Plugin
         }
 
         return $bootstrapper;
-    }
-
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-
-        $locator = new FileLocator('Resources/config');
-        $resolver = new LoaderResolver([
-            new YamlFileLoader($container, $locator),
-            new GlobFileLoader($container, $locator),
-            new DirectoryLoader($container, $locator),
-        ]);
-        (new DelegatingLoader($resolver))
-            ->load(\rtrim($this->getPath(), '/') . '/Resources/config/{packages}/*.yaml', 'glob');
     }
 }

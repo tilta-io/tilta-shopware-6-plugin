@@ -31,7 +31,10 @@ use Tilta\TiltaPaymentSW6\Core\Routes\AbstractBuyerRequestFormDataRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute;
 
-#[Route(path: '/account/credit-facilities', defaults: ['_loginRequired' => true, '_routeScope' => ['storefront']])]
+#[Route(path: '/account/credit-facilities', defaults: [
+    '_loginRequired' => true,
+    '_routeScope' => ['storefront'],
+])]
 class AccountFacilityController extends StorefrontController
 {
     public function __construct(
@@ -84,7 +87,7 @@ class AccountFacilityController extends StorefrontController
                     'addressId' => $addressId,
                 ]
             );
-        } catch (AddressNotFoundException $addressNotFoundException) {
+        } catch (AddressNotFoundException) {
             return $this->handleAddressNotFound();
         }
 
@@ -117,10 +120,7 @@ class AccountFacilityController extends StorefrontController
         return $this->redirectToRoute('frontend.account.tilta.credit-facility.list');
     }
 
-    /**
-     * @return CustomerAddressEntity|RedirectResponse
-     */
-    private function getAddressOrRedirect(SalesChannelContext $context, string $addressId)
+    private function getAddressOrRedirect(SalesChannelContext $context, string $addressId): RedirectResponse|CustomerAddressEntity
     {
         $customer = $context->getCustomer();
         if (!$customer instanceof CustomerEntity) {

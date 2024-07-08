@@ -119,7 +119,7 @@ class BuyerService
             $buyerRequest = $this->container->get(GetBuyerDetailsRequest::class);
 
             $buyer = $buyerRequest->execute(new GetBuyerDetailsRequestModel($buyerExternalId));
-        } catch (BuyerNotFoundException $buyerNotFoundException) {
+        } catch (BuyerNotFoundException) {
             $buyerRequestModel = $this->createCreateBuyerRequestModel($address, $context);
 
             /** @var CreateBuyerRequest $createBuyerRequest */
@@ -229,13 +229,10 @@ class BuyerService
 
         $fallbackValue = $this->configService->get('TiltaPaymentSW6.config.salutationFallback');
 
-        switch ($fallbackValue) {
-            case 'f':
-                return 'MS';
-            case 'm':
-            default:
-                return 'MR';
-        }
+        return match ($fallbackValue) {
+            'f' => 'MS',
+            default => 'MR',
+        };
     }
 
     /**

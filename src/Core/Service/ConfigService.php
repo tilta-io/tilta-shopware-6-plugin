@@ -32,7 +32,7 @@ class ConfigService
             }
 
             return !empty($authToken) && !empty($merchantExternalId);
-        } catch (InvalidSettingValueException $invalidSettingValueException) {
+        } catch (InvalidSettingValueException) {
             return false;
         }
     }
@@ -75,7 +75,7 @@ class ConfigService
     {
         try {
             return $this->systemConfigService->getString('TiltaPaymentSW6.config.' . $key);
-        } catch (InvalidSettingValueException $invalidSettingValueException) {
+        } catch (InvalidSettingValueException) {
             return null;
         }
     }

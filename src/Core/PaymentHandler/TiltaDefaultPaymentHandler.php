@@ -10,10 +10,9 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Core\PaymentHandler;
 
-use Throwable;
-use RuntimeException;
 use Exception;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\SynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\SyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Exception\SyncPaymentProcessException;
@@ -30,6 +29,7 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Throwable;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\Sdk\Service\Request\Order\CreateOrderRequest;
 use Tilta\TiltaPaymentSW6\Core\Components\Api\RequestDataFactory\CreateOrderRequestModelFactory;

@@ -19,7 +19,9 @@ use Tilta\Sdk\Model\Request\Order\GetOrderListRequestModel;
 use Tilta\Sdk\Service\Request\Order\GetOrderListRequest;
 use Tilta\Sdk\Util\TiltaClientFactory;
 
-#[Route(path: '/api/tilta', defaults: ['_routeScope' => ['api']])]
+#[Route(path: '/api/tilta', defaults: [
+    '_routeScope' => ['api'],
+])]
 class TestCredentialsController extends AbstractController
 {
     #[Route(path: '/test-api-credentials', name: 'api.action.tilta.test-api.credentials', methods: ['POST'])]

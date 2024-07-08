@@ -121,14 +121,14 @@ class TiltaCheckoutDataRoute
             } else {
                 $extensionData->set('action', 'buyer-registration-required');
             }
-        } catch (BuyerNotFoundException $buyerNotFoundException) {
+        } catch (BuyerNotFoundException) {
             // address does have a buyer-external-id, but it seems like that this ID is invalid. -> buyer can not buy
             $this->logger->error('Customer does have a buyer-external-id, but this ID is invalid/does not exist on Tilta gateway.', $logDefaultContext);
             $extensionData->set('error', 'unknown-error');
-        } catch (NoActiveFacilityFoundException $noActiveFacilityFoundException) {
+        } catch (NoActiveFacilityFoundException) {
             // buyer does exist, but do not have a facility -> buyer can buy (if the user creates a facility during checkout)
             $extensionData->set('action', 'facility-request-required');
-        } catch (FacilityExceededException $facilityExceededException) {
+        } catch (FacilityExceededException) {
             $extensionData->set('error', 'facility-exceeded');
 
             try {
