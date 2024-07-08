@@ -12,10 +12,10 @@ namespace Tilta\TiltaPaymentSW6\Tests;
 
 use DateTime;
 use Shopware\Core\Checkout\Cart\Cart;
+use Shopware\Core\Checkout\Cart\LineItemFactoryHandler\ProductLineItemFactory;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
-use Shopware\Core\Content\Product\Cart\ProductLineItemFactory;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Api\Util\AccessKeyHelper;
 use Shopware\Core\Framework\Context;
@@ -28,10 +28,10 @@ use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Shopware\Storefront\Page\Checkout\Confirm\CheckoutConfirmPageLoader;
-use Shopware\Storefront\Test\Page\StorefrontPageTestBehaviour;
 use Tilta\TiltaPaymentSW6\Core\Extension\CustomerAddressEntityExtension;
 use Tilta\TiltaPaymentSW6\Core\Extension\Entity\TiltaCustomerAddressDataEntity;
 use Tilta\TiltaPaymentSW6\Core\PaymentHandler\TiltaDefaultPaymentHandler;
+use Tilta\TiltaPaymentSW6\Tests\TestCaseBase\StorefrontPageTestBehaviour;
 
 trait TiltaTestBehavior
 {
@@ -174,7 +174,7 @@ trait TiltaTestBehavior
 
     protected function addProductToCart(string $id, SalesChannelContext $context): Cart
     {
-        $product = $this->getContainer()->get(ProductLineItemFactory::class)->create($id);
+        $product = $this->getContainer()->get(ProductLineItemFactory::class)->create(['id' => $id], $context);
         $cart = $this->getContainer()->get(CartService::class)->getCart($context->getToken(), $context);
 
         return $this->getContainer()->get(CartService::class)->add($cart, $product, $context);
