@@ -20,6 +20,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
+use Shopware\Core\System\SalesChannel\GenericStoreApiResponse;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
 use Shopware\Storefront\Controller\StorefrontController;
@@ -31,10 +32,13 @@ use Tilta\TiltaPaymentSW6\Core\Routes\AbstractBuyerRequestFormDataRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute;
 
-#[Route(path: '/account/credit-facilities', defaults: [
-    '_loginRequired' => true,
-    '_routeScope' => ['storefront'],
-])]
+#[Route(
+    path: '/account/credit-facilities',
+    defaults: [
+        '_loginRequired' => true,
+        '_routeScope' => ['storefront'],
+    ]
+)]
 class AccountFacilityController extends StorefrontController
 {
     public function __construct(
@@ -45,7 +49,7 @@ class AccountFacilityController extends StorefrontController
     ) {
     }
 
-    #[Route(path: '/', name: 'frontend.account.tilta.credit-facility.list')]
+    #[Route(name: 'frontend.account.tilta.credit-facility.list')]
     public function listCreditFacilities(SalesChannelContext $salesChannelContext): Response
     {
         $customer = $salesChannelContext->getCustomer();
