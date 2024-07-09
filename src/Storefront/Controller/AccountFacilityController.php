@@ -113,6 +113,11 @@ class AccountFacilityController extends StorefrontController
 
         $this->addFlash('danger', $message ?: $this->trans('tilta.messages.facility.unknown-error'));
 
+        $backTo = $requestData->get('backTo');
+        if (is_string($backTo)) {
+            return $this->redirect($backTo);
+        }
+
         return $this->forwardToRoute(
             'frontend.account.tilta.credit-facility.requestForm',
             [],
