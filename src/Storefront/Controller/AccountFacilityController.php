@@ -102,7 +102,12 @@ class AccountFacilityController extends StorefrontController
             return $this->redirectToRoute('frontend.account.tilta.credit-facility.list');
         }
 
-        $this->addFlash('danger', $this->trans('tilta.messages.facility.unknown-error'));
+        $message = null;
+        if ($response instanceof GenericStoreApiResponse) {
+            $message = $response->getObject()['error'] ?? null;
+        }
+
+        $this->addFlash('danger', $message ?: $this->trans('tilta.messages.facility.unknown-error'));
 
         return $this->forwardToRoute(
             'frontend.account.tilta.credit-facility.requestForm',

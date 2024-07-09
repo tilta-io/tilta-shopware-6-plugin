@@ -24,7 +24,6 @@ use Shopware\Core\Framework\Struct\ArrayStruct;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidationDefinition;
 use Shopware\Core\Framework\Validation\DataValidator;
-use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
 use Shopware\Core\System\Country\CountryEntity;
 use Shopware\Core\System\SalesChannel\GenericStoreApiResponse;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
@@ -37,7 +36,6 @@ use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Validator\ConstraintViolationList;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
 use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
@@ -116,7 +114,10 @@ class CreateFacilityRoute
 
             $this->facilityService->createFacilityForBuyerIfNotExist($context, $customerAddress, true);
         } catch (MissingBuyerInformationException $missingBuyerInformationException) {
-            throw new ConstraintViolationException(new ConstraintViolationList($missingBuyerInformationException->getErrorMessages()), $requestDataBag->all());
+            return new GenericStoreApiResponse(Response::HTTP_BAD_REQUEST, new ArrayStruct([
+                'success' => false,
+                'error' => implode(' ', $missingBuyerInformationException->getErrorMessages()),
+            ]));
         } catch (TiltaException $tiltaException) {
             $this->logger->error('Error during creation of Tilta facility for buyer', [
                 'user-id' => $customer->getId(),
