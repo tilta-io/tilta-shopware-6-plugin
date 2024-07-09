@@ -64,11 +64,6 @@ class PaymentMethodRoute extends AbstractPaymentMethodRoute
             return $response;
         }
 
-        $filterMethods = $request->query->getBoolean('onlyAvailable', false);
-        if (!$filterMethods) {
-            return $response;
-        }
-
         if (!$this->configService->isConfigReady()) {
             return $this->removeAllTiltaMethods($response, $context);
         }
