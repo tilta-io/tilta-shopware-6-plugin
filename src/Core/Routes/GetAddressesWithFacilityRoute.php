@@ -58,11 +58,10 @@ class GetAddressesWithFacilityRoute
                     $address->addExtension('tiltaFacility', new ArrayStruct($facility->toArray()));
                 }
             } catch (TiltaException $tiltaException) {
-                $this->logger->error(sprintf('Error during fetching facilities for address. stop fetching other facilities. (%s)', $tiltaException->getMessage()), [
+                $this->logger->error(sprintf('Error during fetching facilities for address. (%s)', $tiltaException->getMessage()), [
                     'customer-id' => $customer->getId(),
                     'address-id' => $address->getId(),
                 ]);
-                break;
             }
         }
 
