@@ -33,7 +33,7 @@
 			"unknown-error": "Es is ein unbekannte Fehler aufgetreten. Bitte versuchen Sie es erneut. Falls weiter Probleme auftreten, wenden Sie sich bitte an den Kundendienst.",
 			"no-existing-b2b-address": "Bevor Sie einen Kreditrahmen bei Tilta anfragen können, müssen Sie zuerst eine geschäftliche Rechnungsadresse anlegen.",
 			"address-does-not-exist": "Die angefragte Adresse existiert nicht.",
-			"no-country-can-not-be-changed": "Dieses Land kann für die angegebene Rechnungsadresse nicht aktualisiert werden, da bereits Kreditlimit mit einer Rechnungszahlung verknüpft ist. Bitte legen Sie eine neue Rechnungsadresse an, wenn Sie das Land ändern möchten. Die Beantragung eines Kreditlimits hat keinen Einfluss auf Ihre Kreditwürdigkeit.",
+			"no-country-can-not-be-changed": "Dieses Land kann für die angegebene Rechnungsadresse nicht aktualisiert werden, da bereits ein Kreditlimit mit einer Rechnungszahlung verknüpft ist. Bitte legen Sie eine neue Rechnungsadresse an, wenn Sie das Land ändern möchten. Die Beantragung eines Kreditlimits hat keinen Einfluss auf Ihre Kreditwürdigkeit.",
 			"facility": {
 				"unknown-error": "Es ist ein unbekannter Fehler beim Anfragen des Kreditverfügungsrahmen aufgetreten. Bitte wenden Sie sich an den Kundenservice.",
 				"created-successfully": "Der Kreditverfügungsrahmen wurde erfolgreich erstellt."
