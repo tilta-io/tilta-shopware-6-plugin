@@ -30,11 +30,11 @@ class LegalFormService
     public function getLegalForms(string $countryCode): array
     {
         $cacheKey = 'tilta-legal-forms-' . $countryCode;
-        $return = $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($countryCode): array {
+        $return = $this->cache->get($cacheKey, function (CacheItemInterface $item): array {
             /** @noinspection PhpExpressionResultUnusedInspection */
             $item->expiresAfter(3600 * 4); // cache results for 4 hours
 
-            $responseModel = $this->legalFormsRequest->execute(new GetLegalFormsRequestModel($countryCode));
+            $responseModel = $this->legalFormsRequest->execute(new GetLegalFormsRequestModel());
 
             $options = [];
             foreach ($responseModel->getItems() as $code => $label) {
