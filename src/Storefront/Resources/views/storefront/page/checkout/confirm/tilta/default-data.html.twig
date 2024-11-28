@@ -13,7 +13,7 @@
                             {% if tiltaData.error %}
                                 {% sw_include '@Storefront/storefront/utilities/alert.html.twig' with {
                                     type: "danger",
-                                    content: "tilta.messages.checkout."~tiltaData.error|trans|sw_sanitize
+                                    content: ("tilta.messages.checkout."~tiltaData.error)|trans|sw_sanitize
                                 } %}
                             {% endif %}
                         {% endblock %}
