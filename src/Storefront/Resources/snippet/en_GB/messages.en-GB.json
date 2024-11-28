@@ -9,7 +9,7 @@
 				"totalAmount": "Limit",
 				"list": {
 					"title": "Tilta credit facility",
-					"intro": "Credit Facility is a new, flexible way to shop on our website, giving you a spending limit to make purchases with convenient 30-day payment terms.<br>Here’s how it works:<ol><li>Request a Credit Facility: Fill in your business info, and when approved, you’ll receive a spending limit – that you can use to make purchases on our site</li><li>No prepayments: Use your credit facility to buy the items you want without having to pay upfront. Simply select the “Rechnungskauf” option at checkout.</li><li>Pay Later: You only have to pay 30 days after your purchases are shipped. We will send you a reminder a couple of days before the date.</li></ol>",
+					"intro": "Our credit facility is available to you on a regular basis for your orders with us and can be used to pay on account. The facility describes the maximum amount that can be used for your outstanding invoices at any given time. The corresponding amount is released again with each payment.",
 					"actionRequestFacility": "Request credit facility"
 				},
 				"create": {

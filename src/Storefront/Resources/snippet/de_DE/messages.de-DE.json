@@ -9,7 +9,7 @@
 				"totalAmount": "Limit",
 				"list": {
 					"title": "Kreditlimit",
-					"intro": "Kreditlimit ist eine neue, flexible Möglichkeit, auf unserer Website einzukaufen. Sie erhalten ein Kreditlimit für Ihre Einkäufe mit bequemem 30-tägigen Zahlungsziel.<br>Und so funktioniert's:<ol><li>Beantragen Sie ein Kreditlimit: Geben Sie Ihre Geschäftsdaten ein, und nach der Genehmigung erhalten Sie einen Verfügungsrahmen, den Sie für Ihre Einkäufe auf unserer Website nutzen können.</li><li>Keine Vorauszahlungen: Nutzen Sie Ihren Kreditrahmen, um die gewünschten Artikel zu kaufen, ohne im Voraus bezahlen zu müssen. Wählen Sie an der Kasse einfach die Option \"Rechnungskauf\".</li><li>Später bezahlen: Sie müssen erst 30 Tage nach dem Versand Ihrer Einkäufe bezahlen. Wir schicken Ihnen ein paar Tage vor dem Termin eine Erinnerung.</li></ol>",
+					"intro": "Unser Kreditlimit steht Ihnen regelmäßig für Ihre Bestellungen bei uns zur Verfügung und kann für die Zahlung auf Rechnung verwendet werden. Das Limit beschreibt dabei den maximalen Betrag, der zu einem bestimmten Zeitpunkt für Ihre offenen Rechnungen genutzt werden kann. Mit jeder Zahlung wird der entsprechende Betrag wieder freigegeben.",
 					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
 				},
 				"create": {
