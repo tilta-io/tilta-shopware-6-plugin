@@ -20,7 +20,7 @@ use Tilta\TiltaPaymentSW6\Core\Event\TiltaPaymentSuccessfulEvent;
 class PaymentSuccessfulSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private StateMachineRegistry $stateMachineRegistry
+        private readonly StateMachineRegistry $stateMachineRegistry
     ) {
     }
 

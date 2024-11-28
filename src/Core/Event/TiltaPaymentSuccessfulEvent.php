@@ -22,8 +22,7 @@ class TiltaPaymentSuccessfulEvent
         private readonly OrderTransactionEntity $orderTransactionEntity,
         private readonly Order $order,
         private readonly SalesChannelContext $salesChannelContext
-    )
-    {
+    ) {
     }
 
     public function getOrderEntity(): OrderEntity
