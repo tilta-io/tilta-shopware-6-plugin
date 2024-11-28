@@ -22,6 +22,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidator;
 use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Tilta\Sdk\Enum\PaymentMethodEnum;
 use Tilta\Sdk\Enum\PaymentTermEnum;
 use Tilta\Sdk\Exception\TiltaException;
@@ -46,7 +47,7 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
             $requestModelFactory = $this->createMock(CreateOrderRequestModelFactory::class),
             $this->createMock(EntityRepository::class),
             $this->getContainer()->get(LoggerInterface::class),
-            $this->getContainer()->get('event_dispatcher'),
+            $this->createMock(EventDispatcher::class),
             $this->getContainer()->get(DataValidator::class)
         );
 
@@ -137,7 +138,7 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
             $requestModelFactory = $this->createMock(CreateOrderRequestModelFactory::class),
             $tiltaOrderTransactionRepository = $this->createMock(EntityRepository::class),
             $this->getContainer()->get(LoggerInterface::class),
-            $this->getContainer()->get('event_dispatcher'),
+            $this->createMock(EventDispatcher::class),
             $this->getContainer()->get(DataValidator::class)
         );
 
@@ -175,7 +176,7 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
             $requestModelFactory = $this->createMock(CreateOrderRequestModelFactory::class),
             $tiltaOrderTransactionRepository = $this->createMock(EntityRepository::class),
             $this->getContainer()->get(LoggerInterface::class),
-            $this->getContainer()->get('event_dispatcher'),
+            $this->createMock(EventDispatcher::class),
             $this->getContainer()->get(DataValidator::class)
         );
 
@@ -220,7 +221,7 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
             $requestModelFactory = $this->createMock(CreateOrderRequestModelFactory::class),
             $tiltaOrderTransactionRepository = $this->createMock(EntityRepository::class),
             $this->getContainer()->get(LoggerInterface::class),
-            $this->getContainer()->get('event_dispatcher'),
+            $this->createMock(EventDispatcher::class),
             $this->getContainer()->get(DataValidator::class)
         );
 
@@ -266,7 +267,7 @@ class TiltaDefaultPaymentHandlerTest extends TestCase
             $requestModelFactory = $this->createMock(CreateOrderRequestModelFactory::class),
             $tiltaOrderTransactionRepository = $this->createMock(EntityRepository::class),
             $loggerMock = $this->createMock(LoggerInterface::class),
-            $this->getContainer()->get('event_dispatcher'),
+            $this->createMock(EventDispatcher::class),
             $this->getContainer()->get(DataValidator::class)
         );
 
