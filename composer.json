@@ -50,7 +50,7 @@
     "require": {
         "php": "^8.0",
         "shopware/core": "~6.5.0 || ~6.6.0",
-        "tilta-io/tilta-php-sdk": "^1.0"
+        "tilta-io/tilta-php-sdk": "^2.0.x-dev"
     },
     "scripts": {
         "rector-fix": "./vendor/bin/rector process --autoload-file ../../../vendor/autoload.php",
