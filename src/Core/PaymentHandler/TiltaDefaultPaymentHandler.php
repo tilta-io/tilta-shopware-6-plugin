@@ -92,12 +92,10 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
         $tiltaDataArray = $dataBag->all()['tilta'] ?? [];
         $tiltaRequestData = new DataBag(is_array($tiltaDataArray) ? $tiltaDataArray : []);
         $tiltaPaymentMethod = $tiltaRequestData->getAlnum('payment_method');
-        $tiltaPaymentTerm = $tiltaRequestData->getAlnum('payment_term');
+        /** @var string $tiltaPaymentTerm */ // has been validated by Validator
+        $tiltaPaymentTerm = $tiltaRequestData->get('payment_term'); // do not use `getAlnum` because the value contains underscores
+        /** @var string $buyerExternalId */ // has been validated by Validator
         $buyerExternalId = $tiltaRequestData->get('buyer_external_id'); // do not use `getAlnum` because the value could be more than alphanumerics
-
-        if (!is_string($buyerExternalId)) {
-            throw new SyncPaymentProcessException($transaction->getOrderTransaction()->getId(), 'buyer-external-id is not a string');
-        }
 
         try {
             $requestModel = $this->requestModelFactory->createModel($orderEntity, $tiltaPaymentMethod, $tiltaPaymentTerm, $buyerExternalId, $salesChannelContext->getContext());
