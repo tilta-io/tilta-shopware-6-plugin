@@ -124,6 +124,6 @@ class TiltaDefaultPaymentHandler implements SynchronousPaymentHandlerInterface, 
             $this->logger->error('Tilta payment: Saving additional order transaction data failed, but placing the order got not interrupted. ' . $exception->getMessage());
         }
 
-        $this->eventDispatcher->dispatch(new TiltaPaymentSuccessfulEvent($orderEntity, $transaction->getOrderTransaction(), $responseModel));
+        $this->eventDispatcher->dispatch(new TiltaPaymentSuccessfulEvent($orderEntity, $transaction->getOrderTransaction(), $responseModel, $salesChannelContext));
     }
 }

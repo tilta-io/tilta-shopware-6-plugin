@@ -12,6 +12,7 @@ namespace Tilta\TiltaPaymentSW6\Core\Event;
 
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
+use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Tilta\Sdk\Model\Order;
 
 class TiltaPaymentSuccessfulEvent
@@ -22,7 +23,12 @@ class TiltaPaymentSuccessfulEvent
 
     private Order $order;
 
-    public function __construct(OrderEntity $orderEntity, OrderTransactionEntity $orderTransactionEntity, Order $order)
+    public function __construct(
+        OrderEntity $orderEntity,
+        OrderTransactionEntity $orderTransactionEntity,
+        Order $order,
+        private SalesChannelContext $salesChannelContext
+    )
     {
         $this->orderEntity = $orderEntity;
         $this->orderTransactionEntity = $orderTransactionEntity;
@@ -42,5 +48,10 @@ class TiltaPaymentSuccessfulEvent
     public function getOrder(): Order
     {
         return $this->order;
+    }
+
+    public function getSalesChannelContext(): SalesChannelContext
+    {
+        return $this->salesChannelContext;
     }
 }
