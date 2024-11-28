@@ -20,12 +20,10 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
-use Shopware\Core\Framework\Struct\ArrayStruct;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\DataValidationDefinition;
 use Shopware\Core\Framework\Validation\DataValidator;
 use Shopware\Core\System\Country\CountryEntity;
-use Shopware\Core\System\SalesChannel\GenericStoreApiResponse;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
 use Shopware\Core\System\Salutation\SalutationEntity;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,6 +36,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
 use Tilta\Sdk\Exception\TiltaException;
 use Tilta\TiltaPaymentSW6\Core\Exception\MissingBuyerInformationException;
+use Tilta\TiltaPaymentSW6\Core\Routes\Response\ErrorResponse;
 use Tilta\TiltaPaymentSW6\Core\Service\BuyerService;
 use Tilta\TiltaPaymentSW6\Core\Service\FacilityService;
 use Tilta\TiltaPaymentSW6\Core\Service\LegalFormService;
@@ -114,10 +113,7 @@ class CreateFacilityRoute
 
             $this->facilityService->createFacilityForBuyerIfNotExist($context, $customerAddress, true);
         } catch (MissingBuyerInformationException $missingBuyerInformationException) {
-            return new GenericStoreApiResponse(Response::HTTP_BAD_REQUEST, new ArrayStruct([
-                'success' => false,
-                'error' => implode(' ', $missingBuyerInformationException->getErrorMessages()),
-            ]));
+            return new ErrorResponse($missingBuyerInformationException->getErrorMessages(), Response::HTTP_BAD_REQUEST);
         } catch (TiltaException $tiltaException) {
             $this->logger->error('Error during creation of Tilta facility for buyer', [
                 'user-id' => $customer->getId(),
@@ -125,10 +121,7 @@ class CreateFacilityRoute
                 'error-message' => $tiltaException->getMessage(),
             ]);
 
-            return new GenericStoreApiResponse(Response::HTTP_INTERNAL_SERVER_ERROR, new ArrayStruct([
-                'success' => false,
-                'error' => $tiltaException->getMessage(),
-            ]));
+            return new ErrorResponse([$tiltaException->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return new SuccessResponse();

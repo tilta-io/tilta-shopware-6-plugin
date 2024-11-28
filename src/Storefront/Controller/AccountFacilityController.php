@@ -20,7 +20,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
-use Shopware\Core\System\SalesChannel\GenericStoreApiResponse;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SalesChannel\SuccessResponse;
 use Shopware\Storefront\Controller\StorefrontController;
@@ -31,6 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Tilta\TiltaPaymentSW6\Core\Routes\AbstractBuyerRequestFormDataRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\CreateFacilityRoute;
 use Tilta\TiltaPaymentSW6\Core\Routes\GetAddressesWithFacilityRoute;
+use Tilta\TiltaPaymentSW6\Core\Routes\Response\ErrorResponse;
 
 #[Route(
     path: '/account/credit-facilities',
@@ -106,12 +106,11 @@ class AccountFacilityController extends StorefrontController
             return $this->redirectToRoute('frontend.account.tilta.credit-facility.list');
         }
 
-        $message = null;
-        if ($response instanceof GenericStoreApiResponse) {
-            $message = $response->getObject()['error'] ?? null;
+        if ($response instanceof ErrorResponse) {
+            foreach ($response->getErrors() as $error) {
+                $this->addFlash('danger', $error ?: $this->trans('tilta.messages.facility.unknown-error'));
+            }
         }
-
-        $this->addFlash('danger', $message ?: $this->trans('tilta.messages.facility.unknown-error'));
 
         $backTo = $requestData->get('backTo');
         if (is_string($backTo)) {
