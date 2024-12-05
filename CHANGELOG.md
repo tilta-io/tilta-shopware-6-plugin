@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.0.0] - 2024-12-05
+
+### Added 
+ 
+* implement authorized state for payment
+
+### Changed
+
+* updated the SDK to Version 2.x
+
+### Fixed
+
+* account: prevent loading other facility if fetching of one is failed
+* fix displaying error messages during creation of facility within checkout
+* fix endless redirect loop
+* add missing text in facility list
+* fix missing twig service (Shopware 6.5.0.x / 6.5.1.x) 
 
 ## [2.0.0] - 2023-12-12
 
