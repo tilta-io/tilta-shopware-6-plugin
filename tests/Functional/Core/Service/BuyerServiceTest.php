@@ -121,8 +121,6 @@ class BuyerServiceTest extends TestCase
         return [
             ['address', 'company', null],
             ['address', 'company', ''],
-            ['address', 'phoneNumber', null],
-            ['address', 'phoneNumber', ''],
             ['address', 'salutationId', null],
             // ['tiltaData', TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID, ''], // make no sense, because this will be set by module automatically
             // ['tiltaData', TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT, null], // can not be null

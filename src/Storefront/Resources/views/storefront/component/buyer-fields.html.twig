@@ -49,7 +49,7 @@
                 <div class="form-group col-12">
                     {% block component_address_form_phone_number_label %}
                         <label class="form-label" for="{{ idPrefix ~ prefix }}AddressPhoneNumber">
-                            {{ "address.phoneNumberLabel"|trans|sw_sanitize }}{{ "general.required"|trans|sw_sanitize }}
+                            {{ "address.phoneNumberLabel"|trans|sw_sanitize }}
                         </label>
                     {% endblock %}
 
@@ -60,7 +60,7 @@
                                placeholder="{{ "address.phoneNumberPlaceholder"|trans|striptags }}"
                                name="phoneNumber"
                                value="{{ data.get('phoneNumber') }}"
-                               required="required">
+                        >
 
                         {% block tcf_component_additional_details_fields_phone_number_notice %}
                             <small class="text-muted">{{ "tilta.address.phoneNumberNotice"|trans|sw_sanitize }}</small>

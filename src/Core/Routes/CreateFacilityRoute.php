@@ -89,7 +89,7 @@ class CreateFacilityRoute
             $requestDataBag->all(),
             (new DataValidationDefinition())
                 ->add('salutationId', new NotBlank(), new Choice($this->getSalutationIds($context)))
-                ->add('phoneNumber', new NotBlank(), new Type('string'), new Regex('/^\+[1-9]{2}\d+/'))
+                ->add('phoneNumber', new Type('string'), new Regex('/^\+[1-9]{2}\d+/'))
                 ->add('legalForm', new NotBlank(), new Choice($this->legalFormService->getLegalFormsOnlyCodes($country->getIso() ?? '-')))
                 ->add('incorporatedAt', new NotBlank(), new Type('string'), new Date())
                 ->add('toc', new NotBlank(), new EqualTo('1'))

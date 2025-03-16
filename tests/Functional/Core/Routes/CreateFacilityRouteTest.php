@@ -89,24 +89,42 @@ class CreateFacilityRouteTest extends TestCase
         $this->customerAddress = $customerAddress;
     }
 
-    public function testSuccessful(): void
+    /**
+     * @dataProvider successfulDataProvider
+     */
+    public function testSuccessful(array $data): void
     {
         $this->buyerServiceMock->expects($this->once())->method('updateCustomerAddressData');
         $this->facilityServiceMock->expects($this->once())->method('createFacilityForBuyerIfNotExist');
 
-        $requestData = new RequestDataBag([
-            'incorporatedAtDay' => 20,
-            'incorporatedAtMonth' => 5,
-            'incorporatedAtYear' => 2000,
-            'salutationId' => $this->getValidSalutationId(),
-            'phoneNumber' => '+491731010101',
-            'legalForm' => 'DE_GMBH',
-            'toc' => '1',
-        ]);
+        $requestData = new RequestDataBag($data);
+        $requestData->set('salutationId', $this->getValidSalutationId());
 
         $response = $this->route->requestFacilityPost(Context::createDefaultContext(), $requestData, $this->customer, $this->customerAddress->getId());
 
         static::assertInstanceOf(SuccessResponse::class, $response);
+    }
+
+    public static function successfulDataProvider(): array
+    {
+        return [
+            [[
+                'incorporatedAtDay' => 20,
+                'incorporatedAtMonth' => 5,
+                'incorporatedAtYear' => 2000,
+                'phoneNumber' => null,
+                'legalForm' => 'DE_GMBH',
+                'toc' => '1',
+            ]],
+            [[
+                'incorporatedAtDay' => 20,
+                'incorporatedAtMonth' => 5,
+                'incorporatedAtYear' => 2000,
+                'phoneNumber' => '+491731010101',
+                'legalForm' => 'DE_GMBH',
+                'toc' => '1',
+            ]],
+        ];
     }
 
     /**
@@ -151,7 +169,6 @@ class CreateFacilityRouteTest extends TestCase
             ['incorporatedAtYear', 0, null, 'incorporatedAt'],
             ['salutationId', null, 'VIOLATION::IS_BLANK_ERROR'],
             ['salutationId', Uuid::randomHex(), 'VIOLATION::NO_SUCH_CHOICE_ERROR'],
-            ['phoneNumber', null, 'VIOLATION::IS_BLANK_ERROR'],
             ['legalForm', null, 'VIOLATION::IS_BLANK_ERROR'],
             ['legalForm', 'invalid-value', 'VIOLATION::NO_SUCH_CHOICE_ERROR'],
             ['toc', null, 'VIOLATION::IS_BLANK_ERROR'],
