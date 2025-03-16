@@ -114,8 +114,8 @@ class FacilityService
         }
 
         if (!$tiltaData->getValidUntil() instanceof DateTimeInterface) {
-            // facility seems to be invalid
-            return false;
+            // facility has not been created, yet - but buyer exists.
+            return true;
         }
 
         if ($tiltaData->getValidUntil()->getTimestamp() < time()) {
