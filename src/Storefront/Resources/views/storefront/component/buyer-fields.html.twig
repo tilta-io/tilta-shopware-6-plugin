@@ -1,4 +1,46 @@
 {% block tcf_component_additional_details_fields %}
+    {% block tcf_component_additional_details_fields_legal_form_wrapper %}
+        <div class="row">
+            {% block tcf_component_additional_details_fields_legal_form %}
+                <div class="form-group col-12">
+                    {% block tcf_component_additional_details_fields_legal_form_label %}
+                        <label class="form-label"
+                               for="{{ idPrefix ~ prefix }}legalForm">
+                            {{ "account.tilta.legalFormLabel"|trans|sw_sanitize }}{{ "general.required"|trans|sw_sanitize }}
+                        </label>
+                    {% endblock %}
+
+                    {% block tcf_component_additional_details_form_legal_form_select %}
+                        <select id="{{ idPrefix ~ prefix }}legalForm"
+                                class="form-control{% if formViolations.getViolations('/legalForm') is not empty %} is-invalid{% endif %}"
+                                name="legalForm"
+                                required="required">
+                            {% if not data.get('legalForm') %}
+                                <option disabled="disabled"
+                                        selected="selected"
+                                        value="">
+                                    {{ "account.tilta.legalFormPlaceholder"|trans|sw_sanitize }}
+                                </option>
+                            {% endif %}
+                            {% for legalForm in page.legalForms %}
+                                <option value="{{ legalForm.value }}" {% if legalForm.value == data.get('legalForm') %}selected="selected"{% endif %}>
+                                    {{ legalForm.label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    {% endblock %}
+
+                    {% block tcf_component_additional_details_form_legal_form_select_error %}
+                        {% sw_include '@Storefront/storefront/utilities/form-violation.html.twig' with {
+                            violationPath: '/legalForm',
+                            violationLabel: "account.tilta.legalFormLabel"|trans|sw_sanitize
+                        } %}
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    {% endblock %}
+
     {% block tcf_component_additional_details_fields_salutation_wrapper %}
         <div class="row">
             {% block tcf_component_additional_details_fields_salutation %}
@@ -71,48 +113,6 @@
                         {% sw_include '@Storefront/storefront/utilities/form-violation.html.twig' with {
                             violationPath: '/phoneNumber',
                             violationLabel: "address.phoneNumberLabel"|trans|sw_sanitize
-                        } %}
-                    {% endblock %}
-                </div>
-            {% endblock %}
-        </div>
-    {% endblock %}
-
-    {% block tcf_component_additional_details_fields_legal_form_wrapper %}
-        <div class="row">
-            {% block tcf_component_additional_details_fields_legal_form %}
-                <div class="form-group col-12">
-                    {% block tcf_component_additional_details_fields_legal_form_label %}
-                        <label class="form-label"
-                               for="{{ idPrefix ~ prefix }}legalForm">
-                            {{ "account.tilta.legalFormLabel"|trans|sw_sanitize }}{{ "general.required"|trans|sw_sanitize }}
-                        </label>
-                    {% endblock %}
-
-                    {% block tcf_component_additional_details_form_legal_form_select %}
-                        <select id="{{ idPrefix ~ prefix }}legalForm"
-                                class="form-control{% if formViolations.getViolations('/legalForm') is not empty %} is-invalid{% endif %}"
-                                name="legalForm"
-                                required="required">
-                            {% if not data.get('legalForm') %}
-                                <option disabled="disabled"
-                                        selected="selected"
-                                        value="">
-                                    {{ "account.tilta.legalFormPlaceholder"|trans|sw_sanitize }}
-                                </option>
-                            {% endif %}
-                            {% for legalForm in page.legalForms %}
-                                <option value="{{ legalForm.value }}" {% if legalForm.value == data.get('legalForm') %}selected="selected"{% endif %}>
-                                    {{ legalForm.label }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    {% endblock %}
-
-                    {% block tcf_component_additional_details_form_legal_form_select_error %}
-                        {% sw_include '@Storefront/storefront/utilities/form-violation.html.twig' with {
-                            violationPath: '/legalForm',
-                            violationLabel: "account.tilta.legalFormLabel"|trans|sw_sanitize
                         } %}
                     {% endblock %}
                 </div>
