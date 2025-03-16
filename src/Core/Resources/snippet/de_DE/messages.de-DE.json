@@ -2,7 +2,6 @@
 	"tilta": {
 		"messages": {
 			"invalid-salutation": "Bitte geben Sie Ihre Anrede an.",
-			"invalid-phone": "Bitte geben Sie Ihre Telefonnummer an.",
 			"invalid-company": "Bitte geben Sie den Firmennamen an.",
 			"invalid-incorporate-at": "Bitte geben Sie das Gründungsdatum an.",
 			"invalid-legal-form": "Bitte geben Sie die Rechtsform an."
