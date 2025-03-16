@@ -120,39 +120,6 @@
         </div>
     {% endblock %}
 
-{#    {% block tcf_component_additional_details_vatid %}#}
-{#        <div class="row">#}
-{#            {% block tcf_component_additional_details_vatid_name %}#}
-{#                <div class="form-group col-12">#}
-{#                    {% block tcf_component_additional_details_vatId_label %}#}
-{#                        <label class="form-label" for="{{ idPrefix ~ prefix }}vatId">#}
-{#                            {{ "address.companyVatLabel"|trans|sw_sanitize }}{{ "general.required"|trans|sw_sanitize }}#}
-{#                        </label>#}
-{#                    {% endblock %}#}
-
-{#                    {% block tcf_component_additional_details_vatId_input %}#}
-{#                        <input type="text"#}
-{#                               class="form-control{% if violationPath %} is-invalid{% endif %}"#}
-{#                               id="{{ idPrefix ~ prefix }}vatId"#}
-{#                               placeholder="{{ "address.companyVatPlaceholder"|trans|striptags }}"#}
-{#                               name="vatId"#}
-{#                               value="{{ data.get('vatId') }}"#}
-{#                               data-form-validation-required#}
-{#                               required="required">#}
-{#                    {% endblock %}#}
-
-{#                    {% block tcf_component_additional_details_fields_vatId_input_error %}#}
-{#                        {% if formViolations.getViolations('/vatId') is not empty %}#}
-{#                            {% sw_include '@Storefront/storefront/utilities/form-violation.html.twig' with {#}
-{#                                violationPath: '/vatId'#}
-{#                            } %}#}
-{#                        {% endif %}#}
-{#                    {% endblock %}#}
-{#                </div>#}
-{#            {% endblock %}#}
-{#        </div>#}
-{#    {% endblock %}#}
-
     {% block tcf_component_additional_details_fields_incorporatedAt %}
         {% block tcf_component_additional_details_fields_incorporatedAt_label %}
             <label for="{{ idPrefix ~ prefix }}incorporatedAt">
