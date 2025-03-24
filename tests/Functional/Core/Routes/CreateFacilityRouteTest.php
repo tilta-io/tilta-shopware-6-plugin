@@ -116,9 +116,6 @@ class CreateFacilityRouteTest extends TestCase
     {
         return [
             [[
-                'incorporatedAtDay' => 20,
-                'incorporatedAtMonth' => 5,
-                'incorporatedAtYear' => 2000,
                 'phoneNumber' => null,
                 'legalForm' => 'DE_GMBH',
                 'incorporatedAtDay' => null,
@@ -127,9 +124,6 @@ class CreateFacilityRouteTest extends TestCase
                 'toc' => '1',
             ]],
             [[
-                'incorporatedAtDay' => 20,
-                'incorporatedAtMonth' => 5,
-                'incorporatedAtYear' => 2000,
                 'phoneNumber' => '+491731010101',
                 'legalForm' => 'DE_GMBH',
                 'incorporatedAtDay' => null,
@@ -154,7 +148,6 @@ class CreateFacilityRouteTest extends TestCase
     public function testFailure(string $field, $value, string $expectedError = null, string $violationField = null): void
     {
         $requestData = new RequestDataBag([
-            'salutationId' => $this->getValidSalutationId(),
             'phoneNumber' => '+491731010101',
             'legalForm' => 'DE_GMBH',
             'toc' => '1',
@@ -179,8 +172,6 @@ class CreateFacilityRouteTest extends TestCase
     {
         // we won't validate for message on the date-fields, because of different messages within different SW-Versions
         return [
-            ['salutationId', null, 'VIOLATION::IS_BLANK_ERROR'],
-            ['salutationId', Uuid::randomHex(), 'VIOLATION::NO_SUCH_CHOICE_ERROR'],
             ['legalForm', null, 'VIOLATION::IS_BLANK_ERROR'],
             ['legalForm', 'invalid-value', 'VIOLATION::NO_SUCH_CHOICE_ERROR'],
             ['toc', null, 'VIOLATION::IS_BLANK_ERROR'],
@@ -226,10 +217,12 @@ class CreateFacilityRouteTest extends TestCase
     }
 
     /**
-     * @dataProvider missingIncorporatedAtDataProvider
+     * @dataProvider missingMissingDataSoleTraderDataProvider
      */
-    public function testMissingIncorporatedAt(string $field, mixed $value, string $expectedErrorMessage = 'IS_BLANK_ERROR'): void
+    public function testMissingDataSoleTrader(string $field, mixed $value, string $errorField = null, string $expectedErrorMessage = 'IS_BLANK_ERROR'): void
     {
+        $errorField = empty($errorField) ? $field : $errorField;
+
         $requestData = new RequestDataBag([
             'incorporatedAtDay' => 19,
             'incorporatedAtMonth' => 05,
@@ -246,19 +239,21 @@ class CreateFacilityRouteTest extends TestCase
         } catch (ConstraintViolationException $constraintViolationException) {
             $violations = $constraintViolationException->getViolations();
             static::assertEquals(1, $violations->count(), 'there should by exactly one violations');
-            static::assertEquals('/incorporatedAt', $violations->get(1)->getPropertyPath());
+            static::assertEquals('/' . $errorField, $violations->get(1)->getPropertyPath());
             static::assertEquals('VIOLATION::' . $expectedErrorMessage, $violations->get(1)->getCode());
         }
     }
 
-    public static function missingIncorporatedAtDataProvider(): array
+    public static function missingMissingDataSoleTraderDataProvider(): array
     {
         return [
-            ['incorporatedAtDay', 99, 'INVALID_DATE_ERROR'],
-            ['incorporatedAtMonth', null],
-            ['incorporatedAtMonth', 99, 'INVALID_DATE_ERROR'],
-            ['incorporatedAtYear', null],
-            ['incorporatedAtYear', 0, 'INVALID_FORMAT_ERROR'],
+            ['incorporatedAtDay', 99, 'incorporatedAt', 'INVALID_DATE_ERROR'],
+            ['incorporatedAtMonth', null, 'incorporatedAt'],
+            ['incorporatedAtMonth', 99, 'incorporatedAt', 'INVALID_DATE_ERROR'],
+            ['incorporatedAtYear', null, 'incorporatedAt'],
+            ['incorporatedAtYear', 0, 'incorporatedAt', 'INVALID_FORMAT_ERROR'],
+            ['salutationId', null],
+            ['salutationId', Uuid::randomHex(), null, 'NO_SUCH_CHOICE_ERROR'],
         ];
     }
 
@@ -277,6 +272,7 @@ class CreateFacilityRouteTest extends TestCase
             'incorporatedAtDay' => 19,
             'incorporatedAtMonth' => 5,
             'incorporatedAtYear' => 2000,
+            'salutationId' => $this->getValidSalutationId(),
             'toc' => '1',
         ]);
 
@@ -300,6 +296,7 @@ class CreateFacilityRouteTest extends TestCase
             'incorporatedAtDay' => null,
             'incorporatedAtMonth' => 5,
             'incorporatedAtYear' => 2000,
+            'salutationId' => $this->getValidSalutationId(),
             'toc' => '1',
         ]);
 

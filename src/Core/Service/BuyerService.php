@@ -83,23 +83,15 @@ class BuyerService
     {
         $customerDataUpdate = [];
 
-        if (!empty($data['salutationId']) && $data['salutationId'] !== $addressEntity->getSalutationId()) {
-            $customerDataUpdate['salutationId'] = $data['salutationId'];
-        }
-
         if (!empty($data['phoneNumber']) && $data['phoneNumber'] !== $addressEntity->getPhoneNumber()) {
             $customerDataUpdate['phoneNumber'] = $data['phoneNumber'];
         }
 
-        if ($customerDataUpdate !== []) {
-            $this->customerAddressRepository->upsert([
-                array_merge($customerDataUpdate, [
-                    'id' => $addressEntity->getId(),
-                ]),
-            ], $context);
-        }
-
         if ($data['legalForm'] === 'SOLE_TRADER') {
+            if (!empty($data['salutationId']) && $data['salutationId'] !== $addressEntity->getSalutationId()) {
+                $customerDataUpdate['salutationId'] = $data['salutationId'];
+            }
+
             if (is_string($data['incorporatedAt']) && preg_match('#^\d{4}-\d{2}-\d{2}$#', $data['incorporatedAt'])) {
                 $incorporatedAt = DateTime::createFromFormat('Y-m-d', $data['incorporatedAt']);
             } elseif ($data['incorporatedAt'] instanceof DateTimeInterface) {
@@ -109,6 +101,14 @@ class BuyerService
             }
         } else {
             $incorporatedAt = null;
+        }
+
+        if ($customerDataUpdate !== []) {
+            $this->customerAddressRepository->upsert([
+                array_merge($customerDataUpdate, [
+                    'id' => $addressEntity->getId(),
+                ]),
+            ], $context);
         }
 
         $this->tiltaAddressDataRepository->upsert([
@@ -195,10 +195,6 @@ class BuyerService
     {
         $errors = [];
 
-        if ((string) $address->getSalutationId() === '') {
-            $errors[] = $this->translator->trans('tilta.messages.invalid-salutation');
-        }
-
         if ((string) $address->getCompany() === '') {
             $errors[] = $this->translator->trans('tilta.messages.invalid-company');
         }
@@ -206,8 +202,14 @@ class BuyerService
         /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
         $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
 
-        if ($tiltaData?->getLegalForm() === 'SOLE_TRADER' && !$tiltaData->getIncorporatedAt() instanceof DateTimeInterface) {
-            $errors[] = $this->translator->trans('tilta.messages.invalid-incorporate-at');
+        if ($tiltaData?->getLegalForm() === 'SOLE_TRADER') {
+            if (!$tiltaData->getIncorporatedAt() instanceof DateTimeInterface) {
+                $errors[] = $this->translator->trans('tilta.messages.invalid-incorporate-at');
+            }
+
+            if ((string) $address->getSalutationId() === '') {
+                $errors[] = $this->translator->trans('tilta.messages.invalid-salutation');
+            }
         }
 
         if (!$tiltaData instanceof TiltaCustomerAddressDataEntity || (string) $tiltaData->getLegalForm() === '') {

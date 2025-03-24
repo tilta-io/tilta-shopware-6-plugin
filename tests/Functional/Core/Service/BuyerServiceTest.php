@@ -121,7 +121,6 @@ class BuyerServiceTest extends TestCase
         return [
             ['address', 'company', null],
             ['address', 'company', ''],
-            ['address', 'salutationId', null],
             // ['tiltaData', TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID, ''], // make no sense, because this will be set by module automatically
             // ['tiltaData', TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT, null], // can not be null
             // ['tiltaData', TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM, null], // can not be null
@@ -151,7 +150,7 @@ class BuyerServiceTest extends TestCase
             self::assertIsArray($data[0] ?? null);
             self::assertEquals($address->getId(), $data[0]['id']);
             self::assertEquals('updated-12345', $data[0]['phoneNumber']);
-            self::assertEquals('updated-abc', $data[0]['salutationId']);
+            self::assertArrayNotHasKey('salutationId', $data[0], 'salutationId should be not set, because legal-form is not SOLE_TRADER');
         });
 
         $tiltaDataRepositoryMock->method('upsert')->willReturnCallback(static function (array $data, $context) use ($address) {
@@ -160,6 +159,7 @@ class BuyerServiceTest extends TestCase
             self::assertIsArray($data[0] ?? null);
             self::assertEquals($address->getId(), $data[0][TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID]);
             self::assertEquals('updated-GMBH', $data[0][TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM]);
+            self::assertNull($data[0][TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT], 'incorporated-at should be NULL, because legal-form is not SOLE_TRADER');
         });
 
         $buyerService->updateCustomerAddressData(
@@ -168,15 +168,16 @@ class BuyerServiceTest extends TestCase
                 'phoneNumber' => 'updated-12345',
                 'salutationId' => 'updated-abc',
                 'legalForm' => 'updated-GMBH',
+                'incorporatedAt' => (new DateTime())->setDate(2000, 5, 15),
             ],
             Context::createDefaultContext()
         );
     }
 
-    public function testUpdateCustomerDataIncorporatedAt(): void
+    public function testUpdateCustomerDataForSoleTrader(): void
     {
         $buyerService = new BuyerService(
-            $this->createMock(EntityRepository::class),
+            $customerAddressRepositoryMock = $this->createMock(EntityRepository::class),
             $tiltaDataRepositoryMock = $this->createMock(EntityRepository::class),
             $this->getContainer()->get('translator'),
             $this->createMock(ContainerInterface::class),
@@ -184,7 +185,15 @@ class BuyerServiceTest extends TestCase
             $this->getContainer()->get(AddressModelFactory::class),
             $this->getContainer()->get(EntityHelper::class)
         );
+        $customerAddressRepositoryMock->expects($this->once())->method('upsert');
         $tiltaDataRepositoryMock->expects($this->once())->method('upsert');
+
+        $customerAddressRepositoryMock->method('upsert')->willReturnCallback(static function (array $data, $context) {
+            self::assertIsArray($data);
+            self::assertCount(1, $data);
+            self::assertIsArray($data[0] ?? null);
+            self::assertEquals('salutation-male', $data[0]['salutationId']);
+        });
 
         $address = $this->getValidAddress();
 
@@ -202,41 +211,8 @@ class BuyerServiceTest extends TestCase
             $this->getValidAddress(),
             [
                 'incorporatedAt' => (new DateTime())->setDate(2000, 5, 15),
+                'salutationId' => 'salutation-male',
                 'legalForm' => 'SOLE_TRADER',
-            ],
-            Context::createDefaultContext()
-        );
-    }
-
-    public function testUpdateCustomerDataIncorporatedAtNotSaved(): void
-    {
-        $buyerService = new BuyerService(
-            $this->createMock(EntityRepository::class),
-            $tiltaDataRepositoryMock = $this->createMock(EntityRepository::class),
-            $this->getContainer()->get('translator'),
-            $this->createMock(ContainerInterface::class),
-            $this->createMock(SystemConfigService::class),
-            $this->getContainer()->get(AddressModelFactory::class),
-            $this->getContainer()->get(EntityHelper::class)
-        );
-        $tiltaDataRepositoryMock->expects($this->once())->method('upsert');
-
-        $address = $this->getValidAddress();
-
-        $tiltaDataRepositoryMock->method('upsert')->willReturnCallback(static function (array $data, $context) use ($address) {
-            self::assertIsArray($data);
-            self::assertCount(1, $data);
-            self::assertIsArray($data[0] ?? null);
-            self::assertEquals($address->getId(), $data[0][TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID]);
-            self::assertNull($data[0][TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT] ?? null, 'incorporated-at should be empty, because legal-form is not SOLE_TRADER');
-            self::assertEquals('updated-GMBH', $data[0][TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM]);
-        });
-
-        $buyerService->updateCustomerAddressData(
-            $this->getValidAddress(),
-            [
-                'incorporatedAt' => (new DateTime())->setDate(2000, 5, 15),
-                'legalForm' => 'updated-GMBH',
             ],
             Context::createDefaultContext()
         );
@@ -323,7 +299,6 @@ class BuyerServiceTest extends TestCase
         $address->setCustomer($this->getValidCustomer());
         $address->setCompany('company');
         $address->setPhoneNumber('0123456789');
-        $address->setSalutationId('salutation-id-male');
         $address->setFirstname('Firstname');
         $address->setLastname('Lastname');
 

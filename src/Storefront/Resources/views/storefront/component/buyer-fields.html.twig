@@ -42,7 +42,7 @@
     {% endblock %}
 
     {% block tcf_component_additional_details_fields_salutation_wrapper %}
-        <div class="row">
+        <div class="row" id="tilta-salutation-wrapper">
             {% block tcf_component_additional_details_fields_salutation %}
                 <div class="form-group col-12">
                     {% block tcf_component_additional_details_fields_salutation_label %}
@@ -54,7 +54,7 @@
                     {% block tcf_component_additional_details_form_salutation_select %}
                         <select id="{{ idPrefix ~ prefix }}personalSalutation"
                                 class="form-control{% if formViolations.getViolations('/salutationId') is not empty %} is-invalid{% endif %}"
-                                name="{% if prefix %}{{ prefix }}[salutationId]{% else %}salutationId{% endif %}"
+                                name="salutationId"
                                 required="required">
                             {% if not data.get('salutationId') %}
                                 <option disabled="disabled"
