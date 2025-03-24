@@ -56,7 +56,7 @@ class TiltaCustomerAddressDataEntity extends Entity
 
     protected ?DateTimeInterface $validUntil = null;
 
-    protected DateTimeInterface $incorporatedAt;
+    protected ?DateTimeInterface $incorporatedAt = null;
 
     public function getCustomerAddressId(): string
     {
@@ -73,7 +73,7 @@ class TiltaCustomerAddressDataEntity extends Entity
         return $this->buyerExternalId;
     }
 
-    public function getIncorporatedAt(): DateTimeInterface
+    public function getIncorporatedAt(): ?DateTimeInterface
     {
         return $this->incorporatedAt;
     }

@@ -39,7 +39,7 @@ class TiltaCustomerAddressDataDefinition extends EntityDefinition
             (new IdField('customer_address_id', TiltaCustomerAddressDataEntity::FIELD_CUSTOMER_ADDRESS_ID))->addFlags(new Required(), new PrimaryKey()),
             (new StringField('legal_form', TiltaCustomerAddressDataEntity::FIELD_LEGAL_FORM))->addFlags(new Required()),
             (new StringField('buyer_external_id', TiltaCustomerAddressDataEntity::FIELD_BUYER_EXTERNAL_ID)),
-            (new DateField('incorporated_at', TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT))->addFlags(new Required()),
+            (new DateField('incorporated_at', TiltaCustomerAddressDataEntity::FIELD_INCORPORATED_AT)),
             (new DateField('valid_until', TiltaCustomerAddressDataEntity::FIELD_VALID_UNTIL)),
             (new IntField('total_amount', TiltaCustomerAddressDataEntity::FIELD_TOTAL_AMOUNT)),
         ]);

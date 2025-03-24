@@ -3,11 +3,16 @@ import LoadingIndicator from 'src/utility/loading-indicator/loading-indicator.ut
 
 export default class TiltaCreateFacilityForm extends Plugin {
     init() {
+        this.legalFormElement = this.el.querySelector('[name="legalForm"]');
+        this.incorporatedAtWrapper = document.getElementById('tilta-incorporated-at-wrapper');
         this._registerEvents();
     }
 
     _registerEvents() {
         this.el.addEventListener('submit', this._submitForm.bind(this));
+
+        this.legalFormElement.addEventListener('change', this._onChangeLegalForm.bind(this));
+        this._onChangeLegalForm();
     }
 
     _submitForm(event) {
@@ -24,6 +29,16 @@ export default class TiltaCreateFacilityForm extends Plugin {
             spinner.classList.add('spinner');
             spinner.innerHTML = LoadingIndicator.getTemplate();
             loadingScreenInner.append(spinner)
+        }
+    }
+
+    _onChangeLegalForm() {
+        if (this.legalFormElement.value === 'SOLE_TRADER') {
+            this.incorporatedAtWrapper.style.display = '';
+            this.incorporatedAtWrapper.querySelectorAll('select').forEach(e => e.required = true);
+        } else {
+            this.incorporatedAtWrapper.style.display = 'none';
+            this.incorporatedAtWrapper.querySelectorAll('select').forEach(e => e.required = false);
         }
     }
 }

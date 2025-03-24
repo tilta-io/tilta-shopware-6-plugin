@@ -99,12 +99,16 @@ class BuyerService
             ], $context);
         }
 
-        if (is_string($data['incorporatedAt']) && preg_match('#^\d{4}-\d{2}-\d{2}$#', $data['incorporatedAt'])) {
-            $incorporatedAt = DateTime::createFromFormat('Y-m-d', $data['incorporatedAt']);
-        } elseif ($data['incorporatedAt'] instanceof DateTimeInterface) {
-            $incorporatedAt = $data['incorporatedAt'];
+        if ($data['legalForm'] === 'SOLE_TRADER') {
+            if (is_string($data['incorporatedAt']) && preg_match('#^\d{4}-\d{2}-\d{2}$#', $data['incorporatedAt'])) {
+                $incorporatedAt = DateTime::createFromFormat('Y-m-d', $data['incorporatedAt']);
+            } elseif ($data['incorporatedAt'] instanceof DateTimeInterface) {
+                $incorporatedAt = $data['incorporatedAt'];
+            } else {
+                throw new RuntimeException('incorporatedAt have to be a datetime or a date formatted as Y-m-d');
+            }
         } else {
-            throw new RuntimeException('incorporatedAt have to be a datetime or a date formatted as Y-m-d');
+            $incorporatedAt = null;
         }
 
         $this->tiltaAddressDataRepository->upsert([
@@ -202,7 +206,7 @@ class BuyerService
         /** @var TiltaCustomerAddressDataEntity|null $tiltaData */
         $tiltaData = $address->getExtension(CustomerAddressEntityExtension::TILTA_DATA);
 
-        if (!$tiltaData instanceof TiltaCustomerAddressDataEntity || !$tiltaData->getIncorporatedAt() instanceof DateTimeInterface) {
+        if ($tiltaData?->getLegalForm() === 'SOLE_TRADER' && !$tiltaData->getIncorporatedAt() instanceof DateTimeInterface) {
             $errors[] = $this->translator->trans('tilta.messages.invalid-incorporate-at');
         }
 

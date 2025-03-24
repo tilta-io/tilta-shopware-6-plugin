@@ -64,11 +64,17 @@ class CreateFacilityRouteTest extends TestCase
             $legalFormService = $this->createMock(LegalFormService::class)
         );
 
-        $legalFormService->method('getLegalFormsOnlyCodes')->willReturn(['DE_GMBH']);
-        $legalFormService->method('getLegalForms')->willReturn([[
-            'value' => 'DE_GMBH',
-            'label' => 'GmbH',
-        ]]);
+        $legalFormService->method('getLegalFormsOnlyCodes')->willReturn(['DE_GMBH', 'SOLE_TRADER']);
+        $legalFormService->method('getLegalForms')->willReturn([
+            [
+                'value' => 'DE_GMBH',
+                'label' => 'GmbH',
+            ],
+            [
+                'value' => 'SOLE_TRADER',
+                'label' => 'solo trader',
+            ],
+        ]);
 
         /** @var EntityRepository $customerRepo */
         $customerRepo = $this->getContainer()->get('customer.repository');
@@ -114,6 +120,9 @@ class CreateFacilityRouteTest extends TestCase
                 'incorporatedAtYear' => 2000,
                 'phoneNumber' => null,
                 'legalForm' => 'DE_GMBH',
+                'incorporatedAtDay' => null,
+                'incorporatedAtMonth' => null,
+                'incorporatedAtYear' => null,
                 'toc' => '1',
             ]],
             [[
@@ -122,6 +131,17 @@ class CreateFacilityRouteTest extends TestCase
                 'incorporatedAtYear' => 2000,
                 'phoneNumber' => '+491731010101',
                 'legalForm' => 'DE_GMBH',
+                'incorporatedAtDay' => null,
+                'incorporatedAtMonth' => null,
+                'incorporatedAtYear' => null,
+                'toc' => '1',
+            ]],
+            [[
+                'phoneNumber' => '+491731010101',
+                'legalForm' => 'SOLE_TRADER',
+                'incorporatedAtDay' => 20,
+                'incorporatedAtMonth' => 5,
+                'incorporatedAtYear' => 2000,
                 'toc' => '1',
             ]],
         ];
@@ -133,9 +153,6 @@ class CreateFacilityRouteTest extends TestCase
     public function testFailure(string $field, $value, string $expectedError = null, string $violationField = null): void
     {
         $requestData = new RequestDataBag([
-            'incorporatedAtDay' => 20,
-            'incorporatedAtMonth' => 5,
-            'incorporatedAtYear' => 2000,
             'salutationId' => $this->getValidSalutationId(),
             'phoneNumber' => '+491731010101',
             'legalForm' => 'DE_GMBH',
@@ -161,12 +178,6 @@ class CreateFacilityRouteTest extends TestCase
     {
         // we won't validate for message on the date-fields, because of different messages within different SW-Versions
         return [
-            ['incorporatedAtDay', null, null, 'incorporatedAt'],
-            ['incorporatedAtDay', 99, null, 'incorporatedAt'],
-            ['incorporatedAtMonth', null, null, 'incorporatedAt'],
-            ['incorporatedAtMonth', 99, null, 'incorporatedAt'],
-            ['incorporatedAtYear', null, null, 'incorporatedAt'],
-            ['incorporatedAtYear', 0, null, 'incorporatedAt'],
             ['salutationId', null, 'VIOLATION::IS_BLANK_ERROR'],
             ['salutationId', Uuid::randomHex(), 'VIOLATION::NO_SUCH_CHOICE_ERROR'],
             ['legalForm', null, 'VIOLATION::IS_BLANK_ERROR'],
@@ -210,6 +221,44 @@ class CreateFacilityRouteTest extends TestCase
             ['+49 1731010101'],
             ['+49 173 1010101'],
             ['+49 173 101 010 1'],
+        ];
+    }
+
+    /**
+     * @dataProvider missingIncorporatedAtDataProvider
+     */
+    public function testMissingIncorporatedAt(string $field, mixed $value, string $expectedErrorMessage = 'IS_BLANK_ERROR'): void
+    {
+        $requestData = new RequestDataBag([
+            'incorporatedAtDay' => 19,
+            'incorporatedAtMonth' => 05,
+            'incorporatedAtYear' => 2000,
+            'salutationId' => $this->getValidSalutationId(),
+            'legalForm' => 'SOLE_TRADER',
+            'toc' => '1',
+        ]);
+        $requestData->set($field, $value);
+
+        try {
+            $this->route->requestFacilityPost(Context::createDefaultContext(), $requestData, $this->customer, $this->customerAddress->getId());
+            $this->fail('ConstraintViolationException was not thrown');
+        } catch (ConstraintViolationException $constraintViolationException) {
+            $violations = $constraintViolationException->getViolations();
+            static::assertEquals(1, $violations->count(), 'there should by exactly one violations');
+            static::assertEquals('/incorporatedAt', $violations->get(1)->getPropertyPath());
+            static::assertEquals('VIOLATION::' . $expectedErrorMessage, $violations->get(1)->getCode());
+        }
+    }
+
+    public static function missingIncorporatedAtDataProvider(): array
+    {
+        return [
+            ['incorporatedAtDay', null],
+            ['incorporatedAtDay', 99, 'INVALID_DATE_ERROR'],
+            ['incorporatedAtMonth', null],
+            ['incorporatedAtMonth', 99, 'INVALID_DATE_ERROR'],
+            ['incorporatedAtYear', null],
+            ['incorporatedAtYear', 0, 'INVALID_FORMAT_ERROR'],
         ];
     }
 }
