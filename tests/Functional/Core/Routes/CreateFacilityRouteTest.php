@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Tilta\TiltaPaymentSW6\Tests\Functional\Core\Routes;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
@@ -253,12 +254,57 @@ class CreateFacilityRouteTest extends TestCase
     public static function missingIncorporatedAtDataProvider(): array
     {
         return [
-            ['incorporatedAtDay', null],
             ['incorporatedAtDay', 99, 'INVALID_DATE_ERROR'],
             ['incorporatedAtMonth', null],
             ['incorporatedAtMonth', 99, 'INVALID_DATE_ERROR'],
             ['incorporatedAtYear', null],
             ['incorporatedAtYear', 0, 'INVALID_FORMAT_ERROR'],
         ];
+    }
+
+    public function testIfFullIncorporatedAt(): void
+    {
+        $this->buyerServiceMock->expects($this->once())->method('updateCustomerAddressData')->willReturnCallback(static function (CustomerAddressEntity $addressEntity, array $data, Context $context) {
+            self::assertArrayHasKey('incorporatedAt', $data);
+            self::assertInstanceOf(DateTime::class, $data['incorporatedAt']);
+            self::assertEquals('2000-05-19', $data['incorporatedAt']->format('Y-m-d'));
+        });
+        $this->facilityServiceMock->expects($this->once())->method('createFacilityForBuyerIfNotExist');
+
+        $requestData = new RequestDataBag([
+            'phoneNumber' => '+491731010101',
+            'legalForm' => 'SOLE_TRADER',
+            'incorporatedAtDay' => 19,
+            'incorporatedAtMonth' => 5,
+            'incorporatedAtYear' => 2000,
+            'toc' => '1',
+        ]);
+
+        $response = $this->route->requestFacilityPost(Context::createDefaultContext(), $requestData, $this->customer, $this->customerAddress->getId());
+
+        static::assertInstanceOf(SuccessResponse::class, $response);
+    }
+
+    public function testIfMissingIncorporatedAtDayGotFilled(): void
+    {
+        $this->buyerServiceMock->expects($this->once())->method('updateCustomerAddressData')->willReturnCallback(static function (CustomerAddressEntity $addressEntity, array $data, Context $context) {
+            self::assertArrayHasKey('incorporatedAt', $data);
+            self::assertInstanceOf(DateTime::class, $data['incorporatedAt']);
+            self::assertEquals('2000-05-01', $data['incorporatedAt']->format('Y-m-d'));
+        });
+        $this->facilityServiceMock->expects($this->once())->method('createFacilityForBuyerIfNotExist');
+
+        $requestData = new RequestDataBag([
+            'phoneNumber' => '+491731010101',
+            'legalForm' => 'SOLE_TRADER',
+            'incorporatedAtDay' => null,
+            'incorporatedAtMonth' => 5,
+            'incorporatedAtYear' => 2000,
+            'toc' => '1',
+        ]);
+
+        $response = $this->route->requestFacilityPost(Context::createDefaultContext(), $requestData, $this->customer, $this->customerAddress->getId());
+
+        static::assertInstanceOf(SuccessResponse::class, $response);
     }
 }

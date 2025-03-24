@@ -19,7 +19,6 @@
 				}
 			},
 			"incorporatedAtLabel": "Business start date",
-			"incorporatedAtSelectDay": "Day",
 			"incorporatedAtSelectMonth": "Month",
 			"incorporatedAtSelectYear": "Year",
 			"legalFormLabel": "Legal form",
