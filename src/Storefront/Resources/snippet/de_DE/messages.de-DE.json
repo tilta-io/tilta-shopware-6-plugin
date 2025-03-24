@@ -18,7 +18,7 @@
 					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
 				}
 			},
-			"incorporatedAtLabel": "Unternehmen angemeldet am",
+			"incorporatedAtLabel": "Gründungsdatum",
 			"incorporatedAtSelectDay": "Tag",
 			"incorporatedAtSelectMonth": "Monat",
 			"incorporatedAtSelectYear": "Jahr",
