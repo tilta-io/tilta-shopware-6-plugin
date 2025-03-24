@@ -76,8 +76,13 @@ class CreateFacilityRoute
         /** @var CountryEntity $country */ // country is always loaded
         $country = $customerAddress->getCountry();
 
-        if ($requestDataBag->has('incorporatedAtDay') && $requestDataBag->has('incorporatedAtMonth') && $requestDataBag->has('incorporatedAtYear')) {
+
+        if ($requestDataBag->has('incorporatedAtMonth') && $requestDataBag->has('incorporatedAtYear')) {
             try {
+                if (!$requestDataBag->has('incorporatedAtDay') || $requestDataBag->get('incorporatedAtDay') === null) {
+                    $requestDataBag->set('incorporatedAtDay', 1);
+                }
+
                 $requestDataBag->set('incorporatedAt', sprintf('%02d-%02d-%02d', $requestDataBag->getAlnum('incorporatedAtYear'), $requestDataBag->getAlnum('incorporatedAtMonth'), $requestDataBag->getAlnum('incorporatedAtDay')));
             } catch (UnexpectedValueException) {
                 // do nothing. Validation exception got thrown later.
