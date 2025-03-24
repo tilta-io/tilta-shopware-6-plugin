@@ -121,14 +121,14 @@
     {% endblock %}
 
     {% block tcf_component_additional_details_fields_incorporatedAt %}
-        {% block tcf_component_additional_details_fields_incorporatedAt_label %}
-            <label for="{{ idPrefix ~ prefix }}incorporatedAt">
-                {{ "account.tilta.incorporatedAtLabel"|trans|sw_sanitize }}{{ "general.required"|trans|sw_sanitize }}
-            </label>
-        {% endblock %}
+        <div class="row" id="tilta-incorporated-at-wrapper">
+            {% block tcf_component_additional_details_fields_incorporatedAt_label %}
+                <label for="{{ idPrefix ~ prefix }}incorporatedAt">
+                    {{ "account.tilta.incorporatedAtLabel"|trans|sw_sanitize }}{{ "general.required"|trans|sw_sanitize }}
+                </label>
+            {% endblock %}
 
-        {% block tcf_component_additional_details_fields_incorporatedAt_selects %}
-            <div class="row">
+            {% block tcf_component_additional_details_fields_incorporatedAt_selects %}
                 {% block tcf_component_additional_details_fields_incorporatedAt_select_day %}
                     <div class="form-group col-4">
                         <select id="{{ idPrefix ~ prefix }}incorporatedAt"
@@ -190,8 +190,8 @@
                         violationLabel: "account.tilta.incorporatedAtLabel"|trans|sw_sanitize
                     } %}
                 {% endblock %}
-            </div>
-        {% endblock %}
+            {% endblock %}
+        </div>
     {% endblock %}
 
     {% block tcf_component_additional_details_fields_toc_wrapper %}

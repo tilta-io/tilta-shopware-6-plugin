@@ -56,9 +56,9 @@ class BuyerRequestFormDataRoute extends AbstractBuyerRequestFormDataRoute
                 'salutationId' => $requestDataBag->get('salutationId', $customerAddress->getSalutationId()),
                 'phoneNumber' => $requestDataBag->get('phoneNumber', $customerAddress->getPhoneNumber()),
                 'legalForm' => $requestDataBag->get('legalForm', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getLegalForm() : null),
-                'incorporatedAtYear' => $requestDataBag->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()->format('Y') : null),
-                'incorporatedAtMonth' => $requestDataBag->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()->format('m') : null),
-                'incorporatedAtDay' => $requestDataBag->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()->format('d') : null),
+                'incorporatedAtYear' => $requestDataBag->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()?->format('Y') : null),
+                'incorporatedAtMonth' => $requestDataBag->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()?->format('m') : null),
+                'incorporatedAtDay' => $requestDataBag->get('incorporatedAtDay', $tiltaData instanceof TiltaCustomerAddressDataEntity ? $tiltaData->getIncorporatedAt()?->format('d') : null),
             ]),
         ]));
     }

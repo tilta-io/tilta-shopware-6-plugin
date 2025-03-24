@@ -84,16 +84,18 @@ class CreateFacilityRoute
             }
         }
 
+        $validationDefinitions = (new DataValidationDefinition())
+            ->add('salutationId', new NotBlank(), new Choice($this->getSalutationIds($context)))
+            ->add('phoneNumber', new Type('string'), new Regex('/^\+[1-9]{2}\d+/'))
+            ->add('legalForm', new NotBlank(), new Choice($this->legalFormService->getLegalFormsOnlyCodes($country->getIso() ?? '-')))
+            ->add('toc', new NotBlank(), new EqualTo('1'));
+
+        if ($requestDataBag->get('legalForm') === 'SOLE_TRADER') {
+            $validationDefinitions->add('incorporatedAt', new NotBlank(), new Type('string'), new Date());
+        }
+
         // TODO: use \Shopware\Core\Framework\Rule\RuleConstraints in the future
-        $this->dataValidator->validate(
-            $requestDataBag->all(),
-            (new DataValidationDefinition())
-                ->add('salutationId', new NotBlank(), new Choice($this->getSalutationIds($context)))
-                ->add('phoneNumber', new Type('string'), new Regex('/^\+[1-9]{2}\d+/'))
-                ->add('legalForm', new NotBlank(), new Choice($this->legalFormService->getLegalFormsOnlyCodes($country->getIso() ?? '-')))
-                ->add('incorporatedAt', new NotBlank(), new Type('string'), new Date())
-                ->add('toc', new NotBlank(), new EqualTo('1'))
-        );
+        $this->dataValidator->validate($requestDataBag->all(), $validationDefinitions);
 
         try {
             $incorporatedAt = $requestDataBag->get('incorporatedAt');
