@@ -10,12 +10,12 @@
 				"list": {
 					"title": "Kreditlimit",
 					"intro": "Unser Kreditlimit steht Ihnen regelmäßig für Ihre Bestellungen bei uns zur Verfügung und kann für die Zahlung auf Rechnung verwendet werden. Das Limit beschreibt dabei den maximalen Betrag, der zu einem bestimmten Zeitpunkt für Ihre offenen Rechnungen genutzt werden kann. Mit jeder Zahlung wird der entsprechende Betrag wieder freigegeben.",
-					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
+					"actionRequestFacility": "Zahlung auf Rechnung aktivieren"
 				},
 				"create": {
-					"title": "Kreditverfügungsrahmen anfragen",
-					"intro": "Sie können ein Kreditlimit für die Nutzung des Rechnungskaufs beantragen. Nach der Genehmigung erhalten Sie ein Kreditlimit zur Nutzung auf dieser Seite. Mit diesem können Sie die Zahlung für die Bestellungen, die in Ihr Limit passen, aufschieben. Die Beantragung eines Kreditlimits hat keinen Einfluss auf Ihre Kreditwürdigkeit.",
-					"actionRequestFacility": "Kreditverfügungsrahmen anfragen"
+					"title": "Zahlung auf Rechnung aktivieren",
+					"intro": "Sie können ein Kreditlimit für die Zahlung auf Rechnung beantragen. Nach der Genehmigung steht Ihnen ein Kreditlimit für die Zahlung per Rechnung zur Verfügung. Die Beantragung eines Kreditlimits bei uns hat keine Auswirkungen auf Ihre Bonität.",
+					"actionRequestFacility": "Zahlung auf Rechnung aktivieren"
 				}
 			},
 			"incorporatedAtLabel": "Gründungsdatum",
@@ -29,18 +29,18 @@
 	},
 	"tilta": {
 		"messages": {
-			"unknown-error": "Es is ein unbekannte Fehler aufgetreten. Bitte versuchen Sie es erneut. Falls weiter Probleme auftreten, wenden Sie sich bitte an den Kundendienst.",
-			"no-existing-b2b-address": "Bevor Sie einen Kreditrahmen bei Tilta anfragen können, müssen Sie zuerst eine geschäftliche Rechnungsadresse anlegen.",
+			"unknown-error": "Es is ein unbekannter Fehler aufgetreten. Bitte versuchen Sie es erneut. Falls weiter Probleme auftreten, wenden Sie sich bitte an den Kundendienst.",
+			"no-existing-b2b-address": "Bevor Sie den Kauf auf Rechnung aktivieren können, müssen Sie zuerst eine geschäftliche Rechnungsadresse anlegen.",
 			"address-does-not-exist": "Die angefragte Adresse existiert nicht.",
-			"no-country-can-not-be-changed": "Dieses Land kann für die angegebene Rechnungsadresse nicht aktualisiert werden, da bereits ein Kreditlimit mit einer Rechnungszahlung verknüpft ist. Bitte legen Sie eine neue Rechnungsadresse an, wenn Sie das Land ändern möchten. Die Beantragung eines Kreditlimits hat keinen Einfluss auf Ihre Kreditwürdigkeit.",
+			"no-country-can-not-be-changed": "Das Land kann für die angegebene Rechnungsadresse nicht aktualisiert werden, da bereits ein Kreditlimit zur Zahlung auf Rechnung verknüpft ist. Bitte legen Sie eine neue Rechnungsadresse an, wenn Sie das Land ändern möchten.",
 			"facility": {
-				"unknown-error": "Es ist ein unbekannter Fehler beim Anfragen des Kreditverfügungsrahmen aufgetreten. Bitte wenden Sie sich an den Kundenservice.",
-				"created-successfully": "Der Kreditverfügungsrahmen wurde erfolgreich erstellt."
+				"unknown-error": "Es ist ein unbekannter Fehler beim Anfragen des Kreditlimits aufgetreten. Bitte wenden Sie sich an den Kundenservice.",
+				"created-successfully": "Der Kreditlimits wurde erfolgreich erstellt."
 			},
 			"checkout": {
 				"unknown-error": "Leider können Sie diese Zahlungsart nicht nutzen. Wenden Sie sich bitte an den Kundenservice.",
-				"facility-exceeded": "Ihr Kreditrahmen ist momentan ausgeschöpft. Bevor Sie erneut auf Rechnung bestellen können, begleichen Sie bitte Ihre offenen Rechnungen. Bei Fragen oder Unklarheiten steht Ihnen unser Kundenservice gerne zur Verfügung.",
-				"facility-too-low": "Ihr Kreditrahmen reicht derzeit nicht aus, um diese Bestellung durchzuführen. Bitte überprüfen und passen Sie Ihre Bestellung oder Zahlungsmethode entsprechend an. Bei Fragen oder Unterstützungsbedarf wenden Sie sich bitte an unseren Kundenservice."
+				"facility-exceeded": "Ihr Kreditlimit ist vollständig ausgeschöpft. Bevor Sie erneut auf Rechnung bestellen können, begleichen Sie bitte zunächst Ihre offenen Rechnungen. Wenn Sie Fragen haben oder Hilfe benötigen, steht Ihnen unser Kundenservice zur Verfügung.",
+				"facility-too-low": "Ihr Kreditlimit reicht derzeit nicht aus, um diese Bestellung durchzuführen. Bitte überprüfen und passen Sie Ihre Bestellung an oder wählen Sie eine andere Zahlungsmethode. Wenn Sie Fragen haben oder Hilfe benötigen, wenden Sie sich bitte an unseren Kundenservice."
 			}
 		},
 		"legalForms": {
@@ -58,17 +58,24 @@
 			"OHG": "Offene Handelsgesellschaft",
 			"PRIVATE_PERSON": "Privatperson",
 			"UG": "Unternehmergesellschaft (haftungsbeschränkt)",
-			"EINZELUNTERNEHMER": "Einzelunternehmer"
+			"EINZELUNTERNEHMER": "Einzelunternehmer",
+			"LIMITED_COMPANY": "Gesellschaft mit beschränkter Haftung (z.B. GmbH, Ltd., Sp. z o.o.)",
+			"SOLE_TRADER": "Einzelunternehmen / Freiberufler",
+			"PARTNERSHIP": "Personengesellschaft (z.B. GbR, OHG, KG, LLP)",
+			"PUBLIC_COMPANY": "Aktiengesellschaft (z.B. AG, SE) / Börsennotiertes Unternehmen",
+			"COOPERATIVE": "Genossenschaft (z.B. eG)",
+			"GOVERNMENT": "Öffentliche Einrichtung / Regierungsbehörde",
+			"OTHER": "Andere Rechtsform"
 		},
 		"checkout": {
-			"title": "Tilta Rechnungskauf",
+			"title": "Zahlung auf Rechnung",
 			"informationAboutDuration": "Sie haben %duration Tage Zeit, um zu bezahlen, nachdem Ihre Bestellung versandt wurde. Wir senden Ihnen eine Erinnerung mit allen wichtigen Details, wenn das Zahlungsdatum naht.",
 			"buyerRegistration": {
-				"intro": "Um diese Zahlungsart zu nutzen, bitten wir Sie, einen Kreditverfügbarkeitsrahmen beim Zahlungsdienstleister Tilta Fintech GmbH anzufragen. Nach erfolgreicher Anfrage können Sie mit Ihrer Bestellung fortfahren."
+				"intro": "Um Ihr Konto für die Zahlung auf Rechnung zu aktivieren, benötigen wir einige zusätzliche Geschäftsdaten. Dies ist ein einmaliger Schritt – Sie müssen diese Daten bei zukünftigen Bestellungen nicht erneut eingeben."
 			}
 		},
 		"address": {
-			"phoneNumberNotice": "Bitte beachten Sie die korrekte Schreibweise der Telefonnummer. Diese muss mit dem Ländercode beginnen und darf keine Leerzeichen enthalten. Beispiel: +491731010101"
+			"phoneNumberNotice": "Bitte beachten Sie die korrekte Schreibweise der Telefonnummer. Diese muss mit der Landesvorwahl beginnen und darf keine Leerzeichen enthalten. Beispiel: +491731010101"
 		}
 	},
 	"error": {
